@@ -7,7 +7,7 @@ Imports System.Net
 Imports System.Windows
 
 Public Class Kaardirakendus
-
+    'Algne versioon
     Private Sub Kaardirakendus_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         GMapControl1.MapProvider = GoogleMapProvider.Instance
         GMaps.Instance.Mode = AccessMode.ServerAndCache
