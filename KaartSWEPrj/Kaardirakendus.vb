@@ -22,11 +22,8 @@ Public Class Kaardirakendus
     End Sub
 
     Private Sub btnDisplayComponent_Click(sender As Object, e As EventArgs) Handles btnDisplayComponent.Click
-        MsgBox("Loe btnDisplayComponent_Click funktsiooni ja implementeeri komponent")
-        '   Komponendi realiseerimiseks vajalik osa
-        '   
-        '   UCtrlMapViewer1.map_Init()
-        '   UCtrlMapViewer1.Get_Stops()
+        UCtrlMapViewer1.map_Init()
+        UCtrlMapViewer1.Get_Stops()
     End Sub
 
     Private Sub GMapControl1_OnMapClick(sender As Object, e As MouseEventArgs) Handles GMapControl1.OnMapClick
