@@ -43,7 +43,8 @@ Partial Class Kaardirakendus
         Me.GMapControl1.GrayScaleMode = False
         Me.GMapControl1.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow
         Me.GMapControl1.LevelsKeepInMemory = 5
-        Me.GMapControl1.Location = New System.Drawing.Point(199, 24)
+        Me.GMapControl1.Location = New System.Drawing.Point(298, 37)
+        Me.GMapControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.GMapControl1.MarkersEnabled = True
         Me.GMapControl1.MaxZoom = 2
         Me.GMapControl1.MinZoom = 2
@@ -57,15 +58,16 @@ Partial Class Kaardirakendus
         Me.GMapControl1.ScaleMode = GMap.NET.WindowsForms.ScaleModes.[Integer]
         Me.GMapControl1.SelectedAreaFillColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(105, Byte), Integer), CType(CType(225, Byte), Integer))
         Me.GMapControl1.ShowTileGridLines = False
-        Me.GMapControl1.Size = New System.Drawing.Size(603, 402)
+        Me.GMapControl1.Size = New System.Drawing.Size(904, 618)
         Me.GMapControl1.TabIndex = 0
         Me.GMapControl1.Zoom = 0R
         '
         'btnChoose
         '
-        Me.btnChoose.Location = New System.Drawing.Point(12, 46)
+        Me.btnChoose.Location = New System.Drawing.Point(18, 71)
+        Me.btnChoose.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnChoose.Name = "btnChoose"
-        Me.btnChoose.Size = New System.Drawing.Size(75, 23)
+        Me.btnChoose.Size = New System.Drawing.Size(112, 35)
         Me.btnChoose.TabIndex = 1
         Me.btnChoose.Text = "Name"
         Me.btnChoose.UseVisualStyleBackColor = True
@@ -73,83 +75,92 @@ Partial Class Kaardirakendus
         'lblLat
         '
         Me.lblLat.AutoSize = True
-        Me.lblLat.Location = New System.Drawing.Point(12, 129)
+        Me.lblLat.Location = New System.Drawing.Point(18, 198)
+        Me.lblLat.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblLat.Name = "lblLat"
-        Me.lblLat.Size = New System.Drawing.Size(45, 13)
+        Me.lblLat.Size = New System.Drawing.Size(67, 20)
         Me.lblLat.TabIndex = 2
         Me.lblLat.Text = "Latitude"
         '
         'lblLongName
         '
         Me.lblLongName.AutoSize = True
-        Me.lblLongName.Location = New System.Drawing.Point(9, 84)
+        Me.lblLongName.Location = New System.Drawing.Point(14, 129)
+        Me.lblLongName.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblLongName.Name = "lblLongName"
-        Me.lblLongName.Size = New System.Drawing.Size(54, 13)
+        Me.lblLongName.Size = New System.Drawing.Size(80, 20)
         Me.lblLongName.TabIndex = 3
         Me.lblLongName.Text = "Longitude"
         '
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(12, 24)
+        Me.Label3.Location = New System.Drawing.Point(18, 37)
+        Me.Label3.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(66, 13)
+        Me.Label3.Size = New System.Drawing.Size(99, 20)
         Me.Label3.TabIndex = 4
         Me.Label3.Text = "Choose stop"
         '
         'btnDisplay
         '
-        Me.btnDisplay.Location = New System.Drawing.Point(93, 46)
+        Me.btnDisplay.Location = New System.Drawing.Point(140, 71)
+        Me.btnDisplay.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnDisplay.Name = "btnDisplay"
-        Me.btnDisplay.Size = New System.Drawing.Size(75, 23)
+        Me.btnDisplay.Size = New System.Drawing.Size(112, 35)
         Me.btnDisplay.TabIndex = 5
         Me.btnDisplay.Text = "Display"
         Me.btnDisplay.UseVisualStyleBackColor = True
         '
         'txtLongName
         '
-        Me.txtLongName.Location = New System.Drawing.Point(12, 100)
+        Me.txtLongName.Location = New System.Drawing.Point(18, 154)
+        Me.txtLongName.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.txtLongName.Name = "txtLongName"
-        Me.txtLongName.Size = New System.Drawing.Size(156, 20)
+        Me.txtLongName.Size = New System.Drawing.Size(232, 26)
         Me.txtLongName.TabIndex = 6
         '
         'txtLat
         '
-        Me.txtLat.Location = New System.Drawing.Point(12, 145)
+        Me.txtLat.Location = New System.Drawing.Point(18, 223)
+        Me.txtLat.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.txtLat.Name = "txtLat"
-        Me.txtLat.Size = New System.Drawing.Size(156, 20)
+        Me.txtLat.Size = New System.Drawing.Size(232, 26)
         Me.txtLat.TabIndex = 7
         '
         'btnAll
         '
-        Me.btnAll.Location = New System.Drawing.Point(15, 181)
+        Me.btnAll.Location = New System.Drawing.Point(22, 278)
+        Me.btnAll.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnAll.Name = "btnAll"
-        Me.btnAll.Size = New System.Drawing.Size(153, 23)
+        Me.btnAll.Size = New System.Drawing.Size(230, 35)
         Me.btnAll.TabIndex = 8
         Me.btnAll.Text = "Display All"
         Me.btnAll.UseVisualStyleBackColor = True
         '
         'btnDisplayComponent
         '
-        Me.btnDisplayComponent.Location = New System.Drawing.Point(15, 238)
+        Me.btnDisplayComponent.Location = New System.Drawing.Point(22, 366)
+        Me.btnDisplayComponent.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnDisplayComponent.Name = "btnDisplayComponent"
-        Me.btnDisplayComponent.Size = New System.Drawing.Size(153, 23)
+        Me.btnDisplayComponent.Size = New System.Drawing.Size(230, 35)
         Me.btnDisplayComponent.TabIndex = 9
         Me.btnDisplayComponent.Text = "Display all using component"
         Me.btnDisplayComponent.UseVisualStyleBackColor = True
         '
         'UCtrlMapViewer1
         '
-        Me.UCtrlMapViewer1.Location = New System.Drawing.Point(808, 61)
+        Me.UCtrlMapViewer1.Location = New System.Drawing.Point(298, 37)
+        Me.UCtrlMapViewer1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.UCtrlMapViewer1.Name = "UCtrlMapViewer1"
-        Me.UCtrlMapViewer1.Size = New System.Drawing.Size(627, 350)
+        Me.UCtrlMapViewer1.Size = New System.Drawing.Size(940, 538)
         Me.UCtrlMapViewer1.TabIndex = 10
         '
         'Kaardirakendus
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1436, 558)
+        Me.ClientSize = New System.Drawing.Size(1924, 858)
         Me.Controls.Add(Me.UCtrlMapViewer1)
         Me.Controls.Add(Me.btnDisplayComponent)
         Me.Controls.Add(Me.btnAll)
@@ -161,6 +172,7 @@ Partial Class Kaardirakendus
         Me.Controls.Add(Me.lblLat)
         Me.Controls.Add(Me.btnChoose)
         Me.Controls.Add(Me.GMapControl1)
+        Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.Name = "Kaardirakendus"
         Me.Text = "Form1"
         Me.ResumeLayout(False)
