@@ -95,6 +95,9 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="UCtrlMapViewer">
+      <HintPath>..\UCtrlMapViewer\bin\Debug\UCtrlMapViewer.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
