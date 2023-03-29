@@ -26,7 +26,7 @@ Partial Class Kaardirakendus
         Me.btnChoose = New System.Windows.Forms.Button()
         Me.lblLat = New System.Windows.Forms.Label()
         Me.lblLongName = New System.Windows.Forms.Label()
-        Me.Label3 = New System.Windows.Forms.Label()
+        Me.lblChooseStop = New System.Windows.Forms.Label()
         Me.btnDisplay = New System.Windows.Forms.Button()
         Me.txtLongName = New System.Windows.Forms.TextBox()
         Me.txtLat = New System.Windows.Forms.TextBox()
@@ -92,15 +92,15 @@ Partial Class Kaardirakendus
         Me.lblLongName.TabIndex = 3
         Me.lblLongName.Text = "Longitude"
         '
-        'Label3
+        'lblChooseStop
         '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(18, 37)
-        Me.Label3.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(99, 20)
-        Me.Label3.TabIndex = 4
-        Me.Label3.Text = "Choose stop"
+        Me.lblChooseStop.AutoSize = True
+        Me.lblChooseStop.Location = New System.Drawing.Point(18, 37)
+        Me.lblChooseStop.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblChooseStop.Name = "lblChooseStop"
+        Me.lblChooseStop.Size = New System.Drawing.Size(99, 20)
+        Me.lblChooseStop.TabIndex = 4
+        Me.lblChooseStop.Text = "Choose stop"
         '
         'btnDisplay
         '
@@ -167,7 +167,7 @@ Partial Class Kaardirakendus
         Me.Controls.Add(Me.txtLat)
         Me.Controls.Add(Me.txtLongName)
         Me.Controls.Add(Me.btnDisplay)
-        Me.Controls.Add(Me.Label3)
+        Me.Controls.Add(Me.lblChooseStop)
         Me.Controls.Add(Me.lblLongName)
         Me.Controls.Add(Me.lblLat)
         Me.Controls.Add(Me.btnChoose)
@@ -184,7 +184,7 @@ Partial Class Kaardirakendus
     Friend WithEvents btnChoose As Button
     Friend WithEvents lblLat As Label
     Friend WithEvents lblLongName As Label
-    Friend WithEvents Label3 As Label
+    Friend WithEvents lblChooseStop As Label
     Friend WithEvents btnDisplay As Button
     Friend WithEvents txtLongName As TextBox
     Friend WithEvents txtLat As TextBox
