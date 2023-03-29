@@ -31,6 +31,7 @@ Partial Class Kaardirakendus
         Me.txtLongName = New System.Windows.Forms.TextBox()
         Me.txtLat = New System.Windows.Forms.TextBox()
         Me.btnAll = New System.Windows.Forms.Button()
+        Me.btnDisplayComponent = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'GMapControl1
@@ -41,7 +42,7 @@ Partial Class Kaardirakendus
         Me.GMapControl1.GrayScaleMode = False
         Me.GMapControl1.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow
         Me.GMapControl1.LevelsKeepInMemory = 5
-        Me.GMapControl1.Location = New System.Drawing.Point(175, 24)
+        Me.GMapControl1.Location = New System.Drawing.Point(199, 24)
         Me.GMapControl1.MarkersEnabled = True
         Me.GMapControl1.MaxZoom = 2
         Me.GMapControl1.MinZoom = 2
@@ -108,30 +109,40 @@ Partial Class Kaardirakendus
         '
         Me.txtLongName.Location = New System.Drawing.Point(12, 100)
         Me.txtLongName.Name = "txtLongName"
-        Me.txtLongName.Size = New System.Drawing.Size(100, 20)
+        Me.txtLongName.Size = New System.Drawing.Size(156, 20)
         Me.txtLongName.TabIndex = 6
         '
         'txtLat
         '
         Me.txtLat.Location = New System.Drawing.Point(12, 145)
         Me.txtLat.Name = "txtLat"
-        Me.txtLat.Size = New System.Drawing.Size(100, 20)
+        Me.txtLat.Size = New System.Drawing.Size(156, 20)
         Me.txtLat.TabIndex = 7
         '
         'btnAll
         '
         Me.btnAll.Location = New System.Drawing.Point(15, 181)
         Me.btnAll.Name = "btnAll"
-        Me.btnAll.Size = New System.Drawing.Size(75, 23)
+        Me.btnAll.Size = New System.Drawing.Size(153, 23)
         Me.btnAll.TabIndex = 8
         Me.btnAll.Text = "Display All"
         Me.btnAll.UseVisualStyleBackColor = True
+        '
+        'btnDisplayComponent
+        '
+        Me.btnDisplayComponent.Location = New System.Drawing.Point(15, 238)
+        Me.btnDisplayComponent.Name = "btnDisplayComponent"
+        Me.btnDisplayComponent.Size = New System.Drawing.Size(153, 23)
+        Me.btnDisplayComponent.TabIndex = 9
+        Me.btnDisplayComponent.Text = "Display all using component"
+        Me.btnDisplayComponent.UseVisualStyleBackColor = True
         '
         'Kaardirakendus
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(800, 450)
+        Me.Controls.Add(Me.btnDisplayComponent)
         Me.Controls.Add(Me.btnAll)
         Me.Controls.Add(Me.txtLat)
         Me.Controls.Add(Me.txtLongName)
@@ -157,4 +168,5 @@ Partial Class Kaardirakendus
     Friend WithEvents txtLongName As TextBox
     Friend WithEvents txtLat As TextBox
     Friend WithEvents btnAll As Button
+    Friend WithEvents btnDisplayComponent As Button
 End Class

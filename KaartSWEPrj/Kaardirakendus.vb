@@ -7,7 +7,8 @@ Imports System.Net
 Imports System.Windows
 
 Public Class Kaardirakendus
-    'Algne versioon
+    Dim choose As Boolean = True
+
     Private Sub Kaardirakendus_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         GMapControl1.MapProvider = GoogleMapProvider.Instance
         GMaps.Instance.Mode = AccessMode.ServerAndCache
@@ -17,14 +18,15 @@ Public Class Kaardirakendus
         GMapControl1.MinZoom = 5
         GMapControl1.MaxZoom = 100
         GMapControl1.Zoom = 10
-    End Sub
-
-    Private Sub GMapControl1_Load(sender As Object, e As EventArgs) Handles GMapControl1.Load
 
     End Sub
 
-    Private Sub GMapControl1_MouseMove(sender As Object, e As MouseEventArgs) Handles GMapControl1.MouseMove
-        'GMapControl1.Mouse
+    Private Sub btnDisplayComponent_Click(sender As Object, e As EventArgs) Handles btnDisplayComponent.Click
+        MsgBox("Loe btnDisplayComponent_Click funktsiooni ja implementeeri komponent")
+        '   Komponendi realiseerimiseks vajalik osa
+        '   
+        '   UCtrlMapViewer1.map_Init()
+        '   UCtrlMapViewer1.Get_Stops()
     End Sub
 
     Private Sub GMapControl1_OnMapClick(sender As Object, e As MouseEventArgs) Handles GMapControl1.OnMapClick
@@ -42,7 +44,6 @@ Public Class Kaardirakendus
         txtLat.Text = lat
     End Sub
 
-    Dim choose As Boolean = True
 
     Private Sub btnChoose_Click(sender As Object, e As EventArgs) Handles btnChoose.Click
         If (choose) Then
@@ -127,9 +128,14 @@ Public Class Kaardirakendus
         GMapControl1.Refresh()
     End Sub
 
+
 End Class
 
-'SIIT
+' Eelmise repo Rannar branch code
+'
+'
+'
+'
 'Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 '    If txtLong.Text = Nothing Or txtLat.Text = Nothing Then
 '        MsgBox("Please enter both values")
