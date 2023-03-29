@@ -174,7 +174,7 @@ Partial Class Kaardirakendus
         Me.Controls.Add(Me.GMapControl1)
         Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.Name = "Kaardirakendus"
-        Me.Text = "Form1"
+        Me.Text = "Ühistransport"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

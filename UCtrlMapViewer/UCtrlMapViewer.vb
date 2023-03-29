@@ -2,22 +2,55 @@
 Imports System.Globalization
 Imports System.IO
 Imports System.Net
-Imports System.Net.WebRequestMethods
-Imports System.Text.RegularExpressions
-Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 Imports GMap.NET
 Imports GMap.NET.MapProviders
 Imports GMap.NET.WindowsForms
 Imports GMap.NET.WindowsForms.Markers
-Imports GMap.NET.WindowsForms.ToolTips
-Imports Microsoft.VisualBasic.FileIO
-Imports File = System.IO.File
+
+'Class for creating a modern looking tooltip for the bus stop markers
+Public Class CustomToolTip
+    Inherits GMapToolTip
+
+    Public Sub New(marker As GMapMarker)
+        MyBase.New(marker)
+    End Sub
+    Public Overrides Sub OnRender(g As Graphics)
+        Dim textSize As SizeF = g.MeasureString(Marker.ToolTipText, New Font("Segoe UI", 10))
+        Dim padding As Integer = 5
+        Dim rect As New RectangleF(Marker.ToolTipPosition.X, Marker.ToolTipPosition.Y - textSize.Height - padding, textSize.Width + padding * 2, textSize.Height + padding * 2)
+
+        Dim path As New GraphicsPath()
+        Dim radius As Integer = CInt(rect.Height / 2)
+        path.AddArc(rect.X, rect.Y, radius, radius, 180, 90)
+        path.AddArc(rect.Right - radius, rect.Y, radius, radius, 270, 90)
+        path.AddArc(rect.Right - radius, rect.Bottom - radius, radius, radius, 0, 90)
+        path.AddArc(rect.X, rect.Bottom - radius, radius, radius, 90, 90)
+        path.CloseFigure()
+
+        ' Use a gradient brush to fill the tooltip with a modern color scheme
+        Dim brush As New LinearGradientBrush(rect, Color.FromArgb(255, 35, 35, 35), Color.FromArgb(255, 20, 20, 20), LinearGradientMode.Vertical)
+        g.FillPath(brush, path)
+        g.DrawPath(New Pen(Color.FromArgb(255, 15, 15, 15), 1), path)
+
+        Dim format As New StringFormat()
+        format.Alignment = StringAlignment.Center
+        format.LineAlignment = StringAlignment.Center
+
+        ' Use a light text color for the tooltip
+        g.DrawString(Marker.ToolTipText, New Font("Segoe UI", 10), Brushes.LightGray, rect, format)
+    End Sub
+
+
+End Class
+
+' This class realizes the functionality of the map viewer graphic component
 Public Class UCtrlMapViewer
+
+    'The map is initialized in this sub
     Public Sub map_Init()
         GMapControl1.MapProvider = BingMapProvider.Instance
         GMaps.Instance.Mode = AccessMode.ServerAndCache
         GMapControl1.ShowCenter = False
-
         GMapControl1.Position = New GMap.NET.PointLatLng(59.4001962726054, 24.664921814958522)
         '59.4001962726054, 24.66492181495852
         '59,4001962726054, 24,66492181495852
@@ -31,13 +64,7 @@ Public Class UCtrlMapViewer
         MsgBox("tere koik tootab")
     End Sub
 
-    Public Sub Get_Stops()
-        ' Read the stops data from the URL
-        Dim url As String = "https://transport.tallinn.ee/data/stops.txt"
-        Dim request As HttpWebRequest = CType(WebRequest.Create(url), HttpWebRequest)
-        request.Method = "GET"
-        Dim response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
-
+    Public Function drawMarker()
         ' Create a custom marker with 80% fill opacity, orange fill, black stroke, and circle shape
         Dim markerSize As Integer = 10
         Dim markerBitmap As New Bitmap(markerSize, markerSize)
@@ -49,7 +76,15 @@ Public Class UCtrlMapViewer
             g.FillEllipse(brush, circleRect)
             g.DrawEllipse(pen, circleRect)
         End Using
+        Return markerBitmap
+    End Function
 
+    Public Sub Get_Stops(ByRef markerBitmap As Bitmap)
+        ' Read the stops data from the URL
+        Dim url As String = "https://transport.tallinn.ee/data/stops.txt"
+        Dim request As HttpWebRequest = CType(WebRequest.Create(url), HttpWebRequest)
+        request.Method = "GET"
+        Dim response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
 
         ' Parse the CSV data and add markers for each stop
         Dim stopsOverlay As New GMapOverlay("stopsOverlay")
@@ -66,23 +101,13 @@ Public Class UCtrlMapViewer
                     latitude = Double.Parse(fields(2), CultureInfo.InvariantCulture) / 100000
                     longitude = Double.Parse(fields(3), CultureInfo.InvariantCulture) / 100000
                     marker = New GMarkerGoogle(New PointLatLng(latitude, longitude), markerBitmap)
-                    Dim tooltip As New GMapToolTip(marker)
-                    tooltip.BackColor = Color.White
-                    tooltip.AutoClosing = True
-                    tooltip.AutoEllipsis = True
-                    tooltip.MaximumSize = New Size(400, 0)
-                    tooltip.Font = New Font("Segoe UI", 11, FontStyle.Bold)
-                    tooltip.ForeColor = Color.Black
-                    tooltip.Stroke = New Pen(Color.Transparent, 0)
-                    tooltip.Offset = New Point(25, -45)
-                    tooltip.IsBalloon = False
-                    tooltip.TitleFont = New Font("Segoe UI", 12, FontStyle.Bold)
-                    tooltip.TitleForeColor = Color.Black
-                    tooltip.TitleText = stopName
-                    tooltip.Text = "<div style='padding: 10px;'><p style='font-size: 12px; line-height: 150%;'>" & stopName & "</p></div>"
-                    marker.ToolTip = tooltip
-                    GMapControl1.UpdateMarkerLocalPosition(marker)
-                    stopsOverlay.Markers.Add(marker)
+                    marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
+                    Dim toolTip As New CustomToolTip(marker)
+                    toolTip.Offset = New Point(5, -markerBitmap.Height / 2)
+                    marker.ToolTip = toolTip
+                    marker.ToolTipText = stopName
+                    GMapControl1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
+                    stopsOverlay.Markers.Add(marker)               'without refreshing in the beginning
                 End If
             End While
         End Using
@@ -96,3 +121,5 @@ Public Class UCtrlMapViewer
 
 
 End Class
+
+

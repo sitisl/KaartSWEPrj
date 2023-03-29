@@ -111,9 +111,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
     </Compile>
-    <Compile Include="UCtrlMapViewer.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="UCtrlMapViewer.vb" />
     <Compile Include="UCtrlMapViewer.Designer.vb">
       <DependentUpon>UCtrlMapViewer.vb</DependentUpon>
     </Compile>
@@ -155,9 +153,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="marker_stop.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

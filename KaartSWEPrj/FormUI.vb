@@ -23,7 +23,7 @@ Public Class Kaardirakendus
 
     Private Sub btnDisplayComponent_Click(sender As Object, e As EventArgs) Handles btnDisplayComponent.Click
         UCtrlMapViewer1.map_Init()
-        UCtrlMapViewer1.Get_Stops()
+        UCtrlMapViewer1.Get_Stops(UCtrlMapViewer1.drawMarker())
     End Sub
 
     Private Sub GMapControl1_OnMapClick(sender As Object, e As MouseEventArgs) Handles GMapControl1.OnMapClick
