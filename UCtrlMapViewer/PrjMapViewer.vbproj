@@ -111,7 +111,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
     </Compile>
-    <Compile Include="UCtrlMapViewer.vb" />
+    <Compile Include="UCtrlMapViewer.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="UCtrlMapViewer.Designer.vb">
       <DependentUpon>UCtrlMapViewer.vb</DependentUpon>
     </Compile>

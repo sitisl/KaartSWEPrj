@@ -7,41 +7,6 @@ Imports GMap.NET.MapProviders
 Imports GMap.NET.WindowsForms
 Imports GMap.NET.WindowsForms.Markers
 
-'Class for creating a modern looking tooltip for the bus stop markers
-Public Class CustomToolTip
-    Inherits GMapToolTip
-
-    Public Sub New(marker As GMapMarker)
-        MyBase.New(marker)
-    End Sub
-    Public Overrides Sub OnRender(g As Graphics)
-        Dim textSize As SizeF = g.MeasureString(Marker.ToolTipText, New Font("Segoe UI", 10))
-        Dim padding As Integer = 5
-        Dim rect As New RectangleF(Marker.ToolTipPosition.X, Marker.ToolTipPosition.Y - textSize.Height - padding, textSize.Width + padding * 2, textSize.Height + padding * 2)
-
-        Dim path As New GraphicsPath()
-        Dim radius As Integer = CInt(rect.Height / 2)
-        path.AddArc(rect.X, rect.Y, radius, radius, 180, 90)
-        path.AddArc(rect.Right - radius, rect.Y, radius, radius, 270, 90)
-        path.AddArc(rect.Right - radius, rect.Bottom - radius, radius, radius, 0, 90)
-        path.AddArc(rect.X, rect.Bottom - radius, radius, radius, 90, 90)
-        path.CloseFigure()
-
-        ' Use a gradient brush to fill the tooltip with a modern color scheme
-        Dim brush As New LinearGradientBrush(rect, Color.FromArgb(255, 35, 35, 35), Color.FromArgb(255, 20, 20, 20), LinearGradientMode.Vertical)
-        g.FillPath(brush, path)
-        g.DrawPath(New Pen(Color.FromArgb(255, 15, 15, 15), 1), path)
-
-        Dim format As New StringFormat()
-        format.Alignment = StringAlignment.Center
-        format.LineAlignment = StringAlignment.Center
-
-        ' Use a light text color for the tooltip
-        g.DrawString(Marker.ToolTipText, New Font("Segoe UI", 10), Brushes.LightGray, rect, format)
-    End Sub
-
-
-End Class
 
 ' This class realizes the functionality of the map viewer graphic component
 Public Class UCtrlMapViewer
@@ -111,15 +76,50 @@ Public Class UCtrlMapViewer
                 End If
             End While
         End Using
+        ' Add the markers overlay to the map
         GMapControl1.Overlays.Add(stopsOverlay)
         GMapControl1.Refresh()
-
         response.Close()
     End Sub
 
+End Class
 
+'Class for creating a modern looking tooltip for the bus stop markers
+Public Class CustomToolTip
+    Inherits GMapToolTip
+
+    Public Sub New(marker As GMapMarker)
+        MyBase.New(marker)
+    End Sub
+    Public Overrides Sub OnRender(g As Graphics)
+        Dim textSize As SizeF = g.MeasureString(Marker.ToolTipText, New Font("Segoe UI", 10))
+        Dim padding As Integer = 5
+        Dim rect As New RectangleF(Marker.ToolTipPosition.X, Marker.ToolTipPosition.Y - textSize.Height - padding, textSize.Width + padding * 2, textSize.Height + padding * 2)
+
+        Dim path As New GraphicsPath()
+        Dim radius As Integer = CInt(rect.Height / 2)
+        path.AddArc(rect.X, rect.Y, radius, radius, 180, 90)
+        path.AddArc(rect.Right - radius, rect.Y, radius, radius, 270, 90)
+        path.AddArc(rect.Right - radius, rect.Bottom - radius, radius, radius, 0, 90)
+        path.AddArc(rect.X, rect.Bottom - radius, radius, radius, 90, 90)
+        path.CloseFigure()
+
+        ' Use a gradient brush to fill the tooltip with a modern color scheme
+        Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+        g.FillPath(brush, path)
+        g.DrawPath(New Pen(Color.FromArgb(255, 15, 15, 15), 1), path)
+
+        Dim format As New StringFormat()
+        format.Alignment = StringAlignment.Center
+        format.LineAlignment = StringAlignment.Center
+
+        ' Use a light text color for the tooltip
+        g.DrawString(Marker.ToolTipText, New Font("Segoe UI", 10), Brushes.Snow, rect, format)
+    End Sub
 
 
 End Class
+
+
 
 

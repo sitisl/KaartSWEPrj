@@ -22,7 +22,6 @@ Partial Class Kaardirakendus
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.GMapControl1 = New GMap.NET.WindowsForms.GMapControl()
         Me.btnChoose = New System.Windows.Forms.Button()
         Me.lblLat = New System.Windows.Forms.Label()
         Me.lblLongName = New System.Windows.Forms.Label()
@@ -33,34 +32,8 @@ Partial Class Kaardirakendus
         Me.btnAll = New System.Windows.Forms.Button()
         Me.btnDisplayComponent = New System.Windows.Forms.Button()
         Me.UCtrlMapViewer1 = New UCtrlMapViewer.UCtrlMapViewer()
+        Me.checkBoxStops = New System.Windows.Forms.CheckBox()
         Me.SuspendLayout()
-        '
-        'GMapControl1
-        '
-        Me.GMapControl1.Bearing = 0!
-        Me.GMapControl1.CanDragMap = True
-        Me.GMapControl1.EmptyTileColor = System.Drawing.Color.Navy
-        Me.GMapControl1.GrayScaleMode = False
-        Me.GMapControl1.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow
-        Me.GMapControl1.LevelsKeepInMemory = 5
-        Me.GMapControl1.Location = New System.Drawing.Point(298, 37)
-        Me.GMapControl1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.GMapControl1.MarkersEnabled = True
-        Me.GMapControl1.MaxZoom = 2
-        Me.GMapControl1.MinZoom = 2
-        Me.GMapControl1.MouseWheelZoomEnabled = True
-        Me.GMapControl1.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter
-        Me.GMapControl1.Name = "GMapControl1"
-        Me.GMapControl1.NegativeMode = False
-        Me.GMapControl1.PolygonsEnabled = True
-        Me.GMapControl1.RetryLoadTile = 0
-        Me.GMapControl1.RoutesEnabled = True
-        Me.GMapControl1.ScaleMode = GMap.NET.WindowsForms.ScaleModes.[Integer]
-        Me.GMapControl1.SelectedAreaFillColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(105, Byte), Integer), CType(CType(225, Byte), Integer))
-        Me.GMapControl1.ShowTileGridLines = False
-        Me.GMapControl1.Size = New System.Drawing.Size(904, 618)
-        Me.GMapControl1.TabIndex = 0
-        Me.GMapControl1.Zoom = 0R
         '
         'btnChoose
         '
@@ -95,6 +68,8 @@ Partial Class Kaardirakendus
         'lblChooseStop
         '
         Me.lblChooseStop.AutoSize = True
+        Me.lblChooseStop.BackColor = System.Drawing.SystemColors.Control
+        Me.lblChooseStop.ForeColor = System.Drawing.SystemColors.ControlText
         Me.lblChooseStop.Location = New System.Drawing.Point(18, 37)
         Me.lblChooseStop.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblChooseStop.Name = "lblChooseStop"
@@ -150,17 +125,32 @@ Partial Class Kaardirakendus
         '
         'UCtrlMapViewer1
         '
+        Me.UCtrlMapViewer1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.UCtrlMapViewer1.Location = New System.Drawing.Point(298, 37)
         Me.UCtrlMapViewer1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.UCtrlMapViewer1.Name = "UCtrlMapViewer1"
-        Me.UCtrlMapViewer1.Size = New System.Drawing.Size(940, 538)
+        Me.UCtrlMapViewer1.Size = New System.Drawing.Size(1155, 586)
         Me.UCtrlMapViewer1.TabIndex = 10
+        '
+        'checkBoxStops
+        '
+        Me.checkBoxStops.AutoSize = True
+        Me.checkBoxStops.Location = New System.Drawing.Point(52, 409)
+        Me.checkBoxStops.Name = "checkBoxStops"
+        Me.checkBoxStops.Size = New System.Drawing.Size(181, 24)
+        Me.checkBoxStops.TabIndex = 11
+        Me.checkBoxStops.Text = "Näita kõiki peatuseid"
+        Me.checkBoxStops.UseVisualStyleBackColor = True
         '
         'Kaardirakendus
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.BackColor = System.Drawing.SystemColors.Control
         Me.ClientSize = New System.Drawing.Size(1924, 858)
+        Me.Controls.Add(Me.checkBoxStops)
         Me.Controls.Add(Me.UCtrlMapViewer1)
         Me.Controls.Add(Me.btnDisplayComponent)
         Me.Controls.Add(Me.btnAll)
@@ -171,16 +161,14 @@ Partial Class Kaardirakendus
         Me.Controls.Add(Me.lblLongName)
         Me.Controls.Add(Me.lblLat)
         Me.Controls.Add(Me.btnChoose)
-        Me.Controls.Add(Me.GMapControl1)
         Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.Name = "Kaardirakendus"
         Me.Text = "Ühistransport"
+        Me.TransparencyKey = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
-
-    Friend WithEvents GMapControl1 As GMap.NET.WindowsForms.GMapControl
     Friend WithEvents btnChoose As Button
     Friend WithEvents lblLat As Label
     Friend WithEvents lblLongName As Label
@@ -191,4 +179,5 @@ Partial Class Kaardirakendus
     Friend WithEvents btnAll As Button
     Friend WithEvents btnDisplayComponent As Button
     Friend WithEvents UCtrlMapViewer1 As UCtrlMapViewer.UCtrlMapViewer
+    Friend WithEvents checkBoxStops As CheckBox
 End Class
