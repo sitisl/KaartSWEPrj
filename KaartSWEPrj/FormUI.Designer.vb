@@ -31,8 +31,8 @@ Partial Class Kaardirakendus
         Me.txtLat = New System.Windows.Forms.TextBox()
         Me.btnAll = New System.Windows.Forms.Button()
         Me.btnDisplayComponent = New System.Windows.Forms.Button()
-        Me.UCtrlMapViewer1 = New UCtrlMapViewer.UCtrlMapViewer()
         Me.checkBoxStops = New System.Windows.Forms.CheckBox()
+        Me.UCtrlMapViewer1 = New UCtrlMapViewer.UCtrlMapViewer()
         Me.SuspendLayout()
         '
         'btnChoose
@@ -123,6 +123,16 @@ Partial Class Kaardirakendus
         Me.btnDisplayComponent.Text = "Display all using component"
         Me.btnDisplayComponent.UseVisualStyleBackColor = True
         '
+        'checkBoxStops
+        '
+        Me.checkBoxStops.AutoSize = True
+        Me.checkBoxStops.Location = New System.Drawing.Point(52, 409)
+        Me.checkBoxStops.Name = "checkBoxStops"
+        Me.checkBoxStops.Size = New System.Drawing.Size(137, 24)
+        Me.checkBoxStops.TabIndex = 11
+        Me.checkBoxStops.Text = "Show all stops"
+        Me.checkBoxStops.UseVisualStyleBackColor = True
+        '
         'UCtrlMapViewer1
         '
         Me.UCtrlMapViewer1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -133,16 +143,6 @@ Partial Class Kaardirakendus
         Me.UCtrlMapViewer1.Name = "UCtrlMapViewer1"
         Me.UCtrlMapViewer1.Size = New System.Drawing.Size(1155, 586)
         Me.UCtrlMapViewer1.TabIndex = 10
-        '
-        'checkBoxStops
-        '
-        Me.checkBoxStops.AutoSize = True
-        Me.checkBoxStops.Location = New System.Drawing.Point(52, 409)
-        Me.checkBoxStops.Name = "checkBoxStops"
-        Me.checkBoxStops.Size = New System.Drawing.Size(181, 24)
-        Me.checkBoxStops.TabIndex = 11
-        Me.checkBoxStops.Text = "Näita kõiki peatuseid"
-        Me.checkBoxStops.UseVisualStyleBackColor = True
         '
         'Kaardirakendus
         '
