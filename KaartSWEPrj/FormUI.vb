@@ -10,20 +10,21 @@ Imports System.Windows.Forms.VisualStyles
 Public Class Kaardirakendus
     'Dim choose As Boolean = True
 
-    'Private Sub Kaardirakendus_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-    '   GMapControl1.MapProvider = GoogleMapProvider.Instance
-    '  GMaps.Instance.Mode = AccessMode.ServerAndCache
-    ' GMapControl1.ShowCenter = False
-
-    ' GMapControl1.Position = New GMap.NET.PointLatLng(59.4380930599551, 24.7590637207031)
-    'GMapControl1.MinZoom = 5
-    'GMapControl1.MaxZoom = 100
-    'GMapControl1.Zoom = 10
-
-    'End Sub
-
-    Private Sub btnDisplayComponent_Click(sender As Object, e As EventArgs) Handles btnDisplayComponent.Click
+    Private Sub Kaardirakendus_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         UCtrlMapViewer1.initMap()
+        '   GMapControl1.MapProvider = GoogleMapProvider.Instance
+        '  GMaps.Instance.Mode = AccessMode.ServerAndCache
+        ' GMapControl1.ShowCenter = False
+
+        ' GMapControl1.Position = New GMap.NET.PointLatLng(59.4380930599551, 24.7590637207031)
+        'GMapControl1.MinZoom = 5
+        'GMapControl1.MaxZoom = 100
+        'GMapControl1.Zoom = 10
+
+    End Sub
+
+    Private Sub btnDisplayComponent_Click(sender As Object, e As EventArgs)
+
         'UCtrlMapViewer1.getStops(UCtrlMapViewer1.drawMarker())
     End Sub
 
@@ -32,6 +33,15 @@ Public Class Kaardirakendus
         UCtrlMapViewer1.showHideStops(checkBoxStops.Checked, UCtrlMapViewer1.getStops(UCtrlMapViewer1.drawMarker()))
     End Sub
 
+    Private Sub UCtrlMapViewer1_LocationClicked(ByVal latitude As Double, ByVal longitude As Double) _
+    Handles UCtrlMapViewer1.LocationClicked
+        txtLat.Text = Math.Round(latitude, 5).ToString()
+        txtLongName.Text = Math.Round(longitude, 5).ToString()
+    End Sub
+
+    'Private Sub latAndLong()
+    '   UCtrlMapViewer1.GMapControl1_OnMapClick(UCtrlMapViewer1, OnMouseClick(e), txtLongName, txtLat)
+    'End Sub
 
     'Private Sub GMapControl1_OnMapClick(sender As Object, e As MouseEventArgs) Handles GMapControl1.OnMapClick
     ' Get the latitude and longitude of the clicked point

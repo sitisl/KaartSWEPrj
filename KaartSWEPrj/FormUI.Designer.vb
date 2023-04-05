@@ -29,8 +29,6 @@ Partial Class Kaardirakendus
         Me.btnDisplay = New System.Windows.Forms.Button()
         Me.txtLongName = New System.Windows.Forms.TextBox()
         Me.txtLat = New System.Windows.Forms.TextBox()
-        Me.btnAll = New System.Windows.Forms.Button()
-        Me.btnDisplayComponent = New System.Windows.Forms.Button()
         Me.checkBoxStops = New System.Windows.Forms.CheckBox()
         Me.UCtrlMapViewer1 = New UCtrlMapViewer.UCtrlMapViewer()
         Me.SuspendLayout()
@@ -103,30 +101,10 @@ Partial Class Kaardirakendus
         Me.txtLat.Size = New System.Drawing.Size(232, 26)
         Me.txtLat.TabIndex = 7
         '
-        'btnAll
-        '
-        Me.btnAll.Location = New System.Drawing.Point(22, 278)
-        Me.btnAll.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btnAll.Name = "btnAll"
-        Me.btnAll.Size = New System.Drawing.Size(230, 35)
-        Me.btnAll.TabIndex = 8
-        Me.btnAll.Text = "Display All"
-        Me.btnAll.UseVisualStyleBackColor = True
-        '
-        'btnDisplayComponent
-        '
-        Me.btnDisplayComponent.Location = New System.Drawing.Point(22, 366)
-        Me.btnDisplayComponent.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btnDisplayComponent.Name = "btnDisplayComponent"
-        Me.btnDisplayComponent.Size = New System.Drawing.Size(230, 35)
-        Me.btnDisplayComponent.TabIndex = 9
-        Me.btnDisplayComponent.Text = "Display all using component"
-        Me.btnDisplayComponent.UseVisualStyleBackColor = True
-        '
         'checkBoxStops
         '
         Me.checkBoxStops.AutoSize = True
-        Me.checkBoxStops.Location = New System.Drawing.Point(52, 409)
+        Me.checkBoxStops.Location = New System.Drawing.Point(62, 257)
         Me.checkBoxStops.Name = "checkBoxStops"
         Me.checkBoxStops.Size = New System.Drawing.Size(137, 24)
         Me.checkBoxStops.TabIndex = 11
@@ -152,8 +130,6 @@ Partial Class Kaardirakendus
         Me.ClientSize = New System.Drawing.Size(1924, 858)
         Me.Controls.Add(Me.checkBoxStops)
         Me.Controls.Add(Me.UCtrlMapViewer1)
-        Me.Controls.Add(Me.btnDisplayComponent)
-        Me.Controls.Add(Me.btnAll)
         Me.Controls.Add(Me.txtLat)
         Me.Controls.Add(Me.txtLongName)
         Me.Controls.Add(Me.btnDisplay)
@@ -176,8 +152,6 @@ Partial Class Kaardirakendus
     Friend WithEvents btnDisplay As Button
     Friend WithEvents txtLongName As TextBox
     Friend WithEvents txtLat As TextBox
-    Friend WithEvents btnAll As Button
-    Friend WithEvents btnDisplayComponent As Button
     Friend WithEvents UCtrlMapViewer1 As UCtrlMapViewer.UCtrlMapViewer
     Friend WithEvents checkBoxStops As CheckBox
 End Class

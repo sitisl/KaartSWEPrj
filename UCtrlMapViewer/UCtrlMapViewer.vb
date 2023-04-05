@@ -8,8 +8,12 @@ Imports GMap.NET.WindowsForms
 Imports GMap.NET.WindowsForms.Markers
 
 
+
+
 ' This class realizes the functionality of the map viewer graphic component
 Public Class UCtrlMapViewer
+
+    Public Event LocationClicked(ByVal latitude As Double, ByVal longitude As Double)
 
     'The map is initialized in this sub
     Public Sub initMap()
@@ -54,6 +58,23 @@ Public Class UCtrlMapViewer
         End Using
         Return markerBitmap
     End Function
+
+    Public Sub GMapControl1_MouseDown(sender As Object, e As MouseEventArgs) _
+        Handles GMapControl1.MouseDown
+        If e.Button = MouseButtons.Right Then
+            ' Get the latitude and longitude of the clicked point
+            Dim pointLatLng As PointLatLng = GMapControl1.FromLocalToLatLng(e.X, e.Y)
+            RaiseEvent LocationClicked(pointLatLng.Lat, pointLatLng.Lng)
+        End If
+
+        'If (Choose()) Then
+        'btnChoose.Text = "Name"
+        'lblLongName.Text = "Longitude"
+        'lblLat.Visible = True
+        'txtLat.Visible = True
+        'Choose = False
+        'End If
+    End Sub
 
     Public Function getStops(ByRef markerBitmap As Bitmap)
         ' Read the stops data from the URL
