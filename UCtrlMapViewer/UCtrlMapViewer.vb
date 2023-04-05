@@ -12,7 +12,7 @@ Imports GMap.NET.WindowsForms.Markers
 Public Class UCtrlMapViewer
 
     'The map is initialized in this sub
-    Public Sub map_Init()
+    Public Sub initMap()
         GMapControl1.MapProvider = BingMapProvider.Instance
         GMaps.Instance.Mode = AccessMode.ServerAndCache
         GMapControl1.ShowCenter = False
@@ -27,6 +27,17 @@ Public Class UCtrlMapViewer
 
     Public Sub test()
         MsgBox("tere koik tootab")
+    End Sub
+
+    Public Sub showHideStops(ByRef isChecked As Boolean, ByRef stopsOverlay As GMapOverlay)
+        If (isChecked = True) Then
+            GMapControl1.Overlays.Add(stopsOverlay)
+            GMapControl1.Refresh()
+        Else
+            GMapControl1.Overlays.Clear()
+            GMapControl1.Refresh()
+        End If
+
     End Sub
 
     Public Function drawMarker()
@@ -44,7 +55,7 @@ Public Class UCtrlMapViewer
         Return markerBitmap
     End Function
 
-    Public Sub Get_Stops(ByRef markerBitmap As Bitmap)
+    Public Function getStops(ByRef markerBitmap As Bitmap)
         ' Read the stops data from the URL
         Dim url As String = "https://transport.tallinn.ee/data/stops.txt"
         Dim request As HttpWebRequest = CType(WebRequest.Create(url), HttpWebRequest)
@@ -77,10 +88,11 @@ Public Class UCtrlMapViewer
             End While
         End Using
         ' Add the markers overlay to the map
-        GMapControl1.Overlays.Add(stopsOverlay)
-        GMapControl1.Refresh()
+        'GMapControl1.Overlays.Add(stopsOverlay)
+        'GMapControl1.Refresh()
         response.Close()
-    End Sub
+        Return stopsOverlay
+    End Function
 
 End Class
 

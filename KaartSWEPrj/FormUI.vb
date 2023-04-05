@@ -5,6 +5,7 @@ Imports GMap.NET.WindowsForms.Markers
 Imports System.IO
 Imports System.Net
 Imports System.Windows
+Imports System.Windows.Forms.VisualStyles
 
 Public Class Kaardirakendus
     'Dim choose As Boolean = True
@@ -22,13 +23,15 @@ Public Class Kaardirakendus
     'End Sub
 
     Private Sub btnDisplayComponent_Click(sender As Object, e As EventArgs) Handles btnDisplayComponent.Click
-        UCtrlMapViewer1.map_Init()
-        UCtrlMapViewer1.Get_Stops(UCtrlMapViewer1.drawMarker())
+        UCtrlMapViewer1.initMap()
+        'UCtrlMapViewer1.getStops(UCtrlMapViewer1.drawMarker())
     End Sub
 
-    Private Sub checkBoxStops_CheckedChanged(sender As Object, e As EventArgs) Handles checkBoxStops.CheckedChanged
-
+    Private Sub checkBoxStops_CheckedChanged(sender As Object, e As EventArgs) _
+        Handles checkBoxStops.CheckedChanged
+        UCtrlMapViewer1.showHideStops(checkBoxStops.Checked, UCtrlMapViewer1.getStops(UCtrlMapViewer1.drawMarker()))
     End Sub
+
 
     'Private Sub GMapControl1_OnMapClick(sender As Object, e As MouseEventArgs) Handles GMapControl1.OnMapClick
     ' Get the latitude and longitude of the clicked point
