@@ -24,14 +24,18 @@ Partial Class Kaardirakendus
     Private Sub InitializeComponent()
         Me.tblLayoutForm = New System.Windows.Forms.TableLayoutPanel()
         Me.tblLayoutStops = New System.Windows.Forms.TableLayoutPanel()
+        Me.btnRoute = New System.Windows.Forms.Button()
+        Me.txtEnd = New System.Windows.Forms.TextBox()
+        Me.txtStart = New System.Windows.Forms.TextBox()
         Me.checkBoxStops = New System.Windows.Forms.CheckBox()
         Me.txtLat = New System.Windows.Forms.TextBox()
         Me.txtLongName = New System.Windows.Forms.TextBox()
-        Me.btnDisplay = New System.Windows.Forms.Button()
-        Me.btnChoose = New System.Windows.Forms.Button()
-        Me.lblChooseStop = New System.Windows.Forms.Label()
+        Me.btnStopsList = New System.Windows.Forms.Button()
         Me.lblLat = New System.Windows.Forms.Label()
         Me.lblLongName = New System.Windows.Forms.Label()
+        Me.lblStart = New System.Windows.Forms.Label()
+        Me.lblEnd = New System.Windows.Forms.Label()
+        Me.btnClear = New System.Windows.Forms.Button()
         Me.UCtrlMapViewer1 = New UCtrlMapViewer.UCtrlMapViewer()
         Me.tblLayoutForm.SuspendLayout()
         Me.tblLayoutStops.SuspendLayout()
@@ -66,98 +70,114 @@ Partial Class Kaardirakendus
         Me.tblLayoutStops.ColumnCount = 2
         Me.tblLayoutStops.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.tblLayoutStops.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.tblLayoutStops.Controls.Add(Me.checkBoxStops, 0, 6)
-        Me.tblLayoutStops.Controls.Add(Me.txtLat, 0, 5)
-        Me.tblLayoutStops.Controls.Add(Me.txtLongName, 0, 3)
-        Me.tblLayoutStops.Controls.Add(Me.btnDisplay, 1, 1)
-        Me.tblLayoutStops.Controls.Add(Me.btnChoose, 0, 1)
-        Me.tblLayoutStops.Controls.Add(Me.lblChooseStop, 0, 0)
-        Me.tblLayoutStops.Controls.Add(Me.lblLat, 0, 4)
-        Me.tblLayoutStops.Controls.Add(Me.lblLongName, 0, 2)
+        Me.tblLayoutStops.Controls.Add(Me.btnClear, 0, 8)
+        Me.tblLayoutStops.Controls.Add(Me.btnRoute, 1, 8)
+        Me.tblLayoutStops.Controls.Add(Me.txtEnd, 0, 7)
+        Me.tblLayoutStops.Controls.Add(Me.txtStart, 0, 5)
+        Me.tblLayoutStops.Controls.Add(Me.checkBoxStops, 0, 3)
+        Me.tblLayoutStops.Controls.Add(Me.txtLat, 1, 2)
+        Me.tblLayoutStops.Controls.Add(Me.txtLongName, 1, 1)
+        Me.tblLayoutStops.Controls.Add(Me.btnStopsList, 0, 0)
+        Me.tblLayoutStops.Controls.Add(Me.lblLat, 0, 2)
+        Me.tblLayoutStops.Controls.Add(Me.lblLongName, 0, 1)
+        Me.tblLayoutStops.Controls.Add(Me.lblStart, 0, 4)
+        Me.tblLayoutStops.Controls.Add(Me.lblEnd, 0, 6)
         Me.tblLayoutStops.Dock = System.Windows.Forms.DockStyle.Top
         Me.tblLayoutStops.Font = New System.Drawing.Font("Segoe UI", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(186, Byte))
         Me.tblLayoutStops.Location = New System.Drawing.Point(7, 7)
         Me.tblLayoutStops.Name = "tblLayoutStops"
-        Me.tblLayoutStops.RowCount = 7
-        Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 13.88822!))
-        Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66649!))
-        Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 13.88822!))
-        Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 13.88822!))
-        Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 13.88822!))
-        Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 13.88822!))
-        Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 13.89239!))
+        Me.tblLayoutStops.RowCount = 9
+        Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.678377!))
+        Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.065012!))
+        Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.065012!))
+        Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.062345!))
+        Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.066045!))
+        Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.066045!))
+        Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.065862!))
+        Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.062345!))
+        Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.673923!))
         Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.tblLayoutStops.Size = New System.Drawing.Size(250, 281)
+        Me.tblLayoutStops.Size = New System.Drawing.Size(250, 494)
         Me.tblLayoutStops.TabIndex = 12
+        '
+        'btnRoute
+        '
+        Me.btnRoute.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.btnRoute.Location = New System.Drawing.Point(129, 432)
+        Me.btnRoute.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnRoute.Name = "btnRoute"
+        Me.btnRoute.Size = New System.Drawing.Size(117, 57)
+        Me.btnRoute.TabIndex = 16
+        Me.btnRoute.Text = "Go"
+        Me.btnRoute.UseVisualStyleBackColor = True
+        '
+        'txtEnd
+        '
+        Me.tblLayoutStops.SetColumnSpan(Me.txtEnd, 2)
+        Me.txtEnd.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.txtEnd.Enabled = False
+        Me.txtEnd.Location = New System.Drawing.Point(4, 380)
+        Me.txtEnd.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.txtEnd.Name = "txtEnd"
+        Me.txtEnd.Size = New System.Drawing.Size(242, 29)
+        Me.txtEnd.TabIndex = 15
+        '
+        'txtStart
+        '
+        Me.tblLayoutStops.SetColumnSpan(Me.txtStart, 2)
+        Me.txtStart.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.txtStart.Enabled = False
+        Me.txtStart.Location = New System.Drawing.Point(4, 276)
+        Me.txtStart.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.txtStart.Name = "txtStart"
+        Me.txtStart.Size = New System.Drawing.Size(242, 29)
+        Me.txtStart.TabIndex = 13
         '
         'checkBoxStops
         '
         Me.checkBoxStops.AutoSize = True
         Me.tblLayoutStops.SetColumnSpan(Me.checkBoxStops, 2)
         Me.checkBoxStops.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.checkBoxStops.Location = New System.Drawing.Point(3, 244)
+        Me.checkBoxStops.Location = New System.Drawing.Point(3, 170)
         Me.checkBoxStops.Name = "checkBoxStops"
-        Me.checkBoxStops.Size = New System.Drawing.Size(244, 34)
+        Me.checkBoxStops.Size = New System.Drawing.Size(244, 46)
         Me.checkBoxStops.TabIndex = 11
         Me.checkBoxStops.Text = "Show all stops"
         Me.checkBoxStops.UseVisualStyleBackColor = True
         '
         'txtLat
         '
-        Me.tblLayoutStops.SetColumnSpan(Me.txtLat, 2)
+        Me.txtLat.Cursor = System.Windows.Forms.Cursors.Arrow
         Me.txtLat.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.txtLat.Location = New System.Drawing.Point(4, 207)
+        Me.txtLat.Location = New System.Drawing.Point(129, 120)
         Me.txtLat.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.txtLat.Name = "txtLat"
-        Me.txtLat.Size = New System.Drawing.Size(242, 29)
+        Me.txtLat.ReadOnly = True
+        Me.txtLat.Size = New System.Drawing.Size(117, 29)
         Me.txtLat.TabIndex = 7
         '
         'txtLongName
         '
-        Me.tblLayoutStops.SetColumnSpan(Me.txtLongName, 2)
+        Me.txtLongName.Cursor = System.Windows.Forms.Cursors.Arrow
         Me.txtLongName.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.txtLongName.Location = New System.Drawing.Point(4, 129)
+        Me.txtLongName.Location = New System.Drawing.Point(129, 68)
         Me.txtLongName.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.txtLongName.Name = "txtLongName"
-        Me.txtLongName.Size = New System.Drawing.Size(242, 29)
+        Me.txtLongName.ReadOnly = True
+        Me.txtLongName.Size = New System.Drawing.Size(117, 29)
         Me.txtLongName.TabIndex = 6
         '
-        'btnDisplay
+        'btnStopsList
         '
-        Me.btnDisplay.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.btnDisplay.Location = New System.Drawing.Point(129, 44)
-        Me.btnDisplay.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btnDisplay.Name = "btnDisplay"
-        Me.btnDisplay.Size = New System.Drawing.Size(117, 36)
-        Me.btnDisplay.TabIndex = 5
-        Me.btnDisplay.Text = "Display"
-        Me.btnDisplay.UseVisualStyleBackColor = True
-        '
-        'btnChoose
-        '
-        Me.btnChoose.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.btnChoose.Location = New System.Drawing.Point(4, 44)
-        Me.btnChoose.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btnChoose.Name = "btnChoose"
-        Me.btnChoose.Size = New System.Drawing.Size(117, 36)
-        Me.btnChoose.TabIndex = 1
-        Me.btnChoose.Text = "Name"
-        Me.btnChoose.UseVisualStyleBackColor = True
-        '
-        'lblChooseStop
-        '
-        Me.lblChooseStop.AutoSize = True
-        Me.lblChooseStop.BackColor = System.Drawing.SystemColors.Control
-        Me.tblLayoutStops.SetColumnSpan(Me.lblChooseStop, 2)
-        Me.lblChooseStop.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.lblChooseStop.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.lblChooseStop.Location = New System.Drawing.Point(4, 8)
-        Me.lblChooseStop.Margin = New System.Windows.Forms.Padding(4, 8, 4, 8)
-        Me.lblChooseStop.Name = "lblChooseStop"
-        Me.lblChooseStop.Size = New System.Drawing.Size(242, 23)
-        Me.lblChooseStop.TabIndex = 4
-        Me.lblChooseStop.Text = "Choose stop"
-        Me.lblChooseStop.TextAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.tblLayoutStops.SetColumnSpan(Me.btnStopsList, 2)
+        Me.btnStopsList.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.btnStopsList.Location = New System.Drawing.Point(4, 5)
+        Me.btnStopsList.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnStopsList.Name = "btnStopsList"
+        Me.btnStopsList.Size = New System.Drawing.Size(242, 53)
+        Me.btnStopsList.TabIndex = 1
+        Me.btnStopsList.Text = "List of stops"
+        Me.btnStopsList.UseVisualStyleBackColor = True
         '
         'lblLat
         '
@@ -165,10 +185,10 @@ Partial Class Kaardirakendus
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblLat.AutoSize = True
-        Me.lblLat.Location = New System.Drawing.Point(4, 171)
+        Me.lblLat.Location = New System.Drawing.Point(4, 123)
         Me.lblLat.Margin = New System.Windows.Forms.Padding(4, 8, 0, 8)
         Me.lblLat.Name = "lblLat"
-        Me.lblLat.Size = New System.Drawing.Size(121, 23)
+        Me.lblLat.Size = New System.Drawing.Size(121, 36)
         Me.lblLat.TabIndex = 2
         Me.lblLat.Text = "Latitude"
         '
@@ -176,12 +196,49 @@ Partial Class Kaardirakendus
         '
         Me.lblLongName.AutoSize = True
         Me.lblLongName.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.lblLongName.Location = New System.Drawing.Point(4, 93)
+        Me.lblLongName.Location = New System.Drawing.Point(4, 71)
         Me.lblLongName.Margin = New System.Windows.Forms.Padding(4, 8, 4, 8)
         Me.lblLongName.Name = "lblLongName"
-        Me.lblLongName.Size = New System.Drawing.Size(117, 23)
+        Me.lblLongName.Size = New System.Drawing.Size(117, 36)
         Me.lblLongName.TabIndex = 3
         Me.lblLongName.Text = "Longitude"
+        '
+        'lblStart
+        '
+        Me.lblStart.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblStart.AutoSize = True
+        Me.lblStart.Location = New System.Drawing.Point(4, 227)
+        Me.lblStart.Margin = New System.Windows.Forms.Padding(4, 8, 0, 8)
+        Me.lblStart.Name = "lblStart"
+        Me.lblStart.Size = New System.Drawing.Size(121, 36)
+        Me.lblStart.TabIndex = 12
+        Me.lblStart.Text = "Start"
+        '
+        'lblEnd
+        '
+        Me.lblEnd.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblEnd.AutoSize = True
+        Me.lblEnd.Location = New System.Drawing.Point(4, 331)
+        Me.lblEnd.Margin = New System.Windows.Forms.Padding(4, 8, 0, 8)
+        Me.lblEnd.Name = "lblEnd"
+        Me.lblEnd.Size = New System.Drawing.Size(121, 36)
+        Me.lblEnd.TabIndex = 14
+        Me.lblEnd.Text = "End"
+        '
+        'btnClear
+        '
+        Me.btnClear.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.btnClear.Location = New System.Drawing.Point(4, 432)
+        Me.btnClear.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnClear.Name = "btnClear"
+        Me.btnClear.Size = New System.Drawing.Size(117, 57)
+        Me.btnClear.TabIndex = 17
+        Me.btnClear.Text = "Clear"
+        Me.btnClear.UseVisualStyleBackColor = True
         '
         'UCtrlMapViewer1
         '
@@ -190,6 +247,7 @@ Partial Class Kaardirakendus
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.UCtrlMapViewer1.AutoSize = True
         Me.UCtrlMapViewer1.BackColor = System.Drawing.Color.Transparent
+        Me.UCtrlMapViewer1.CausesValidation = False
         Me.UCtrlMapViewer1.Font = New System.Drawing.Font("Segoe UI", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(186, Byte))
         Me.UCtrlMapViewer1.Location = New System.Drawing.Point(264, 9)
         Me.UCtrlMapViewer1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
@@ -225,9 +283,13 @@ Partial Class Kaardirakendus
     Friend WithEvents checkBoxStops As CheckBox
     Friend WithEvents txtLat As TextBox
     Friend WithEvents txtLongName As TextBox
-    Friend WithEvents btnDisplay As Button
-    Friend WithEvents btnChoose As Button
-    Friend WithEvents lblChooseStop As Label
+    Friend WithEvents btnStopsList As Button
     Friend WithEvents lblLat As Label
     Friend WithEvents lblLongName As Label
+    Friend WithEvents btnRoute As Button
+    Friend WithEvents txtEnd As TextBox
+    Friend WithEvents txtStart As TextBox
+    Friend WithEvents lblStart As Label
+    Friend WithEvents lblEnd As Label
+    Friend WithEvents btnClear As Button
 End Class
