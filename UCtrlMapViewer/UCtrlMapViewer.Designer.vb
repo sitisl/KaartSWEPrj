@@ -30,6 +30,7 @@ Partial Class UCtrlMapViewer
         Me.GMapControl1.AutoSize = True
         Me.GMapControl1.Bearing = 0!
         Me.GMapControl1.CanDragMap = True
+        Me.GMapControl1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.GMapControl1.EmptyTileColor = System.Drawing.Color.Navy
         Me.GMapControl1.GrayScaleMode = False
         Me.GMapControl1.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow
@@ -49,7 +50,7 @@ Partial Class UCtrlMapViewer
         Me.GMapControl1.ScaleMode = GMap.NET.WindowsForms.ScaleModes.[Integer]
         Me.GMapControl1.SelectedAreaFillColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(105, Byte), Integer), CType(CType(225, Byte), Integer))
         Me.GMapControl1.ShowTileGridLines = False
-        Me.GMapControl1.Size = New System.Drawing.Size(940, 538)
+        Me.GMapControl1.Size = New System.Drawing.Size(925, 518)
         Me.GMapControl1.TabIndex = 0
         Me.GMapControl1.Zoom = 0R
         '
@@ -59,8 +60,10 @@ Partial Class UCtrlMapViewer
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.Controls.Add(Me.GMapControl1)
         Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.MaximumSize = New System.Drawing.Size(1880, 1076)
+        Me.MinimumSize = New System.Drawing.Size(920, 510)
         Me.Name = "UCtrlMapViewer"
-        Me.Size = New System.Drawing.Size(940, 538)
+        Me.Size = New System.Drawing.Size(925, 518)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
