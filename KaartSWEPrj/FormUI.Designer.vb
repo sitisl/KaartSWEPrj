@@ -75,11 +75,11 @@ Partial Class Kaardirakendus
         Me.tblLayoutStops.Controls.Add(Me.txtEnd, 0, 7)
         Me.tblLayoutStops.Controls.Add(Me.txtStart, 0, 5)
         Me.tblLayoutStops.Controls.Add(Me.checkBoxStops, 0, 3)
-        Me.tblLayoutStops.Controls.Add(Me.txtLat, 1, 2)
-        Me.tblLayoutStops.Controls.Add(Me.txtLongName, 1, 1)
+        Me.tblLayoutStops.Controls.Add(Me.txtLat, 1, 1)
+        Me.tblLayoutStops.Controls.Add(Me.txtLongName, 1, 2)
         Me.tblLayoutStops.Controls.Add(Me.btnStopsList, 0, 0)
-        Me.tblLayoutStops.Controls.Add(Me.lblLat, 0, 2)
-        Me.tblLayoutStops.Controls.Add(Me.lblLongName, 0, 1)
+        Me.tblLayoutStops.Controls.Add(Me.lblLat, 0, 1)
+        Me.tblLayoutStops.Controls.Add(Me.lblLongName, 0, 2)
         Me.tblLayoutStops.Controls.Add(Me.lblStart, 0, 4)
         Me.tblLayoutStops.Controls.Add(Me.lblEnd, 0, 6)
         Me.tblLayoutStops.Dock = System.Windows.Forms.DockStyle.Top
@@ -115,10 +115,10 @@ Partial Class Kaardirakendus
         '
         Me.tblLayoutStops.SetColumnSpan(Me.txtEnd, 2)
         Me.txtEnd.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.txtEnd.Enabled = False
         Me.txtEnd.Location = New System.Drawing.Point(4, 380)
         Me.txtEnd.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.txtEnd.Name = "txtEnd"
+        Me.txtEnd.ReadOnly = True
         Me.txtEnd.Size = New System.Drawing.Size(242, 29)
         Me.txtEnd.TabIndex = 15
         '
@@ -126,10 +126,10 @@ Partial Class Kaardirakendus
         '
         Me.tblLayoutStops.SetColumnSpan(Me.txtStart, 2)
         Me.txtStart.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.txtStart.Enabled = False
         Me.txtStart.Location = New System.Drawing.Point(4, 276)
         Me.txtStart.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.txtStart.Name = "txtStart"
+        Me.txtStart.ReadOnly = True
         Me.txtStart.Size = New System.Drawing.Size(242, 29)
         Me.txtStart.TabIndex = 13
         '
@@ -149,7 +149,7 @@ Partial Class Kaardirakendus
         '
         Me.txtLat.Cursor = System.Windows.Forms.Cursors.Arrow
         Me.txtLat.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.txtLat.Location = New System.Drawing.Point(129, 120)
+        Me.txtLat.Location = New System.Drawing.Point(129, 68)
         Me.txtLat.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.txtLat.Name = "txtLat"
         Me.txtLat.ReadOnly = True
@@ -160,7 +160,7 @@ Partial Class Kaardirakendus
         '
         Me.txtLongName.Cursor = System.Windows.Forms.Cursors.Arrow
         Me.txtLongName.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.txtLongName.Location = New System.Drawing.Point(129, 68)
+        Me.txtLongName.Location = New System.Drawing.Point(129, 120)
         Me.txtLongName.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.txtLongName.Name = "txtLongName"
         Me.txtLongName.ReadOnly = True
@@ -185,7 +185,7 @@ Partial Class Kaardirakendus
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblLat.AutoSize = True
-        Me.lblLat.Location = New System.Drawing.Point(4, 123)
+        Me.lblLat.Location = New System.Drawing.Point(4, 71)
         Me.lblLat.Margin = New System.Windows.Forms.Padding(4, 8, 0, 8)
         Me.lblLat.Name = "lblLat"
         Me.lblLat.Size = New System.Drawing.Size(121, 36)
@@ -196,7 +196,7 @@ Partial Class Kaardirakendus
         '
         Me.lblLongName.AutoSize = True
         Me.lblLongName.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.lblLongName.Location = New System.Drawing.Point(4, 71)
+        Me.lblLongName.Location = New System.Drawing.Point(4, 123)
         Me.lblLongName.Margin = New System.Windows.Forms.Padding(4, 8, 4, 8)
         Me.lblLongName.Name = "lblLongName"
         Me.lblLongName.Size = New System.Drawing.Size(117, 36)

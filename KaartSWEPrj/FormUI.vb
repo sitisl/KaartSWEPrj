@@ -10,6 +10,8 @@ Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 
 Public Class Kaardirakendus
     'Dim choose As Boolean = True
+    Public Property startPoint As New PointLatLng
+    Public Property endPoint As New PointLatLng
 
     Private Sub Kaardirakendus_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         btnClear.Enabled = False
@@ -29,12 +31,15 @@ Public Class Kaardirakendus
         txtLongName.Text = Math.Round(longitude, 5).ToString()
     End Sub
 
-    Private Sub UCtrlMapViewer1_MarkerClicked(ByVal value As String) Handles UCtrlMapViewer1.MarkerClicked
+    Private Sub UCtrlMapViewer1_MarkerClicked(ByVal value As String, ByVal latitude As Double,
+                                              ByVal longitude As Double) Handles UCtrlMapViewer1.MarkerClicked
         btnClear.Enabled = True
         If (txtStart.Text = "") Then
             txtStart.Text = value
+            startPoint = New PointLatLng(latitude, longitude)
         Else
             txtEnd.Text = value
+            endPoint = New PointLatLng(latitude, longitude)
             btnRoute.Enabled = True
         End If
     End Sub
@@ -42,7 +47,7 @@ Public Class Kaardirakendus
     Private Sub btnRoute_Click(sender As Object, e As EventArgs) Handles btnRoute.Click
         If txtStart.Text IsNot "" And txtEnd.Text IsNot "" _
             And txtStart.Text IsNot txtEnd.Text Then
-            UCtrlMapViewer1.GetRoute(txtStart.Text, txtEnd.Text)
+            UCtrlMapViewer1.getRoute(startPoint, endPoint)
         End If
         btnRoute.Enabled = False
     End Sub
@@ -52,11 +57,11 @@ Public Class Kaardirakendus
         txtEnd.Text = ""
         btnClear.Enabled = False
         btnRoute.Enabled = False
-    End Sub
+        UCtrlMapViewer1.clearRoute()
+        checkBoxStops.Checked = False
+        checkBoxStops.Checked = True
 
-    'Private Sub txtStart_MouseClick(sender As Object, e As MouseEventArgs) Handles txtStart.MouseClick
-    '   txtStart.Focus()
-    'End Sub
+    End Sub
 
 
 
