@@ -64,12 +64,6 @@ Public Class Kaardirakendus
     End Sub
 
 
-
-
-
-
-
-
     'Private Sub GMapControl1_OnMapClick(sender As Object, e As MouseEventArgs) Handles GMapControl1.OnMapClick
     ' Get the latitude and longitude of the clicked point
     'Dim lat As Double = GMapControl1.FromLocalToLatLng(e.X, e.Y).Lat

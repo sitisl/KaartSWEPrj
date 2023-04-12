@@ -23,18 +23,18 @@ Public Class UCtrlMapViewer
         'menuPanel.Visible = False
     End Sub
 
+    ' Events to see coordinates and stops on the form
     Public Event LocationClicked(ByVal latitude As Double, ByVal longitude As Double)
     Public Event MarkerClicked(ByVal value As String, ByVal latitude As Double, ByVal longitude As Double)
 
     'The map is initialized in this sub
     Public Sub initMap()
-        GMapControl1.MapProvider = BingMapProvider.Instance
+        GMapControl1.MapProvider = BingMapProvider.Instance 'Bing for map provider
+        'API key
         BingMapProvider.Instance.ClientKey = "9uNDiiSRdZbV6ok9Ec5t~H2haoDb04SzxUDigaGoUfg~Ajj9p1O58cpXmy-Y-BbTNAF8M1Ws3HjoFHGWOaSgIYCucioMsIkP3BpBZGI3XtWr"
         GMaps.Instance.Mode = AccessMode.ServerAndCache
         GMapControl1.ShowCenter = False
         GMapControl1.Position = New GMap.NET.PointLatLng(59.43, 24.75)
-        '59.4001962726054, 24.66492181495852
-        '59,4001962726054, 24,66492181495852
         GMapControl1.MinZoom = 11
         GMapControl1.MaxZoom = 20
         GMapControl1.Zoom = 11
@@ -79,14 +79,6 @@ Public Class UCtrlMapViewer
             Dim pointLatLng As PointLatLng = GMapControl1.FromLocalToLatLng(e.X, e.Y)
             RaiseEvent LocationClicked(pointLatLng.Lat, pointLatLng.Lng)
         End If
-
-        'If (Choose()) Then
-        'btnChoose.Text = "Name"
-        'lblLongName.Text = "Longitude"
-        'lblLat.Visible = True
-        'txtLat.Visible = True
-        'Choose = False
-        'End If
     End Sub
 
     Public Function getStops(ByRef markerBitmap As Bitmap)
@@ -121,9 +113,7 @@ Public Class UCtrlMapViewer
                 End If
             End While
         End Using
-        ' Add the markers overlay to the map
-        'GMapControl1.Overlays.Add(stopsOverlay)
-        'GMapControl1.Refresh()
+
         response.Close()
         Return stopsOverlay
     End Function
@@ -133,6 +123,7 @@ Public Class UCtrlMapViewer
         ' Define the route overlay and add it to the map
 
         Dim mapOverlay As GMapOverlay = New GMapOverlay("routes")
+        'Gets route using Bing API with start and destination coordinate
         Dim route As MapRoute = GMapProviders.BingMap.GetRoute(startPoint, endPoint, False, False, 15)
 
         If route IsNot Nothing AndAlso route.Points.Count > 1 Then
@@ -142,11 +133,11 @@ Public Class UCtrlMapViewer
             mapOverlay.Routes.Add(routeOverlay)
 
             Dim startMarker As GMarkerGoogle = New GMarkerGoogle(startPoint, GMarkerGoogleType.green)
-            'startMarker.ToolTipText = "Start Point"
+            'startMarker.ToolTipText = "Start"
             mapOverlay.Markers.Add(startMarker)
 
             Dim endMarker As GMarkerGoogle = New GMarkerGoogle(endPoint, GMarkerGoogleType.red)
-            'endMarker.ToolTipText = "End Point"
+            'endMarker.ToolTipText = "End"
             mapOverlay.Markers.Add(endMarker)
 
             GMapControl1.Overlays.Clear()
@@ -183,7 +174,7 @@ Public Class UCtrlMapViewer
 End Class
 
 
-'Class for creating a modern looking tooltip for the bus stop markers
+'Class for creating a modern tooltip box for the bus stop markers
 Public Class CustomToolTip
     Inherits GMapToolTip
 
