@@ -257,6 +257,7 @@ Public Class Kaardirakendus
     End Sub
 
     Private Sub lBoxLiinid_SelectedValueChanged(sender As Object, e As EventArgs) Handles lBoxLiinid.SelectedValueChanged
+        lBoxPeatused.Items.Clear()
         SelectedLine = lBoxLiinid.SelectedItem
         LoadLineSuund(SelectedLine)
     End Sub
