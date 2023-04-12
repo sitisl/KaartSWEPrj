@@ -114,16 +114,16 @@ Partial Class Kaardirakendus
         Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.062345!))
         Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.673923!))
         Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.tblLayoutStops.Size = New System.Drawing.Size(250, 525)
+        Me.tblLayoutStops.Size = New System.Drawing.Size(250, 545)
         Me.tblLayoutStops.TabIndex = 12
         '
         'btnClear
         '
         Me.btnClear.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.btnClear.Location = New System.Drawing.Point(4, 457)
+        Me.btnClear.Location = New System.Drawing.Point(4, 473)
         Me.btnClear.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnClear.Name = "btnClear"
-        Me.btnClear.Size = New System.Drawing.Size(117, 63)
+        Me.btnClear.Size = New System.Drawing.Size(117, 67)
         Me.btnClear.TabIndex = 17
         Me.btnClear.Text = "Clear"
         Me.btnClear.UseVisualStyleBackColor = True
@@ -131,10 +131,10 @@ Partial Class Kaardirakendus
         'btnRoute
         '
         Me.btnRoute.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.btnRoute.Location = New System.Drawing.Point(129, 457)
+        Me.btnRoute.Location = New System.Drawing.Point(129, 473)
         Me.btnRoute.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnRoute.Name = "btnRoute"
-        Me.btnRoute.Size = New System.Drawing.Size(117, 63)
+        Me.btnRoute.Size = New System.Drawing.Size(117, 67)
         Me.btnRoute.TabIndex = 16
         Me.btnRoute.Text = "Go"
         Me.btnRoute.UseVisualStyleBackColor = True
@@ -143,7 +143,7 @@ Partial Class Kaardirakendus
         '
         Me.tblLayoutStops.SetColumnSpan(Me.txtEnd, 2)
         Me.txtEnd.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.txtEnd.Location = New System.Drawing.Point(4, 402)
+        Me.txtEnd.Location = New System.Drawing.Point(4, 416)
         Me.txtEnd.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.txtEnd.Name = "txtEnd"
         Me.txtEnd.ReadOnly = True
@@ -154,7 +154,7 @@ Partial Class Kaardirakendus
         '
         Me.tblLayoutStops.SetColumnSpan(Me.txtStart, 2)
         Me.txtStart.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.txtStart.Location = New System.Drawing.Point(4, 292)
+        Me.txtStart.Location = New System.Drawing.Point(4, 302)
         Me.txtStart.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.txtStart.Name = "txtStart"
         Me.txtStart.ReadOnly = True
@@ -166,9 +166,9 @@ Partial Class Kaardirakendus
         Me.checkBoxStops.AutoSize = True
         Me.tblLayoutStops.SetColumnSpan(Me.checkBoxStops, 2)
         Me.checkBoxStops.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.checkBoxStops.Location = New System.Drawing.Point(3, 180)
+        Me.checkBoxStops.Location = New System.Drawing.Point(3, 186)
         Me.checkBoxStops.Name = "checkBoxStops"
-        Me.checkBoxStops.Size = New System.Drawing.Size(244, 49)
+        Me.checkBoxStops.Size = New System.Drawing.Size(244, 51)
         Me.checkBoxStops.TabIndex = 11
         Me.checkBoxStops.Text = "Show all stops"
         Me.checkBoxStops.UseVisualStyleBackColor = True
@@ -177,7 +177,7 @@ Partial Class Kaardirakendus
         '
         Me.txtLat.Cursor = System.Windows.Forms.Cursors.Arrow
         Me.txtLat.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.txtLat.Location = New System.Drawing.Point(129, 72)
+        Me.txtLat.Location = New System.Drawing.Point(129, 74)
         Me.txtLat.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.txtLat.Name = "txtLat"
         Me.txtLat.ReadOnly = True
@@ -188,7 +188,7 @@ Partial Class Kaardirakendus
         '
         Me.txtLongName.Cursor = System.Windows.Forms.Cursors.Arrow
         Me.txtLongName.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.txtLongName.Location = New System.Drawing.Point(129, 127)
+        Me.txtLongName.Location = New System.Drawing.Point(129, 131)
         Me.txtLongName.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.txtLongName.Name = "txtLongName"
         Me.txtLongName.ReadOnly = True
@@ -202,7 +202,7 @@ Partial Class Kaardirakendus
         Me.btnStopsList.Location = New System.Drawing.Point(4, 5)
         Me.btnStopsList.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnStopsList.Name = "btnStopsList"
-        Me.btnStopsList.Size = New System.Drawing.Size(242, 57)
+        Me.btnStopsList.Size = New System.Drawing.Size(242, 59)
         Me.btnStopsList.TabIndex = 1
         Me.btnStopsList.Text = "List of stops"
         Me.btnStopsList.UseVisualStyleBackColor = True
@@ -213,10 +213,10 @@ Partial Class Kaardirakendus
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblLat.AutoSize = True
-        Me.lblLat.Location = New System.Drawing.Point(4, 75)
+        Me.lblLat.Location = New System.Drawing.Point(4, 77)
         Me.lblLat.Margin = New System.Windows.Forms.Padding(4, 8, 0, 8)
         Me.lblLat.Name = "lblLat"
-        Me.lblLat.Size = New System.Drawing.Size(121, 39)
+        Me.lblLat.Size = New System.Drawing.Size(121, 41)
         Me.lblLat.TabIndex = 2
         Me.lblLat.Text = "Latitude"
         '
@@ -224,10 +224,10 @@ Partial Class Kaardirakendus
         '
         Me.lblLongName.AutoSize = True
         Me.lblLongName.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.lblLongName.Location = New System.Drawing.Point(4, 130)
+        Me.lblLongName.Location = New System.Drawing.Point(4, 134)
         Me.lblLongName.Margin = New System.Windows.Forms.Padding(4, 8, 4, 8)
         Me.lblLongName.Name = "lblLongName"
-        Me.lblLongName.Size = New System.Drawing.Size(117, 39)
+        Me.lblLongName.Size = New System.Drawing.Size(117, 41)
         Me.lblLongName.TabIndex = 3
         Me.lblLongName.Text = "Longitude"
         '
@@ -237,10 +237,10 @@ Partial Class Kaardirakendus
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblStart.AutoSize = True
-        Me.lblStart.Location = New System.Drawing.Point(4, 240)
+        Me.lblStart.Location = New System.Drawing.Point(4, 248)
         Me.lblStart.Margin = New System.Windows.Forms.Padding(4, 8, 0, 8)
         Me.lblStart.Name = "lblStart"
-        Me.lblStart.Size = New System.Drawing.Size(121, 39)
+        Me.lblStart.Size = New System.Drawing.Size(121, 41)
         Me.lblStart.TabIndex = 12
         Me.lblStart.Text = "Start"
         '
@@ -250,10 +250,10 @@ Partial Class Kaardirakendus
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblEnd.AutoSize = True
-        Me.lblEnd.Location = New System.Drawing.Point(4, 350)
+        Me.lblEnd.Location = New System.Drawing.Point(4, 362)
         Me.lblEnd.Margin = New System.Windows.Forms.Padding(4, 8, 0, 8)
         Me.lblEnd.Name = "lblEnd"
-        Me.lblEnd.Size = New System.Drawing.Size(121, 39)
+        Me.lblEnd.Size = New System.Drawing.Size(121, 41)
         Me.lblEnd.TabIndex = 14
         Me.lblEnd.Text = "End"
         '
