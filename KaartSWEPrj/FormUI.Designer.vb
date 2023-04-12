@@ -23,7 +23,9 @@ Partial Class Kaardirakendus
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.tblLayoutForm = New System.Windows.Forms.TableLayoutPanel()
+        Me.UCtrlMapViewer1 = New UCtrlMapViewer.UCtrlMapViewer()
         Me.tblLayoutStops = New System.Windows.Forms.TableLayoutPanel()
+        Me.btnClear = New System.Windows.Forms.Button()
         Me.btnRoute = New System.Windows.Forms.Button()
         Me.txtEnd = New System.Windows.Forms.TextBox()
         Me.txtStart = New System.Windows.Forms.TextBox()
@@ -35,8 +37,6 @@ Partial Class Kaardirakendus
         Me.lblLongName = New System.Windows.Forms.Label()
         Me.lblStart = New System.Windows.Forms.Label()
         Me.lblEnd = New System.Windows.Forms.Label()
-        Me.btnClear = New System.Windows.Forms.Button()
-        Me.UCtrlMapViewer1 = New UCtrlMapViewer.UCtrlMapViewer()
         Me.tblLayoutForm.SuspendLayout()
         Me.tblLayoutStops.SuspendLayout()
         Me.SuspendLayout()
@@ -63,6 +63,23 @@ Partial Class Kaardirakendus
         Me.tblLayoutForm.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.tblLayoutForm.Size = New System.Drawing.Size(1200, 559)
         Me.tblLayoutForm.TabIndex = 14
+        '
+        'UCtrlMapViewer1
+        '
+        Me.UCtrlMapViewer1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UCtrlMapViewer1.AutoSize = True
+        Me.UCtrlMapViewer1.BackColor = System.Drawing.Color.Transparent
+        Me.UCtrlMapViewer1.CausesValidation = False
+        Me.UCtrlMapViewer1.Font = New System.Drawing.Font("Segoe UI", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(186, Byte))
+        Me.UCtrlMapViewer1.Location = New System.Drawing.Point(264, 9)
+        Me.UCtrlMapViewer1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.UCtrlMapViewer1.MaximumSize = New System.Drawing.Size(1880, 1076)
+        Me.UCtrlMapViewer1.MinimumSize = New System.Drawing.Size(920, 510)
+        Me.UCtrlMapViewer1.Name = "UCtrlMapViewer1"
+        Me.UCtrlMapViewer1.Size = New System.Drawing.Size(928, 541)
+        Me.UCtrlMapViewer1.TabIndex = 10
         '
         'tblLayoutStops
         '
@@ -97,16 +114,27 @@ Partial Class Kaardirakendus
         Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.062345!))
         Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.673923!))
         Me.tblLayoutStops.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.tblLayoutStops.Size = New System.Drawing.Size(250, 494)
+        Me.tblLayoutStops.Size = New System.Drawing.Size(250, 525)
         Me.tblLayoutStops.TabIndex = 12
+        '
+        'btnClear
+        '
+        Me.btnClear.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.btnClear.Location = New System.Drawing.Point(4, 457)
+        Me.btnClear.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.btnClear.Name = "btnClear"
+        Me.btnClear.Size = New System.Drawing.Size(117, 63)
+        Me.btnClear.TabIndex = 17
+        Me.btnClear.Text = "Clear"
+        Me.btnClear.UseVisualStyleBackColor = True
         '
         'btnRoute
         '
         Me.btnRoute.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.btnRoute.Location = New System.Drawing.Point(129, 432)
+        Me.btnRoute.Location = New System.Drawing.Point(129, 457)
         Me.btnRoute.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnRoute.Name = "btnRoute"
-        Me.btnRoute.Size = New System.Drawing.Size(117, 57)
+        Me.btnRoute.Size = New System.Drawing.Size(117, 63)
         Me.btnRoute.TabIndex = 16
         Me.btnRoute.Text = "Go"
         Me.btnRoute.UseVisualStyleBackColor = True
@@ -115,7 +143,7 @@ Partial Class Kaardirakendus
         '
         Me.tblLayoutStops.SetColumnSpan(Me.txtEnd, 2)
         Me.txtEnd.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.txtEnd.Location = New System.Drawing.Point(4, 380)
+        Me.txtEnd.Location = New System.Drawing.Point(4, 402)
         Me.txtEnd.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.txtEnd.Name = "txtEnd"
         Me.txtEnd.ReadOnly = True
@@ -126,7 +154,7 @@ Partial Class Kaardirakendus
         '
         Me.tblLayoutStops.SetColumnSpan(Me.txtStart, 2)
         Me.txtStart.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.txtStart.Location = New System.Drawing.Point(4, 276)
+        Me.txtStart.Location = New System.Drawing.Point(4, 292)
         Me.txtStart.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.txtStart.Name = "txtStart"
         Me.txtStart.ReadOnly = True
@@ -138,9 +166,9 @@ Partial Class Kaardirakendus
         Me.checkBoxStops.AutoSize = True
         Me.tblLayoutStops.SetColumnSpan(Me.checkBoxStops, 2)
         Me.checkBoxStops.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.checkBoxStops.Location = New System.Drawing.Point(3, 170)
+        Me.checkBoxStops.Location = New System.Drawing.Point(3, 180)
         Me.checkBoxStops.Name = "checkBoxStops"
-        Me.checkBoxStops.Size = New System.Drawing.Size(244, 46)
+        Me.checkBoxStops.Size = New System.Drawing.Size(244, 49)
         Me.checkBoxStops.TabIndex = 11
         Me.checkBoxStops.Text = "Show all stops"
         Me.checkBoxStops.UseVisualStyleBackColor = True
@@ -149,7 +177,7 @@ Partial Class Kaardirakendus
         '
         Me.txtLat.Cursor = System.Windows.Forms.Cursors.Arrow
         Me.txtLat.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.txtLat.Location = New System.Drawing.Point(129, 68)
+        Me.txtLat.Location = New System.Drawing.Point(129, 72)
         Me.txtLat.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.txtLat.Name = "txtLat"
         Me.txtLat.ReadOnly = True
@@ -160,7 +188,7 @@ Partial Class Kaardirakendus
         '
         Me.txtLongName.Cursor = System.Windows.Forms.Cursors.Arrow
         Me.txtLongName.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.txtLongName.Location = New System.Drawing.Point(129, 120)
+        Me.txtLongName.Location = New System.Drawing.Point(129, 127)
         Me.txtLongName.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.txtLongName.Name = "txtLongName"
         Me.txtLongName.ReadOnly = True
@@ -174,7 +202,7 @@ Partial Class Kaardirakendus
         Me.btnStopsList.Location = New System.Drawing.Point(4, 5)
         Me.btnStopsList.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.btnStopsList.Name = "btnStopsList"
-        Me.btnStopsList.Size = New System.Drawing.Size(242, 53)
+        Me.btnStopsList.Size = New System.Drawing.Size(242, 57)
         Me.btnStopsList.TabIndex = 1
         Me.btnStopsList.Text = "List of stops"
         Me.btnStopsList.UseVisualStyleBackColor = True
@@ -185,10 +213,10 @@ Partial Class Kaardirakendus
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblLat.AutoSize = True
-        Me.lblLat.Location = New System.Drawing.Point(4, 71)
+        Me.lblLat.Location = New System.Drawing.Point(4, 75)
         Me.lblLat.Margin = New System.Windows.Forms.Padding(4, 8, 0, 8)
         Me.lblLat.Name = "lblLat"
-        Me.lblLat.Size = New System.Drawing.Size(121, 36)
+        Me.lblLat.Size = New System.Drawing.Size(121, 39)
         Me.lblLat.TabIndex = 2
         Me.lblLat.Text = "Latitude"
         '
@@ -196,10 +224,10 @@ Partial Class Kaardirakendus
         '
         Me.lblLongName.AutoSize = True
         Me.lblLongName.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.lblLongName.Location = New System.Drawing.Point(4, 123)
+        Me.lblLongName.Location = New System.Drawing.Point(4, 130)
         Me.lblLongName.Margin = New System.Windows.Forms.Padding(4, 8, 4, 8)
         Me.lblLongName.Name = "lblLongName"
-        Me.lblLongName.Size = New System.Drawing.Size(117, 36)
+        Me.lblLongName.Size = New System.Drawing.Size(117, 39)
         Me.lblLongName.TabIndex = 3
         Me.lblLongName.Text = "Longitude"
         '
@@ -209,10 +237,10 @@ Partial Class Kaardirakendus
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblStart.AutoSize = True
-        Me.lblStart.Location = New System.Drawing.Point(4, 227)
+        Me.lblStart.Location = New System.Drawing.Point(4, 240)
         Me.lblStart.Margin = New System.Windows.Forms.Padding(4, 8, 0, 8)
         Me.lblStart.Name = "lblStart"
-        Me.lblStart.Size = New System.Drawing.Size(121, 36)
+        Me.lblStart.Size = New System.Drawing.Size(121, 39)
         Me.lblStart.TabIndex = 12
         Me.lblStart.Text = "Start"
         '
@@ -222,40 +250,12 @@ Partial Class Kaardirakendus
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblEnd.AutoSize = True
-        Me.lblEnd.Location = New System.Drawing.Point(4, 331)
+        Me.lblEnd.Location = New System.Drawing.Point(4, 350)
         Me.lblEnd.Margin = New System.Windows.Forms.Padding(4, 8, 0, 8)
         Me.lblEnd.Name = "lblEnd"
-        Me.lblEnd.Size = New System.Drawing.Size(121, 36)
+        Me.lblEnd.Size = New System.Drawing.Size(121, 39)
         Me.lblEnd.TabIndex = 14
         Me.lblEnd.Text = "End"
-        '
-        'btnClear
-        '
-        Me.btnClear.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.btnClear.Location = New System.Drawing.Point(4, 432)
-        Me.btnClear.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.btnClear.Name = "btnClear"
-        Me.btnClear.Size = New System.Drawing.Size(117, 57)
-        Me.btnClear.TabIndex = 17
-        Me.btnClear.Text = "Clear"
-        Me.btnClear.UseVisualStyleBackColor = True
-        '
-        'UCtrlMapViewer1
-        '
-        Me.UCtrlMapViewer1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.UCtrlMapViewer1.AutoSize = True
-        Me.UCtrlMapViewer1.BackColor = System.Drawing.Color.Transparent
-        Me.UCtrlMapViewer1.CausesValidation = False
-        Me.UCtrlMapViewer1.Font = New System.Drawing.Font("Segoe UI", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(186, Byte))
-        Me.UCtrlMapViewer1.Location = New System.Drawing.Point(264, 9)
-        Me.UCtrlMapViewer1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.UCtrlMapViewer1.MaximumSize = New System.Drawing.Size(1880, 1076)
-        Me.UCtrlMapViewer1.MinimumSize = New System.Drawing.Size(920, 510)
-        Me.UCtrlMapViewer1.Name = "UCtrlMapViewer1"
-        Me.UCtrlMapViewer1.Size = New System.Drawing.Size(928, 541)
-        Me.UCtrlMapViewer1.TabIndex = 10
         '
         'Kaardirakendus
         '
