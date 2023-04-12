@@ -6,9 +6,126 @@ Imports System.IO
 Imports System.Net
 Imports System.Windows
 
+Imports MySql.Data.MySqlClient
+
 Public Class Kaardirakendus
+    Private Const CONN_STRING As String = "server=localhost;userid=root;password='1234';database=kaardidb"
+    'Private Const CONN_STRING As String = "server=b4jkjdcm9aadnnrqpgms-mysql.services.clever-cloud.com;userid=utkgha0in26npszi;password='AnYMkrGnd7P3qce4HZz7';database=b4jkjdcm9aadnnrqpgms"
+    Dim conn As MySqlConnection
+    Dim Suund As String
+    Dim LinkHalf As String
+    Dim SelectedLine As String
+    Dim SelectedStop As String
+    Dim SelectedStopId As String
+
     'Algne versioon
+    Private Sub LoadLines()
+        conn = New MySqlConnection
+        conn.ConnectionString = CONN_STRING
+
+        Try
+            conn.Open()
+            Dim query As String = "select Line from liinid"
+            Dim cmd As New MySqlCommand(query, conn)
+            Dim reader As MySqlDataReader = cmd.ExecuteReader()
+            While reader.Read()
+                lBoxLiinid.Items.Add(reader.GetString(0))
+            End While
+            reader.Close()
+            conn.Close()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+            conn.Close()
+        End Try
+    End Sub
+
+    Private Sub LoadLineStops(Suund As String)
+        lBoxPeatused.Items.Clear()
+        If lBoxPeatused.Visible = False Then
+            lBoxPeatused.Visible = True
+        End If
+        Dim asi As String = SelectedLine
+        conn = New MySqlConnection
+        conn.ConnectionString = CONN_STRING
+
+        Try
+            conn.Open()
+            Dim query As String = "select * from koikpeatused where liin = '" & asi & "' And suund ='" & Suund & "';"
+            Dim cmd As New MySqlCommand(query, conn)
+            Dim reader As MySqlDataReader = cmd.ExecuteReader()
+            While reader.Read()
+                lBoxPeatused.Items.Add(reader.GetString(2))
+            End While
+            reader.Close()
+            conn.Close()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+            conn.Close()
+        End Try
+    End Sub
+
+    Private Sub LoadLineSuund(Liin As String)
+        btnAB.Visible = True
+        btnBA.Visible = True
+
+        btnAB.Text = Nothing
+        btnBA.Text = Nothing
+
+        conn = New MySqlConnection
+        conn.ConnectionString = CONN_STRING
+
+        Try
+            conn.Open()
+            Dim query As String = "select `a-b`,`b-a` from liinid where Line = '" & Liin & "';"
+            Dim cmd As New MySqlCommand(query, conn)
+            Dim reader As MySqlDataReader = cmd.ExecuteReader()
+
+            While reader.Read()
+                btnAB.Text = reader.GetString(0)
+                btnBA.Text = reader.GetString(1)
+            End While
+            reader.Close()
+            conn.Close()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+            conn.Close()
+        End Try
+
+    End Sub
+
+    Private Sub LoadLineLink(Suund As String)
+        conn = New MySqlConnection
+        conn.ConnectionString = CONN_STRING
+        Dim SelectElement As String
+        If Suund = "a-b" Then
+            SelectElement = "link_a-b"
+        ElseIf Suund = "b-a" Then
+            SelectElement = "link_b-a"
+        Else
+            SelectElement = Nothing
+            Exit Sub
+        End If
+        Try
+            conn.Open()
+            Dim query As String = "select `" & SelectElement & "` from liinid Where line = '" & SelectedLine & "';"
+            'MsgBox(query)
+            Dim cmd As New MySqlCommand(query, conn)
+            Dim reader As MySqlDataReader = cmd.ExecuteReader()
+
+            While reader.Read()
+                LinkHalf = reader.GetString(0)
+
+            End While
+            reader.Close()
+            conn.Close()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+            conn.Close()
+        End Try
+    End Sub
+
     Private Sub Kaardirakendus_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
         GMapControl1.MapProvider = GoogleMapProvider.Instance
         GMaps.Instance.Mode = AccessMode.ServerAndCache
         GMapControl1.ShowCenter = False
@@ -17,14 +134,6 @@ Public Class Kaardirakendus
         GMapControl1.MinZoom = 5
         GMapControl1.MaxZoom = 100
         GMapControl1.Zoom = 10
-    End Sub
-
-    Private Sub GMapControl1_Load(sender As Object, e As EventArgs) Handles GMapControl1.Load
-
-    End Sub
-
-    Private Sub GMapControl1_MouseMove(sender As Object, e As MouseEventArgs) Handles GMapControl1.MouseMove
-        'GMapControl1.Mouse
     End Sub
 
     Private Sub GMapControl1_OnMapClick(sender As Object, e As MouseEventArgs) Handles GMapControl1.OnMapClick
@@ -126,5 +235,57 @@ Public Class Kaardirakendus
         GMapControl1.Overlays.Add(markers)
         GMapControl1.Refresh()
     End Sub
+
+    Private Sub btnShowLines_Click(sender As Object, e As EventArgs) Handles btnShowLines.Click
+        If lBoxPeatused.Visible = True Then
+            Exit Sub
+        End If
+        lBoxLiinid.Visible = True
+        LoadLines()
+    End Sub
+
+    Private Sub btnAB_Click(sender As Object, e As EventArgs) Handles btnAB.Click
+        Suund = "a-b"
+        LoadLineLink(Suund)
+        LoadLineStops(Suund)
+    End Sub
+
+    Private Sub btnBA_Click(sender As Object, e As EventArgs) Handles btnBA.Click
+        Suund = "b-a"
+        LoadLineLink(Suund)
+        LoadLineStops(Suund)
+    End Sub
+
+    Private Sub lBoxLiinid_SelectedValueChanged(sender As Object, e As EventArgs) Handles lBoxLiinid.SelectedValueChanged
+        SelectedLine = lBoxLiinid.SelectedItem
+        LoadLineSuund(SelectedLine)
+    End Sub
+
+    Private Function lBoxPeatused_SelectedValueChanged(sender As Object, e As EventArgs) Handles lBoxPeatused.SelectedIndexChanged
+        SelectedStop = lBoxPeatused.SelectedItem
+        'MsgBox(SelectedLine & " " & SelectedStop & " " & Suund & " " & LinkHalf)
+        conn = New MySqlConnection
+        conn.ConnectionString = CONN_STRING
+        Dim PeatuseID As String = Nothing
+
+        Try
+            conn.Open()
+            Dim query As String = "select PeatuseID from koikpeatused where PeatuseNimi = '" & SelectedStop & "' And Liin ='" & SelectedLine & "';"
+            Dim cmd As New MySqlCommand(query, conn)
+            Dim reader As MySqlDataReader = cmd.ExecuteReader()
+            While reader.Read()
+                PeatuseID = reader.GetString(0)
+            End While
+            reader.Close()
+            conn.Close()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+            conn.Close()
+        End Try
+        Dim LinkFull As String = LinkHalf & "/" & PeatuseID
+        tBoxLink.Visible = True
+        tBoxLink.Text = LinkFull
+        Return LinkFull
+    End Function
 
 End Class
