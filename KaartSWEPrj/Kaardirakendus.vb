@@ -7,6 +7,7 @@ Imports System.Net
 Imports System.Windows
 
 Imports MySql.Data.MySqlClient
+Imports System.Data.SQLite
 
 Public Class Kaardirakendus
     Private Const CONN_STRING As String = "server=localhost;userid=root;password='1234';database=kaardidb"
