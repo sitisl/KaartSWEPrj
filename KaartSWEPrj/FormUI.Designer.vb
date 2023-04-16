@@ -75,7 +75,6 @@ Partial Class Kaardirakendus
         Me.UCtrlMapViewer1.Font = New System.Drawing.Font("Segoe UI", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(186, Byte))
         Me.UCtrlMapViewer1.Location = New System.Drawing.Point(264, 9)
         Me.UCtrlMapViewer1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.UCtrlMapViewer1.MaximumSize = New System.Drawing.Size(1880, 1076)
         Me.UCtrlMapViewer1.MinimumSize = New System.Drawing.Size(920, 510)
         Me.UCtrlMapViewer1.Name = "UCtrlMapViewer1"
         Me.UCtrlMapViewer1.Size = New System.Drawing.Size(928, 541)
