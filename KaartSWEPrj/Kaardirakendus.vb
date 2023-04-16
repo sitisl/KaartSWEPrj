@@ -17,7 +17,17 @@ Public Class Kaardirakendus
     Private Sub btnShowLines_Click(sender As Object, e As EventArgs) Handles btnShowLines.Click
 
         Try
-            con = New SQLiteConnection("Data Source=C://Users//S11M//Desktop//sqliteDB//mapsdb.db;Version=3;")
+            Dim dbFilePath As String = Path.Combine(Application.StartupPath, "mapsdb.db")
+            If File.Exists(dbFilePath) Then
+                con = New SQLiteConnection($"Data Source={dbFilePath};Version=3;")
+            Else
+                Dim dbStream As Stream = New MemoryStream(My.Resources.mapsdb)
+                Using fileStream As FileStream = File.Create(dbFilePath)
+                    dbStream.CopyTo(fileStream)
+                End Using
+                con = New SQLiteConnection($"Data Source={dbFilePath};Version=3;")
+            End If
+
             con.Open()
             cmd = New SQLiteCommand("SELECT Line FROM liinid", con)
             Dim reader As SQLiteDataReader = cmd.ExecuteReader()
@@ -31,7 +41,7 @@ Public Class Kaardirakendus
             End While
 
         Catch ex As Exception
-            MsgBox(ex)
+            MessageBox.Show(ex.Message)
         Finally
             con.Close()
         End Try
