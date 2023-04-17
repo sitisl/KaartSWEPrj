@@ -17,7 +17,7 @@ Public Class Kaardirakendus
         btnClear.Enabled = False
         btnRoute.Enabled = False
         UCtrlMapViewer1.initMap()
-
+        Me.TransparencyKey = Color.Empty
     End Sub
 
     Private Sub UCtrlMapViewer1_LocationClicked(ByVal latitude As Double, ByVal longitude As Double) _

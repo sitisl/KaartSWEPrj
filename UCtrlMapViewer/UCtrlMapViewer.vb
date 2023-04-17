@@ -1,7 +1,9 @@
 ﻿Imports System.Drawing.Drawing2D
+Imports System.Drawing.Imaging
 Imports System.Globalization
 Imports System.IO
 Imports System.Net
+Imports System.Windows.Forms.VisualStyles
 Imports GMap.NET
 Imports GMap.NET.MapProviders
 Imports GMap.NET.WindowsForms
@@ -13,43 +15,54 @@ Imports GMap.NET.WindowsForms.Markers
 ' This class realizes the functionality of the map viewer graphic component
 Public Class UCtrlMapViewer
 
-
     Private Sub UCtrlMapViewer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' This code will run when the user control is loaded into a form or another container control
-        '' Adjust the position of the button so it stays within the bounds of the form
-        Panel1.Controls.Remove(CheckBox1)
-        Panel1.Controls.Remove(CheckBox2)
-        Panel1.Controls.Remove(CheckBox3)
-        Panel1.Controls.Remove(CheckBox4)
-        Dim padding As Integer = 10 ' Padding from the right and top edges of the form
-        'Dim menuSize As Size = Panel1.Size
-        Dim menuLocation As New Point(Me.ClientSize.Width - Button1.Width - padding, padding)
-        Panel1.Location = menuLocation
-        'menuPanel.Visible = False
-        Panel1.Size = Button1.Size
-        Button1.Location = New Point(Panel1.Width - Button1.Width, 0)
-        CheckBox1.Checked = True
+        panelLayers_Init()
+        cbStops.Checked = True
     End Sub
 
-
-
+    Private Sub panelLayers_Init()
+        panelLayers.Parent = gMap1
+        panelLayers.BackColor = Color.Transparent
+        panelLayers.Controls.Clear()
+        panelLayers.Controls.Add(btnLayers)
+        Dim padding As Integer = 10 ' Padding from the right and top edges of the form
+        Dim menuLocation As New Point(Me.ClientSize.Width - btnLayers.Width - padding, padding)
+        panelLayers.Location = menuLocation
+        panelLayers.Size = btnLayers.Size
+        btnLayers.Location = New Point(panelLayers.Width - btnLayers.Width, 0)
+    End Sub
+    Private Sub btnLayers_Paint(sender As Object, e As PaintEventArgs) Handles btnLayers.Paint
+        Dim originalImage As Image = My.Resources.layers_white
+        ' Create a smaller copy of the original image
+        Dim imageSize As New Size(32, 32)
+        Dim resizedImage As New Bitmap(originalImage, imageSize)
+        ' Calculate the target location
+        Dim targetLocation As New Point((btnLayers.Width - imageSize.Width) \ 2, (btnLayers.Height - imageSize.Height) \ 2)
+        ' Draw the image in the target location
+        e.Graphics.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
+        e.Graphics.DrawImage(resizedImage, targetLocation)
+    End Sub
 
     ' Events to see coordinates and stops on the form
     Public Event LocationClicked(ByVal latitude As Double, ByVal longitude As Double)
     Public Event MarkerClicked(ByVal value As String, ByVal latitude As Double, ByVal longitude As Double)
 
-    'The map is initialized in this sub
     Public Sub initMap()
-        GMapControl1.MapProvider = BingMapProvider.Instance 'Bing for map provider
+        initializeMap()
+    End Sub
+    'The map is initialized in this sub
+    Private Sub initializeMap()
+        gMap1.MapProvider = BingMapProvider.Instance 'Bing for map provider
         'API key
         BingMapProvider.Instance.ClientKey = "9uNDiiSRdZbV6ok9Ec5t~H2haoDb04SzxUDigaGoUfg~Ajj9p1O58cpXmy-Y-BbTNAF8M1Ws3HjoFHGWOaSgIYCucioMsIkP3BpBZGI3XtWr"
         GMaps.Instance.Mode = AccessMode.ServerAndCache
-        GMapControl1.ShowCenter = False
-        GMapControl1.Position = New GMap.NET.PointLatLng(59.43, 24.75)
-        GMapControl1.MinZoom = 11
-        GMapControl1.MaxZoom = 20
-        GMapControl1.Zoom = 11
-        GMapControl1.DragButton = MouseButtons.Left
+        gMap1.ShowCenter = False
+        gMap1.Position = New GMap.NET.PointLatLng(59.43, 24.75)
+        gMap1.MinZoom = 11
+        gMap1.MaxZoom = 20
+        gMap1.Zoom = 11
+        gMap1.DragButton = MouseButtons.Left
         'GMapControl1.BoundsOfMap = New RectLatLng(59.43, 24.75, 0.1, 0.1)
     End Sub
 
@@ -59,13 +72,12 @@ Public Class UCtrlMapViewer
 
     Public Sub showHideStops(ByRef isChecked As Boolean, ByRef stopsOverlay As GMapOverlay)
         If (isChecked = True) Then
-            GMapControl1.Overlays.Add(stopsOverlay)
-            GMapControl1.Refresh()
+            gMap1.Overlays.Add(stopsOverlay)
+            gMap1.Refresh()
         Else
-            GMapControl1.Overlays.Clear()
-            GMapControl1.Refresh()
+            gMap1.Overlays.Clear()
+            gMap1.Refresh()
         End If
-
     End Sub
 
     Public Function drawMarker()
@@ -83,11 +95,11 @@ Public Class UCtrlMapViewer
         Return markerBitmap
     End Function
 
-    Public Sub GMapControl1_MouseDown(sender As Object, e As MouseEventArgs) _
-        Handles GMapControl1.MouseDown
+    Public Sub gMap1_MouseDown(sender As Object, e As MouseEventArgs) _
+        Handles gMap1.MouseDown
         If e.Button = MouseButtons.Right Then
             ' Get the latitude and longitude of the clicked point
-            Dim pointLatLng As PointLatLng = GMapControl1.FromLocalToLatLng(e.X, e.Y)
+            Dim pointLatLng As PointLatLng = gMap1.FromLocalToLatLng(e.X, e.Y)
             RaiseEvent LocationClicked(pointLatLng.Lat, pointLatLng.Lng)
         End If
     End Sub
@@ -119,12 +131,11 @@ Public Class UCtrlMapViewer
                     toolTip.Offset = New Point(5, -markerBitmap.Height / 2)
                     marker.ToolTip = toolTip
                     marker.ToolTipText = stopName
-                    GMapControl1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
+                    gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
                     stopsOverlay.Markers.Add(marker)               'without refreshing in the beginning
                 End If
             End While
         End Using
-
         response.Close()
         Return stopsOverlay
     End Function
@@ -132,7 +143,6 @@ Public Class UCtrlMapViewer
     Public Sub getRoute(startPoint As PointLatLng, endPoint As PointLatLng)
         showHideStops(False, getStops(drawMarker()))
         ' Define the route overlay and add it to the map
-
         Dim mapOverlay As GMapOverlay = New GMapOverlay("routes")
         'Gets route using Bing API with start and destination coordinate
         Dim route As MapRoute = GMapProviders.BingMap.GetRoute(startPoint, endPoint, False, False, 15)
@@ -151,77 +161,84 @@ Public Class UCtrlMapViewer
             'endMarker.ToolTipText = "End"
             mapOverlay.Markers.Add(endMarker)
 
-            GMapControl1.Overlays.Clear()
-            GMapControl1.Overlays.Add(mapOverlay)
+            gMap1.Overlays.Clear()
+            gMap1.Overlays.Add(mapOverlay)
 
-            GMapControl1.ZoomAndCenterRoute(routeOverlay)
+            gMap1.ZoomAndCenterRoute(routeOverlay)
         Else
             MessageBox.Show("No route found.")
         End If
-
     End Sub
 
     Public Sub clearRoute()
-        GMapControl1.Overlays.Clear()
-        GMapControl1.Refresh()
-        CheckBox1.Checked = False
-        CheckBox1.Checked = True
+        gMap1.Overlays.Clear()
+        gMap1.Refresh()
+        cbStops.Checked = False
+        cbStops.Checked = True
     End Sub
 
-
-    Private Sub GMapControl1_OnMarkerClick(item As GMapMarker, e As MouseEventArgs) _
-        Handles GMapControl1.OnMarkerClick
+    Private Sub gMap1_OnMarkerClick(item As GMapMarker, e As MouseEventArgs) _
+        Handles gMap1.OnMarkerClick
         Dim marker As GMarkerGoogle = TryCast(item, GMarkerGoogle)
         If marker IsNot Nothing Then
             RaiseEvent MarkerClicked(marker.ToolTipText, item.Position.Lat, item.Position.Lng)
         End If
     End Sub
+
     Private isResized As Boolean = False
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        Panel1.Controls.Remove(Button1)
-        Panel1.Hide()
-        'Panel1.Location = New Point(Me.ClientSize.Width - Panel1.Width - 10, 10)
-        Panel1.Width = CheckBox1.Width * 1.4
-        Panel1.Height = CheckBox1.Height * 7
-        'Panel1.AutoSize = True
-        Panel1.Left = Me.ClientSize.Width - Panel1.Width - 10
-        Panel1.Controls.Add(CheckBox1)
-        Panel1.Controls.Add(CheckBox2)
-        Panel1.Controls.Add(CheckBox3)
-        Panel1.Controls.Add(CheckBox4)
-        CheckBox1.Location = New Point(10, 10)
-        CheckBox2.Location = New Point(10, 35)
-        CheckBox3.Location = New Point(10, 60)
-        CheckBox4.Location = New Point(10, 85)
-        Panel1.Show()
+    Private Sub btnLayers_MouseEnter(sender As Object, e As EventArgs) Handles btnLayers.MouseEnter
+        panelLayers.Hide()
+        panelLayers.Controls.Clear()
+        panelLayers.Cursor = Cursors.Arrow
+        panelLayers.Width = cbStops.Width * 1.4
+        panelLayers.Height = cbStops.Height * 6
+        panelLayers.Left = Me.ClientSize.Width - panelLayers.Width - 10
+        panelLayers.Controls.Add(cbStops)
+        panelLayers.Controls.Add(cbBuses)
+        panelLayers.Controls.Add(cbTram)
+        panelLayers.Controls.Add(cbTroll)
+        cbStops.Location = New Point(10, 10)
+        cbBuses.Location = New Point(10, 35)
+        cbTram.Location = New Point(10, 60)
+        cbTroll.Location = New Point(10, 85)
+        panelLayers.Show()
         isResized = True
     End Sub
 
-    Private Sub Panel1_MouseLeave(sender As Object, e As EventArgs) Handles Panel1.MouseLeave
-        Dim panelBounds As Rectangle = Panel1.RectangleToScreen(Panel1.ClientRectangle)
+    Private Sub panelLayers_MouseLeave(sender As Object, e As EventArgs) Handles panelLayers.MouseLeave
+        Dim panelBounds As Rectangle = panelLayers.RectangleToScreen(panelLayers.ClientRectangle)
         If Not panelBounds.Contains(Control.MousePosition) Then
-            Panel1.Controls.Remove(CheckBox1)
-            Panel1.Controls.Remove(CheckBox2)
-            Panel1.Controls.Remove(CheckBox3)
-            Panel1.Controls.Remove(CheckBox4)
-            Panel1.Controls.Add(Button1)
-            'Panel1.AutoSize = False
+            panelLayers.Hide()
+            panelLayers.Controls.Clear()
+            panelLayers.Controls.Add(btnLayers)
             Dim padding As Integer = 10 ' Padding from the right and top edges of the form
-            'Dim menuSize As Size = Panel1.Size
-            Dim menuLocation As New Point(Me.ClientSize.Width - Button1.Width - padding, padding)
-            Panel1.Location = menuLocation
-            'menuPanel.Visible = False
-            Panel1.Size = Button1.Size
-            Button1.Location = New Point(Panel1.Width - Button1.Width, 0)
-            'Panel1.Size = Button1.Size
+            Dim menuLocation As New Point(Me.ClientSize.Width - btnLayers.Width - padding, padding)
+            panelLayers.Location = menuLocation
+            panelLayers.Size = btnLayers.Size
+            btnLayers.Location = New Point(panelLayers.Width - btnLayers.Width, 0)
             isResized = False
-            'Button1.Location = New Point(126 - Button1.Width, 0)
+            panelLayers.Show()
         End If
     End Sub
 
-    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox1.CheckedChanged
-        showHideStops(CheckBox1.Checked, getStops(drawMarker()))
+
+    Private Sub cbStops_CheckedChanged(sender As Object, e As EventArgs) Handles cbStops.CheckedChanged
+        showHideStops(cbStops.Checked, getStops(drawMarker()))
     End Sub
+
+
+    Private Sub panelLayers_Paint(sender As Object, e As PaintEventArgs) Handles panelLayers.Paint
+        Dim g As Graphics = e.Graphics
+        Dim rect As Rectangle = panelLayers.ClientRectangle
+        Dim padding As Integer = 5
+        Dim path As New GraphicsPath()
+        path.AddRectangle(rect)
+        ' Use a gradient brush to fill the panel with a modern color scheme
+        Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+        g.FillPath(brush, path)
+        g.DrawPath(New Pen(Color.FromArgb(255, 15, 15, 15), 1), path)
+    End Sub
+
 End Class
 
 

@@ -251,7 +251,7 @@ Partial Class Kaardirakendus
         Me.MinimumSize = New System.Drawing.Size(1220, 600)
         Me.Name = "Kaardirakendus"
         Me.Text = "Ühistransport"
-        Me.TransparencyKey = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.TransparencyKey = System.Drawing.Color.White
         Me.tblLayoutForm.ResumeLayout(False)
         Me.tblLayoutForm.PerformLayout()
         Me.tblLayoutStops.ResumeLayout(False)
