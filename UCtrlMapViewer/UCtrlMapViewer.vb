@@ -15,6 +15,9 @@ Imports GMap.NET.WindowsForms.Markers
 ' This class realizes the functionality of the map viewer graphic component
 Public Class UCtrlMapViewer
 
+    ' Flag for checking if the layerPanel is resized
+    Private isResized As Boolean = False
+
     Private Sub UCtrlMapViewer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' This code will run when the user control is loaded into a form or another container control
         panelLayers_Init()
@@ -185,7 +188,7 @@ Public Class UCtrlMapViewer
         End If
     End Sub
 
-    Private isResized As Boolean = False
+
     Private Sub btnLayers_MouseEnter(sender As Object, e As EventArgs) Handles btnLayers.MouseEnter
         panelLayers.Hide()
         panelLayers.Controls.Clear()
