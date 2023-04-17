@@ -16,13 +16,8 @@ Public Class Kaardirakendus
     Private Sub Kaardirakendus_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         btnClear.Enabled = False
         btnRoute.Enabled = False
-        checkBoxStops.Checked = True
         UCtrlMapViewer1.initMap()
 
-    End Sub
-
-    Private Sub checkBoxStops_CheckedChanged(sender As Object, e As EventArgs) Handles checkBoxStops.CheckedChanged
-        UCtrlMapViewer1.showHideStops(checkBoxStops.Checked, UCtrlMapViewer1.getStops(UCtrlMapViewer1.drawMarker()))
     End Sub
 
     Private Sub UCtrlMapViewer1_LocationClicked(ByVal latitude As Double, ByVal longitude As Double) _
@@ -58,9 +53,6 @@ Public Class Kaardirakendus
         btnClear.Enabled = False
         btnRoute.Enabled = False
         UCtrlMapViewer1.clearRoute()
-        checkBoxStops.Checked = False
-        checkBoxStops.Checked = True
-
     End Sub
 
 

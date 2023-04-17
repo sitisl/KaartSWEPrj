@@ -12,16 +12,27 @@ Imports GMap.NET.WindowsForms.Markers
 
 ' This class realizes the functionality of the map viewer graphic component
 Public Class UCtrlMapViewer
+
+
     Private Sub UCtrlMapViewer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' This code will run when the user control is loaded into a form or another container control
-
         '' Adjust the position of the button so it stays within the bounds of the form
+        Panel1.Controls.Remove(CheckBox1)
+        Panel1.Controls.Remove(CheckBox2)
+        Panel1.Controls.Remove(CheckBox3)
+        Panel1.Controls.Remove(CheckBox4)
         Dim padding As Integer = 10 ' Padding from the right and top edges of the form
-        Dim menuSize As Size = btnLayer.Size
-        Dim menuLocation As New Point(Me.ClientSize.Width - btnLayer.Width - padding, padding)
-        btnLayer.Location = menuLocation
+        'Dim menuSize As Size = Panel1.Size
+        Dim menuLocation As New Point(Me.ClientSize.Width - Button1.Width - padding, padding)
+        Panel1.Location = menuLocation
         'menuPanel.Visible = False
+        Panel1.Size = Button1.Size
+        Button1.Location = New Point(Panel1.Width - Button1.Width, 0)
+        CheckBox1.Checked = True
     End Sub
+
+
+
 
     ' Events to see coordinates and stops on the form
     Public Event LocationClicked(ByVal latitude As Double, ByVal longitude As Double)
@@ -153,16 +164,10 @@ Public Class UCtrlMapViewer
     Public Sub clearRoute()
         GMapControl1.Overlays.Clear()
         GMapControl1.Refresh()
+        CheckBox1.Checked = False
+        CheckBox1.Checked = True
     End Sub
 
-    'Public Sub createMarker(point As PointLatLng)
-    'Dim routeMarkOverlay As New GMapOverlay("routeMarkOverlay")
-    'Dim marker As New GMarkerGoogle(point, GMarkerGoogleType.red_dot)
-    '   routeMarkOverlay.Markers.Add(marker)
-    '  GMapControl1.Overlays.Add(routeMarkOverlay)
-    ' GMapControl1.UpdateMarkerLocalPosition(marker)
-    'GMapControl1.Refresh()
-    'End Sub
 
     Private Sub GMapControl1_OnMarkerClick(item As GMapMarker, e As MouseEventArgs) _
         Handles GMapControl1.OnMarkerClick
@@ -170,6 +175,52 @@ Public Class UCtrlMapViewer
         If marker IsNot Nothing Then
             RaiseEvent MarkerClicked(marker.ToolTipText, item.Position.Lat, item.Position.Lng)
         End If
+    End Sub
+    Private isResized As Boolean = False
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Panel1.Controls.Remove(Button1)
+        Panel1.Hide()
+        'Panel1.Location = New Point(Me.ClientSize.Width - Panel1.Width - 10, 10)
+        Panel1.Width = CheckBox1.Width * 1.4
+        Panel1.Height = CheckBox1.Height * 7
+        'Panel1.AutoSize = True
+        Panel1.Left = Me.ClientSize.Width - Panel1.Width - 10
+        Panel1.Controls.Add(CheckBox1)
+        Panel1.Controls.Add(CheckBox2)
+        Panel1.Controls.Add(CheckBox3)
+        Panel1.Controls.Add(CheckBox4)
+        CheckBox1.Location = New Point(10, 10)
+        CheckBox2.Location = New Point(10, 35)
+        CheckBox3.Location = New Point(10, 60)
+        CheckBox4.Location = New Point(10, 85)
+        Panel1.Show()
+        isResized = True
+    End Sub
+
+    Private Sub Panel1_MouseLeave(sender As Object, e As EventArgs) Handles Panel1.MouseLeave
+        Dim panelBounds As Rectangle = Panel1.RectangleToScreen(Panel1.ClientRectangle)
+        If Not panelBounds.Contains(Control.MousePosition) Then
+            Panel1.Controls.Remove(CheckBox1)
+            Panel1.Controls.Remove(CheckBox2)
+            Panel1.Controls.Remove(CheckBox3)
+            Panel1.Controls.Remove(CheckBox4)
+            Panel1.Controls.Add(Button1)
+            'Panel1.AutoSize = False
+            Dim padding As Integer = 10 ' Padding from the right and top edges of the form
+            'Dim menuSize As Size = Panel1.Size
+            Dim menuLocation As New Point(Me.ClientSize.Width - Button1.Width - padding, padding)
+            Panel1.Location = menuLocation
+            'menuPanel.Visible = False
+            Panel1.Size = Button1.Size
+            Button1.Location = New Point(Panel1.Width - Button1.Width, 0)
+            'Panel1.Size = Button1.Size
+            isResized = False
+            'Button1.Location = New Point(126 - Button1.Width, 0)
+        End If
+    End Sub
+
+    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox1.CheckedChanged
+        showHideStops(CheckBox1.Checked, getStops(drawMarker()))
     End Sub
 End Class
 
