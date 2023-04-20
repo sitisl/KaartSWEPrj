@@ -8,6 +8,9 @@ Imports GMap.NET
 Imports GMap.NET.MapProviders
 Imports GMap.NET.WindowsForms
 Imports GMap.NET.WindowsForms.Markers
+Imports System.Data.SQLite
+Imports System.Data.SqlClient
+
 
 
 
@@ -153,7 +156,7 @@ Public Class UCtrlMapViewer
         Dim marker As GMarkerGoogle
         Dim latitude, longitude As Double
         Dim stopName As String
-
+        con = New SQLiteConnection
     End Function
 
     Public Sub getRoute(startPoint As PointLatLng, endPoint As PointLatLng)
