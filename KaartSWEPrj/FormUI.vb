@@ -38,6 +38,10 @@ Public Class Kaardirakendus
         End If
     End Sub
 
+    Private Sub UCtrlMapViewer1_markerClick(ByVal stopName As String) Handles UCtrlMapViewer1.markerClick
+
+    End Sub
+
     Private Sub btnRoute_Click(sender As Object, e As EventArgs) Handles btnRoute.Click
         If txtStart.Text IsNot "" And txtEnd.Text IsNot "" _
             And txtStart.Text IsNot txtEnd.Text Then

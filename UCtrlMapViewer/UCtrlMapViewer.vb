@@ -51,6 +51,9 @@ Public Class UCtrlMapViewer
     Public Event LocationClicked(ByVal latitude As Double, ByVal longitude As Double)
     Public Event MarkerClicked(ByVal value As String, ByVal latitude As Double, ByVal longitude As Double)
 
+    'Event to get stop name, when clicking on marker
+    Public Event markerClick(ByVal stopName As String)
+
     Public Sub initMap()
         initializeMap()
     End Sub
@@ -185,6 +188,7 @@ Public Class UCtrlMapViewer
         Dim marker As GMarkerGoogle = TryCast(item, GMarkerGoogle)
         If marker IsNot Nothing Then
             RaiseEvent MarkerClicked(marker.ToolTipText, item.Position.Lat, item.Position.Lng)
+            RaiseEvent markerClick(marker.ToolTipText)
         End If
     End Sub
 
