@@ -147,6 +147,8 @@ Public Class UCtrlMapViewer
     End Function
 
     Public Function getStopsSQL(ByRef markerBitmap As Bitmap)
+        Dim con As SQLiteConnection
+        Dim cmd As SQLiteCommand
         Dim stopsOverlay As New GMapOverlay("stopsOverlay")
         Dim marker As GMarkerGoogle
         Dim latitude, longitude As Double
