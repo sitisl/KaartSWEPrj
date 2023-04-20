@@ -23,6 +23,7 @@ Partial Class Kaardirakendus
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.tblLayoutForm = New System.Windows.Forms.TableLayoutPanel()
+        Me.UCtrlMapViewer1 = New UCtrlMapViewer.UCtrlMapViewer()
         Me.tblLayoutStops = New System.Windows.Forms.TableLayoutPanel()
         Me.btnClear = New System.Windows.Forms.Button()
         Me.btnRoute = New System.Windows.Forms.Button()
@@ -35,7 +36,6 @@ Partial Class Kaardirakendus
         Me.lblLongName = New System.Windows.Forms.Label()
         Me.lblStart = New System.Windows.Forms.Label()
         Me.lblEnd = New System.Windows.Forms.Label()
-        Me.UCtrlMapViewer1 = New UCtrlMapViewer.UCtrlMapViewer()
         Me.tblLayoutForm.SuspendLayout()
         Me.tblLayoutStops.SuspendLayout()
         Me.SuspendLayout()
@@ -62,6 +62,22 @@ Partial Class Kaardirakendus
         Me.tblLayoutForm.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.tblLayoutForm.Size = New System.Drawing.Size(1200, 559)
         Me.tblLayoutForm.TabIndex = 14
+        '
+        'UCtrlMapViewer1
+        '
+        Me.UCtrlMapViewer1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UCtrlMapViewer1.AutoSize = True
+        Me.UCtrlMapViewer1.BackColor = System.Drawing.Color.Transparent
+        Me.UCtrlMapViewer1.CausesValidation = False
+        Me.UCtrlMapViewer1.Font = New System.Drawing.Font("Segoe UI", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(186, Byte))
+        Me.UCtrlMapViewer1.Location = New System.Drawing.Point(264, 9)
+        Me.UCtrlMapViewer1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.UCtrlMapViewer1.MinimumSize = New System.Drawing.Size(920, 510)
+        Me.UCtrlMapViewer1.Name = "UCtrlMapViewer1"
+        Me.UCtrlMapViewer1.Size = New System.Drawing.Size(928, 541)
+        Me.UCtrlMapViewer1.TabIndex = 10
         '
         'tblLayoutStops
         '
@@ -142,7 +158,6 @@ Partial Class Kaardirakendus
         '
         'txtLat
         '
-        Me.txtLat.Cursor = System.Windows.Forms.Cursors.Arrow
         Me.txtLat.Dock = System.Windows.Forms.DockStyle.Fill
         Me.txtLat.Location = New System.Drawing.Point(129, 78)
         Me.txtLat.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
@@ -153,7 +168,6 @@ Partial Class Kaardirakendus
         '
         'txtLongName
         '
-        Me.txtLongName.Cursor = System.Windows.Forms.Cursors.Arrow
         Me.txtLongName.Dock = System.Windows.Forms.DockStyle.Fill
         Me.txtLongName.Location = New System.Drawing.Point(129, 144)
         Me.txtLongName.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
@@ -223,22 +237,6 @@ Partial Class Kaardirakendus
         Me.lblEnd.Size = New System.Drawing.Size(121, 50)
         Me.lblEnd.TabIndex = 14
         Me.lblEnd.Text = "End"
-        '
-        'UCtrlMapViewer1
-        '
-        Me.UCtrlMapViewer1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.UCtrlMapViewer1.AutoSize = True
-        Me.UCtrlMapViewer1.BackColor = System.Drawing.Color.Transparent
-        Me.UCtrlMapViewer1.CausesValidation = False
-        Me.UCtrlMapViewer1.Font = New System.Drawing.Font("Segoe UI", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(186, Byte))
-        Me.UCtrlMapViewer1.Location = New System.Drawing.Point(264, 9)
-        Me.UCtrlMapViewer1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.UCtrlMapViewer1.MinimumSize = New System.Drawing.Size(920, 510)
-        Me.UCtrlMapViewer1.Name = "UCtrlMapViewer1"
-        Me.UCtrlMapViewer1.Size = New System.Drawing.Size(928, 541)
-        Me.UCtrlMapViewer1.TabIndex = 10
         '
         'Kaardirakendus
         '

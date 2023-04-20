@@ -146,6 +146,14 @@ Public Class UCtrlMapViewer
         Return stopsOverlay
     End Function
 
+    Public Function getStopsSQL(ByRef markerBitmap As Bitmap)
+        Dim stopsOverlay As New GMapOverlay("stopsOverlay")
+        Dim marker As GMarkerGoogle
+        Dim latitude, longitude As Double
+        Dim stopName As String
+
+    End Function
+
     Public Sub getRoute(startPoint As PointLatLng, endPoint As PointLatLng)
         showHideStops(False, getStops(drawMarker()))
         ' Define the route overlay and add it to the map
