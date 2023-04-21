@@ -13,12 +13,12 @@ Public Class UTimeTable
     Dim SQLiteCmd As SQLiteCommand
     Dim SQLiteReader As SQLiteDataReader
 
-    Dim Suund As String = Nothing
-    Dim LinkHalf As String = Nothing
-    Dim LinkFull As String = Nothing
-    Dim SelectedLine As String = Nothing
-    Dim SelectedStop As String = Nothing
-    Dim SelectedStopId As String = Nothing
+    Public Dim Suund As String = Nothing
+    Public Dim LinkHalf As String = Nothing
+    Public Dim LinkFull As String = Nothing
+    Public Dim SelectedLine As String = Nothing
+    Public Dim SelectedStop As String = Nothing
+    Public Dim SelectedStopId As String = Nothing
 
     Dim dbFilePath As String = Path.Combine(Application.StartupPath, "mapsdb.db")
 
@@ -30,6 +30,11 @@ Public Class UTimeTable
             MsgBox("Did not find")
         End If
         SQLiteCon.Open()
+    End Sub
+
+    Public Sub CloseConnections()
+        SQLiteCon.Close()
+        driver.Quit()
     End Sub
 
     Private Sub LoadLines()

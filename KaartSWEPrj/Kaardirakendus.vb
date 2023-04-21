@@ -17,56 +17,10 @@ Imports System.Security.Policy
 
 Public Class Kaardirakendus
 
-    Dim options As OpenQA.Selenium.Chrome.ChromeOptions
-    Dim driver As OpenQA.Selenium.Chrome.ChromeDriver
-
-
-
-    Dim SQLiteCon As SQLiteConnection
-    Dim SQLiteCmd As SQLiteCommand
-    Dim SQLiteReader As SQLiteDataReader
-
-    Dim dbFilePath As String = Path.Combine(Application.StartupPath, "mapsdb.db")
-
-    Dim Suund As String = Nothing
-    Dim LinkHalf As String = Nothing
-    Dim LinkFull As String = Nothing
-    Dim SelectedLine As String = Nothing
-    Dim SelectedStop As String = Nothing
-    Dim SelectedStopId As String = Nothing
 
     Private lastMarker As GMapMarker
     Dim choose As Boolean = True
 
-
-    Private Sub LoadLineLink(Suund As String)
-
-        Dim SelectElement As String
-        If Suund = "a-b" Then
-            SelectElement = "link_a-b"
-        ElseIf Suund = "b-a" Then
-            SelectElement = "link_b-a"
-        Else
-            SelectElement = Nothing
-            Exit Sub
-        End If
-        Try
-
-            Dim query As String = "select `" & SelectElement & "` from liinid Where line = '" & SelectedLine & "';"
-            SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
-            SQLiteReader = SQLiteCmd.ExecuteReader()
-
-            While SQLiteReader.Read()
-                LinkHalf = SQLiteReader.GetString(0)
-
-            End While
-            SQLiteReader.Close()
-
-        Catch ex As Exception
-            MsgBox(ex.Message)
-            SQLiteCon.Close()
-        End Try
-    End Sub
 
     Private Sub Kaardirakendus_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         GMapControl1.MapProvider = GoogleMapProvider.Instance
@@ -78,6 +32,7 @@ Public Class Kaardirakendus
         GMapControl1.MaxZoom = 100
         GMapControl1.Zoom = 10
         'InitChromeDriverIfNeeded()
+
     End Sub
 
     Private Sub GMapControl1_OnMapClick(sender As Object, e As MouseEventArgs) Handles GMapControl1.OnMapClick
@@ -184,13 +139,11 @@ Public Class Kaardirakendus
 
     Private Sub Kaardirakendus_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         Try
-            SQLiteCon.Close()
-            driver.Quit()
+            UTimeTable.CloseConnections()
         Catch ex As Exception
             'Kaardirakendus.ActiveForm.Close()
         End Try
 
     End Sub
-
 
 End Class

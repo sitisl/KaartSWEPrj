@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class Kaardirakendus
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class Kaardirakendus
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.GMapControl1 = New GMap.NET.WindowsForms.GMapControl()
         Me.btnChoose = New System.Windows.Forms.Button()
@@ -31,7 +31,7 @@ Partial Class Kaardirakendus
         Me.txtLongName = New System.Windows.Forms.TextBox()
         Me.txtLat = New System.Windows.Forms.TextBox()
         Me.btnAll = New System.Windows.Forms.Button()
-        Me.UTimeTable1 = New UTimeTable.UTimeTable()
+        Me.UTimeTable = New UTimeTable.UTimeTable()
         Me.SuspendLayout()
         '
         'GMapControl1
@@ -128,19 +128,20 @@ Partial Class Kaardirakendus
         Me.btnAll.Text = "Display All"
         Me.btnAll.UseVisualStyleBackColor = True
         '
-        'UTimeTable1
+        'UTimeTable
         '
-        Me.UTimeTable1.Location = New System.Drawing.Point(784, 24)
-        Me.UTimeTable1.Name = "UTimeTable1"
-        Me.UTimeTable1.Size = New System.Drawing.Size(559, 406)
-        Me.UTimeTable1.TabIndex = 21
+        Me.UTimeTable.Font = New System.Drawing.Font("Consolas", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(186, Byte))
+        Me.UTimeTable.Location = New System.Drawing.Point(784, 24)
+        Me.UTimeTable.Name = "UTimeTable"
+        Me.UTimeTable.Size = New System.Drawing.Size(559, 406)
+        Me.UTimeTable.TabIndex = 21
         '
         'Kaardirakendus
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1464, 595)
-        Me.Controls.Add(Me.UTimeTable1)
+        Me.Controls.Add(Me.UTimeTable)
         Me.Controls.Add(Me.btnAll)
         Me.Controls.Add(Me.txtLat)
         Me.Controls.Add(Me.txtLongName)
@@ -166,5 +167,5 @@ Partial Class Kaardirakendus
     Friend WithEvents txtLongName As TextBox
     Friend WithEvents txtLat As TextBox
     Friend WithEvents btnAll As Button
-    Friend WithEvents UTimeTable1 As UTimeTable.UTimeTable
+    Friend WithEvents UTimeTable As UTimeTable.UTimeTable
 End Class
