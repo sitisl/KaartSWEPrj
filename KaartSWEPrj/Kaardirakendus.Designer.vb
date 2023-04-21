@@ -31,15 +31,7 @@ Partial Class Kaardirakendus
         Me.txtLongName = New System.Windows.Forms.TextBox()
         Me.txtLat = New System.Windows.Forms.TextBox()
         Me.btnAll = New System.Windows.Forms.Button()
-        Me.btnShowLines = New System.Windows.Forms.Button()
-        Me.lBoxLiinid = New System.Windows.Forms.ListBox()
-        Me.lBoxPeatused = New System.Windows.Forms.ListBox()
-        Me.btnAB = New System.Windows.Forms.Button()
-        Me.btnBA = New System.Windows.Forms.Button()
-        Me.tBoxLink = New System.Windows.Forms.TextBox()
-        Me.lBoxAjad = New System.Windows.Forms.ListBox()
-        Me.btnShowStops = New System.Windows.Forms.Button()
-        Me.lBoxRealTime = New System.Windows.Forms.ListBox()
+        Me.UTimeTable1 = New UTimeTable.UTimeTable()
         Me.SuspendLayout()
         '
         'GMapControl1
@@ -136,99 +128,19 @@ Partial Class Kaardirakendus
         Me.btnAll.Text = "Display All"
         Me.btnAll.UseVisualStyleBackColor = True
         '
-        'btnShowLines
+        'UTimeTable1
         '
-        Me.btnShowLines.Location = New System.Drawing.Point(784, 24)
-        Me.btnShowLines.Name = "btnShowLines"
-        Me.btnShowLines.Size = New System.Drawing.Size(125, 23)
-        Me.btnShowLines.TabIndex = 9
-        Me.btnShowLines.Text = "Show all lines"
-        Me.btnShowLines.UseVisualStyleBackColor = True
-        '
-        'lBoxLiinid
-        '
-        Me.lBoxLiinid.FormattingEnabled = True
-        Me.lBoxLiinid.Location = New System.Drawing.Point(784, 129)
-        Me.lBoxLiinid.Name = "lBoxLiinid"
-        Me.lBoxLiinid.Size = New System.Drawing.Size(100, 264)
-        Me.lBoxLiinid.TabIndex = 10
-        Me.lBoxLiinid.Visible = False
-        '
-        'lBoxPeatused
-        '
-        Me.lBoxPeatused.FormattingEnabled = True
-        Me.lBoxPeatused.Location = New System.Drawing.Point(890, 129)
-        Me.lBoxPeatused.Name = "lBoxPeatused"
-        Me.lBoxPeatused.Size = New System.Drawing.Size(130, 264)
-        Me.lBoxPeatused.TabIndex = 11
-        Me.lBoxPeatused.Visible = False
-        '
-        'btnAB
-        '
-        Me.btnAB.Location = New System.Drawing.Point(925, 24)
-        Me.btnAB.Name = "btnAB"
-        Me.btnAB.Size = New System.Drawing.Size(329, 23)
-        Me.btnAB.TabIndex = 12
-        Me.btnAB.UseVisualStyleBackColor = True
-        Me.btnAB.Visible = False
-        '
-        'btnBA
-        '
-        Me.btnBA.Location = New System.Drawing.Point(925, 53)
-        Me.btnBA.Name = "btnBA"
-        Me.btnBA.Size = New System.Drawing.Size(329, 23)
-        Me.btnBA.TabIndex = 13
-        Me.btnBA.UseVisualStyleBackColor = True
-        Me.btnBA.Visible = False
-        '
-        'tBoxLink
-        '
-        Me.tBoxLink.Location = New System.Drawing.Point(784, 406)
-        Me.tBoxLink.Name = "tBoxLink"
-        Me.tBoxLink.Size = New System.Drawing.Size(259, 20)
-        Me.tBoxLink.TabIndex = 16
-        '
-        'lBoxAjad
-        '
-        Me.lBoxAjad.FormattingEnabled = True
-        Me.lBoxAjad.Location = New System.Drawing.Point(1026, 129)
-        Me.lBoxAjad.Name = "lBoxAjad"
-        Me.lBoxAjad.Size = New System.Drawing.Size(208, 264)
-        Me.lBoxAjad.TabIndex = 17
-        Me.lBoxAjad.Visible = False
-        '
-        'btnShowStops
-        '
-        Me.btnShowStops.Location = New System.Drawing.Point(784, 53)
-        Me.btnShowStops.Name = "btnShowStops"
-        Me.btnShowStops.Size = New System.Drawing.Size(125, 23)
-        Me.btnShowStops.TabIndex = 18
-        Me.btnShowStops.Text = "Show all stops"
-        Me.btnShowStops.UseVisualStyleBackColor = True
-        '
-        'lBoxRealTime
-        '
-        Me.lBoxRealTime.FormattingEnabled = True
-        Me.lBoxRealTime.Location = New System.Drawing.Point(1240, 129)
-        Me.lBoxRealTime.Name = "lBoxRealTime"
-        Me.lBoxRealTime.Size = New System.Drawing.Size(95, 56)
-        Me.lBoxRealTime.TabIndex = 20
-        Me.lBoxRealTime.Visible = False
+        Me.UTimeTable1.Location = New System.Drawing.Point(784, 24)
+        Me.UTimeTable1.Name = "UTimeTable1"
+        Me.UTimeTable1.Size = New System.Drawing.Size(559, 406)
+        Me.UTimeTable1.TabIndex = 21
         '
         'Kaardirakendus
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1464, 595)
-        Me.Controls.Add(Me.lBoxRealTime)
-        Me.Controls.Add(Me.btnShowStops)
-        Me.Controls.Add(Me.lBoxAjad)
-        Me.Controls.Add(Me.tBoxLink)
-        Me.Controls.Add(Me.btnBA)
-        Me.Controls.Add(Me.btnAB)
-        Me.Controls.Add(Me.lBoxPeatused)
-        Me.Controls.Add(Me.lBoxLiinid)
-        Me.Controls.Add(Me.btnShowLines)
+        Me.Controls.Add(Me.UTimeTable1)
         Me.Controls.Add(Me.btnAll)
         Me.Controls.Add(Me.txtLat)
         Me.Controls.Add(Me.txtLongName)
@@ -254,13 +166,5 @@ Partial Class Kaardirakendus
     Friend WithEvents txtLongName As TextBox
     Friend WithEvents txtLat As TextBox
     Friend WithEvents btnAll As Button
-    Friend WithEvents btnShowLines As Button
-    Friend WithEvents lBoxLiinid As ListBox
-    Friend WithEvents lBoxPeatused As ListBox
-    Friend WithEvents btnAB As Button
-    Friend WithEvents btnBA As Button
-    Friend WithEvents tBoxLink As TextBox
-    Friend WithEvents lBoxAjad As ListBox
-    Friend WithEvents btnShowStops As Button
-    Friend WithEvents lBoxRealTime As ListBox
+    Friend WithEvents UTimeTable1 As UTimeTable.UTimeTable
 End Class
