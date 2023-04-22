@@ -30,8 +30,12 @@ Public Class UTimeTable
     End Sub
 
     Public Sub CloseConnections()
-        SQLiteCon.Close()
-        driver.Quit()
+        Try
+            SQLiteCon.Close()
+            driver.Quit()
+        Catch
+            Exit Sub
+        End Try
     End Sub
 
     Private Sub LoadLines()
