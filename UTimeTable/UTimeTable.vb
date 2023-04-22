@@ -22,10 +22,10 @@ Public Class UTimeTable
     Dim dbFilePath As String = Path.Combine(Application.StartupPath, "mapdb.db")
     Private Sub MakeSqlConn(ByRef conn As SQLiteConnection)
         Try
-            Dim dbStream As Stream = New MemoryStream(My.Resources.mapdb)
-            Using fileStream As FileStream = File.Create(dbFilePath)
-                dbStream.CopyTo(fileStream)
-            End Using
+            'Dim dbStream As Stream = New MemoryStream(My.Resources.mapdb)
+            'Using fileStream As FileStream = File.Create(dbFilePath)
+            '    dbStream.CopyTo(fileStream)
+            'End Using
             SQLiteCon = New SQLiteConnection($"Data Source={dbFilePath};Version=3;")
         Catch ex As Exception
             MsgBox(ex)
