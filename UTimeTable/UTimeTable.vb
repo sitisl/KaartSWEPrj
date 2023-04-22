@@ -19,16 +19,17 @@ Public Class UTimeTable
     Public Dim SelectedLine As String = Nothing
     Public Dim SelectedStop As String = Nothing
     Public Dim SelectedStopId As String = Nothing
-
-    Dim dbFilePath As String = Path.Combine(Application.StartupPath, "mapsdb.db")
-
+    Dim dbFilePath As String = Path.Combine(Application.StartupPath, "mapdb.db")
     Private Sub MakeSqlConn(ByRef conn As SQLiteConnection)
-        If File.Exists(dbFilePath) Then
-            conn = New SQLiteConnection($"Data Source={dbFilePath};Version=3;")
-
-        Else
-            MsgBox("Did not find")
-        End If
+        Try
+            Dim dbStream As Stream = New MemoryStream(My.Resources.mapdb)
+            Using fileStream As FileStream = File.Create(dbFilePath)
+                dbStream.CopyTo(fileStream)
+            End Using
+            SQLiteCon = New SQLiteConnection($"Data Source={dbFilePath};Version=3;")
+        Catch ex As Exception
+            MsgBox(ex)
+        End Try
         SQLiteCon.Open()
     End Sub
 
