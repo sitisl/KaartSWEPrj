@@ -4,20 +4,12 @@ Imports GMap.NET.WindowsForms
 Imports GMap.NET.WindowsForms.Markers
 Imports System.IO
 Imports System.Net
-Imports System.Windows
 
-Imports System.Data.SQLite
-
-Imports OpenQA.Selenium
-Imports OpenQA.Selenium.Chrome
-Imports OpenQA.Selenium.Support.UI
-Imports System.Collections.ObjectModel
-Imports System.Xml
-Imports System.Security.Policy
+Imports UTimeTable
 
 Public Class Kaardirakendus
 
-
+    Dim Ut As New UTimeTable.UTimeTable
     Private lastMarker As GMapMarker
     Dim choose As Boolean = True
 
@@ -26,7 +18,6 @@ Public Class Kaardirakendus
         GMapControl1.MapProvider = GoogleMapProvider.Instance
         GMaps.Instance.Mode = AccessMode.ServerAndCache
         GMapControl1.ShowCenter = False
-
         GMapControl1.Position = New GMap.NET.PointLatLng(59.4380930599551, 24.7590637207031)
         GMapControl1.MinZoom = 5
         GMapControl1.MaxZoom = 100
@@ -139,9 +130,9 @@ Public Class Kaardirakendus
 
     Private Sub Kaardirakendus_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         Try
-            UTimeTable.CloseConnections()
+            Ut.CloseConnections()
         Catch ex As Exception
-            'Kaardirakendus.ActiveForm.Close()
+            MsgBox(ex)
         End Try
 
     End Sub

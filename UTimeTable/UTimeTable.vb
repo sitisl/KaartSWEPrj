@@ -14,23 +14,19 @@ Public Class UTimeTable
     Dim SQLiteReader As SQLiteDataReader
 
     Public Dim Suund As String = Nothing
-    Public Dim LinkHalf As String = Nothing
+    Private LinkHalf As String = Nothing
     Public Dim LinkFull As String = Nothing
     Public Dim SelectedLine As String = Nothing
     Public Dim SelectedStop As String = Nothing
     Public Dim SelectedStopId As String = Nothing
     Dim dbFilePath As String = Path.Combine(Application.StartupPath, "mapdb.db")
-    Private Sub MakeSqlConn(ByRef conn As SQLiteConnection)
+    Public Sub MakeSqlConn()
         Try
-            'Dim dbStream As Stream = New MemoryStream(My.Resources.mapdb)
-            'Using fileStream As FileStream = File.Create(dbFilePath)
-            '    dbStream.CopyTo(fileStream)
-            'End Using
             SQLiteCon = New SQLiteConnection($"Data Source={dbFilePath};Version=3;")
+            SQLiteCon.Open()
         Catch ex As Exception
             MsgBox(ex)
         End Try
-        SQLiteCon.Open()
     End Sub
 
     Public Sub CloseConnections()
@@ -48,7 +44,7 @@ Public Class UTimeTable
         End If
 
         Try
-            MakeSqlConn(SQLiteCon)
+            MakeSqlConn()
             SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
             SQLiteReader = SQLiteCmd.ExecuteReader()
             While SQLiteReader.Read()
@@ -66,7 +62,7 @@ Public Class UTimeTable
         If lBoxPeatused.Visible = False Then
             lBoxPeatused.Visible = True
         End If
-        MakeSqlConn(SQLiteCon)
+        MakeSqlConn()
         Dim query As String
         If allStopsQuery Is Nothing Then
             query = "select Distinct PeatuseNimi from koikpeatused where Liin = '" & SelectedLine & "' And Suund ='" & Suund & "';"
