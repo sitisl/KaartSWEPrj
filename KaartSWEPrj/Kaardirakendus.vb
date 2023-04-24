@@ -28,7 +28,7 @@ Public Class Kaardirakendus
     End Sub
 
     Private Sub btnDisplayStops_Click(sender As Object, e As EventArgs) Handles btnDisplayStops.Click
-        UCtrlMapViewer.getStops(UCtrlMapViewer.drawMarker())
+        UCtrlMapViewer.getStopsSQL(UCtrlMapViewer.drawMarker())
 
     End Sub
 

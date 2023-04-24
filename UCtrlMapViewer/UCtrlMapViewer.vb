@@ -169,7 +169,7 @@ Public Class UCtrlMapViewer
     End Function
 
     Public Sub getRoute(startPoint As PointLatLng, endPoint As PointLatLng)
-        showHideStops(False, getStops(drawMarker()))
+        showHideStops(False, getStopsSQL(drawMarker()))
         ' Define the route overlay and add it to the map
         Dim mapOverlay As GMapOverlay = New GMapOverlay("routes")
         'Gets route using Bing API with start and destination coordinate
@@ -252,7 +252,7 @@ Public Class UCtrlMapViewer
 
 
     Private Sub cbStops_CheckedChanged(sender As Object, e As EventArgs) Handles cbStops.CheckedChanged
-        showHideStops(cbStops.Checked, getStops(drawMarker()))
+        showHideStops(cbStops.Checked, getStopsSQL(drawMarker()))
     End Sub
 
 
