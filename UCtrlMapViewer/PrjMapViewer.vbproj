@@ -163,6 +163,12 @@
   <ItemGroup>
     <None Include="img\layers-white.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UTimeTable\UTimeTable.vbproj">
+      <Project>{957e8b01-520a-4786-880e-1168f4da9d65}</Project>
+      <Name>UTimeTable</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

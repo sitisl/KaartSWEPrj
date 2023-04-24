@@ -10,16 +10,35 @@ Imports GMap.NET.WindowsForms
 Imports GMap.NET.WindowsForms.Markers
 Imports System.Data.SQLite
 Imports System.Data.SqlClient
-
-
-
+Imports UTimeTable.UTimeTable
+Imports System.Windows
 
 
 ' This class realizes the functionality of the map viewer graphic component
 Public Class UCtrlMapViewer
-
     ' Flag for checking if the layerPanel is resized
     Private isResized As Boolean = False
+
+    Public timeT As New UTimeTable.UTimeTable
+
+    Public Function getStopsSQL(ByRef markerBitmap As Bitmap)
+
+        Dim stops As List(Of StopStruct) = timeT.GetStopsCoordinates()
+
+        Dim stopsOverlay As New GMapOverlay("stopsOverlay")
+        Dim marker As GMarkerGoogle
+        For Each stop_el As StopStruct In stops
+            marker = New GMarkerGoogle(New PointLatLng(stop_el.Latitude, stop_el.Longitude), markerBitmap)
+            marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
+            Dim toolTip As New CustomToolTip(marker)
+            toolTip.Offset = New Point(5, -markerBitmap.Height / 2)
+            marker.ToolTip = toolTip
+            marker.ToolTipText = stop_el.Name
+            gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
+            stopsOverlay.Markers.Add(marker)
+        Next
+        Return stopsOverlay
+    End Function
 
     Private Sub UCtrlMapViewer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' This code will run when the user control is loaded into a form or another container control
@@ -147,16 +166,6 @@ Public Class UCtrlMapViewer
         End Using
         response.Close()
         Return stopsOverlay
-    End Function
-
-    Public Function getStopsSQL(ByRef markerBitmap As Bitmap)
-        Dim con As SQLiteConnection
-        Dim cmd As SQLiteCommand
-        Dim stopsOverlay As New GMapOverlay("stopsOverlay")
-        Dim marker As GMarkerGoogle
-        Dim latitude, longitude As Double
-        Dim stopName As String
-        con = New SQLiteConnection
     End Function
 
     Public Sub getRoute(startPoint As PointLatLng, endPoint As PointLatLng)

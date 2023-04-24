@@ -20,6 +20,38 @@ Public Class UTimeTable
     Public Dim SelectedStop As String = Nothing
     Public Dim SelectedStopId As String = Nothing
     Dim dbFilePath As String = Path.Combine(Application.StartupPath, "mapdb.db")
+
+    Public Structure StopStruct
+        Public Name As String
+        Public Latitude As Double
+        Public Longitude As Double
+    End Structure
+
+    Public Function GetStopsCoordinates() As List(Of StopStruct)
+        Dim query As String = "SELECT name, lat, lon FROM stops;"
+        Dim stops As New List(Of StopStruct)
+
+        Try
+            MakeSqlConn()
+            SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
+            SQLiteReader = SQLiteCmd.ExecuteReader()
+
+            While SQLiteReader.Read()
+                Dim s As New StopStruct
+                s.Name = SQLiteReader.GetString(0)
+                s.Latitude = SQLiteReader.GetDouble(1)
+                s.Longitude = SQLiteReader.GetDouble(2)
+                stops.Add(s)
+            End While
+
+            SQLiteReader.Close()
+            SQLiteCon.Close()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+
+        Return stops
+    End Function
     Public Sub MakeSqlConn()
         Try
             SQLiteCon = New SQLiteConnection($"Data Source={dbFilePath};Version=3;")

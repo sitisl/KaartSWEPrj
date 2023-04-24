@@ -12,12 +12,9 @@ Public Class Kaardirakendus
     Dim choose As Boolean = True
 
     Private Sub Kaardirakendus_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        UCtrlMapViewer1.initMap()
+        UCtrlMapViewer.initMap()
         'InitChromeDriverIfNeeded()
 
-    End Sub
-    Private Sub UCtrlMapViewer1_markerClick(ByVal stopName As String) Handles UCtrlMapViewer1.markerClick
-        MsgBox(stopName)
     End Sub
 
 
@@ -27,6 +24,11 @@ Public Class Kaardirakendus
         Catch ex As Exception
             MsgBox(ex)
         End Try
+
+    End Sub
+
+    Private Sub btnDisplayStops_Click(sender As Object, e As EventArgs) Handles btnDisplayStops.Click
+        UCtrlMapViewer.getStops(UCtrlMapViewer.drawMarker())
 
     End Sub
 
