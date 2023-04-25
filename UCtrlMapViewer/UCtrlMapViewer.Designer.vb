@@ -46,7 +46,6 @@ Partial Class UCtrlMapViewer
         Me.gMap1.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow
         Me.gMap1.LevelsKeepInMemory = 5
         Me.gMap1.Location = New System.Drawing.Point(0, 0)
-        Me.gMap1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.gMap1.MarkersEnabled = True
         Me.gMap1.MaxZoom = 2
         Me.gMap1.MinZoom = 2
@@ -60,7 +59,7 @@ Partial Class UCtrlMapViewer
         Me.gMap1.ScaleMode = GMap.NET.WindowsForms.ScaleModes.[Integer]
         Me.gMap1.SelectedAreaFillColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(105, Byte), Integer), CType(CType(225, Byte), Integer))
         Me.gMap1.ShowTileGridLines = False
-        Me.gMap1.Size = New System.Drawing.Size(925, 518)
+        Me.gMap1.Size = New System.Drawing.Size(617, 337)
         Me.gMap1.TabIndex = 0
         Me.gMap1.Zoom = 0R
         '
@@ -74,9 +73,10 @@ Partial Class UCtrlMapViewer
         Me.panelLayers.Controls.Add(Me.cbStops)
         Me.panelLayers.Controls.Add(Me.btnLayers)
         Me.panelLayers.ForeColor = System.Drawing.Color.Transparent
-        Me.panelLayers.Location = New System.Drawing.Point(796, 3)
+        Me.panelLayers.Location = New System.Drawing.Point(531, 2)
+        Me.panelLayers.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
         Me.panelLayers.Name = "panelLayers"
-        Me.panelLayers.Size = New System.Drawing.Size(126, 228)
+        Me.panelLayers.Size = New System.Drawing.Size(84, 148)
         Me.panelLayers.TabIndex = 3
         '
         'cbTroll
@@ -86,9 +86,10 @@ Partial Class UCtrlMapViewer
         Me.cbTroll.BackColor = System.Drawing.Color.Transparent
         Me.cbTroll.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(186, Byte))
         Me.cbTroll.ForeColor = System.Drawing.Color.Snow
-        Me.cbTroll.Location = New System.Drawing.Point(7, 159)
+        Me.cbTroll.Location = New System.Drawing.Point(5, 103)
+        Me.cbTroll.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
         Me.cbTroll.Name = "cbTroll"
-        Me.cbTroll.Size = New System.Drawing.Size(85, 29)
+        Me.cbTroll.Size = New System.Drawing.Size(58, 19)
         Me.cbTroll.TabIndex = 4
         Me.cbTroll.Text = "Trollid"
         Me.cbTroll.UseVisualStyleBackColor = False
@@ -100,9 +101,10 @@ Partial Class UCtrlMapViewer
         Me.cbTram.BackColor = System.Drawing.Color.Transparent
         Me.cbTram.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(186, Byte))
         Me.cbTram.ForeColor = System.Drawing.Color.Snow
-        Me.cbTram.Location = New System.Drawing.Point(7, 129)
+        Me.cbTram.Location = New System.Drawing.Point(5, 84)
+        Me.cbTram.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
         Me.cbTram.Name = "cbTram"
-        Me.cbTram.Size = New System.Drawing.Size(107, 29)
+        Me.cbTram.Size = New System.Drawing.Size(73, 19)
         Me.cbTram.TabIndex = 3
         Me.cbTram.Text = "Trammid"
         Me.cbTram.UseVisualStyleBackColor = False
@@ -114,9 +116,10 @@ Partial Class UCtrlMapViewer
         Me.cbBuses.BackColor = System.Drawing.Color.Transparent
         Me.cbBuses.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(186, Byte))
         Me.cbBuses.ForeColor = System.Drawing.Color.Snow
-        Me.cbBuses.Location = New System.Drawing.Point(7, 99)
+        Me.cbBuses.Location = New System.Drawing.Point(5, 64)
+        Me.cbBuses.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
         Me.cbBuses.Name = "cbBuses"
-        Me.cbBuses.Size = New System.Drawing.Size(89, 29)
+        Me.cbBuses.Size = New System.Drawing.Size(60, 19)
         Me.cbBuses.TabIndex = 2
         Me.cbBuses.Text = "Bussid"
         Me.cbBuses.UseVisualStyleBackColor = False
@@ -129,9 +132,10 @@ Partial Class UCtrlMapViewer
         Me.cbStops.FlatAppearance.BorderSize = 0
         Me.cbStops.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(186, Byte))
         Me.cbStops.ForeColor = System.Drawing.Color.Snow
-        Me.cbStops.Location = New System.Drawing.Point(7, 71)
+        Me.cbStops.Location = New System.Drawing.Point(5, 46)
+        Me.cbStops.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
         Me.cbStops.Name = "cbStops"
-        Me.cbStops.Size = New System.Drawing.Size(109, 29)
+        Me.cbStops.Size = New System.Drawing.Size(74, 19)
         Me.cbStops.TabIndex = 1
         Me.cbStops.Text = "Peatused"
         Me.cbStops.UseVisualStyleBackColor = False
@@ -145,23 +149,22 @@ Partial Class UCtrlMapViewer
         Me.btnLayers.FlatAppearance.BorderSize = 0
         Me.btnLayers.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnLayers.ForeColor = System.Drawing.Color.Transparent
-        Me.btnLayers.Location = New System.Drawing.Point(55, 1)
-        Me.btnLayers.Margin = New System.Windows.Forms.Padding(2)
+        Me.btnLayers.Location = New System.Drawing.Point(37, 1)
+        Me.btnLayers.Margin = New System.Windows.Forms.Padding(1, 1, 1, 1)
         Me.btnLayers.Name = "btnLayers"
-        Me.btnLayers.Size = New System.Drawing.Size(70, 70)
+        Me.btnLayers.Size = New System.Drawing.Size(47, 46)
         Me.btnLayers.TabIndex = 0
         Me.btnLayers.UseVisualStyleBackColor = False
         '
         'UCtrlMapViewer
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 20.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.Transparent
         Me.Controls.Add(Me.panelLayers)
         Me.Controls.Add(Me.gMap1)
-        Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.Name = "UCtrlMapViewer"
-        Me.Size = New System.Drawing.Size(925, 518)
+        Me.Size = New System.Drawing.Size(617, 337)
         Me.panelLayers.ResumeLayout(False)
         Me.panelLayers.PerformLayout()
         Me.ResumeLayout(False)

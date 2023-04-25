@@ -19,7 +19,8 @@ Public Class UTimeTable
     Public SelectedLine As String = Nothing
     Public SelectedStop As String = Nothing
     Public SelectedStopId As String = Nothing
-    Dim dbFilePath As String = Path.Combine(Application.StartupPath, "mapdb.db")
+    Dim desktopPath As String = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)
+    Dim dbFilePath As String = Path.Combine(desktopPath, "mapdb.db")
 
     Public Structure StopStruct
         Public Name As String
@@ -28,7 +29,7 @@ Public Class UTimeTable
     End Structure
 
     Public Function GetStopsCoordinates() As List(Of StopStruct)
-        Dim query As String = "SELECT name, lat, lon FROM stops;"
+        Dim query As String = "SELECT s.name, s.lat, s.lon FROM stops s WHERE EXISTS (SELECT 1 FROM routes r WHERE r.stop_id = s.id AND r.transport = 'bus');"
         Dim stops As New List(Of StopStruct)
 
         Try
@@ -95,9 +96,6 @@ Public Class UTimeTable
 
     Private Sub LoadLineStops(Suund As String, Optional allStopsQuery As String = Nothing)
         lBoxPeatused.Items.Clear()
-        If lBoxPeatused.Visible = False Then
-            lBoxPeatused.Visible = True
-        End If
         MakeSqlConn()
         Dim query As String
         If allStopsQuery Is Nothing Then
@@ -120,9 +118,6 @@ Public Class UTimeTable
     End Sub
 
     Private Sub LoadLineSuund(Liin As String)
-        btnAB.Visible = True
-        btnBA.Visible = True
-
         btnAB.Text = Nothing
         btnBA.Text = Nothing
 
@@ -196,8 +191,6 @@ Public Class UTimeTable
                 SQLiteCon.Close()
             End Try
             LinkFull = LinkHalf & "/" & PeatuseID
-            tBoxLink.Visible = True
-            tBoxLink.Text = LinkFull
             GetStopTimes()
         End If
     End Sub
@@ -215,9 +208,6 @@ Public Class UTimeTable
         Dim InvaColor As Color = Color.DeepSkyBlue
         lblAbi.ForeColor = InvaColor
         lblAbi.Font = New Font(lblAbi.Font, FontStyle.Underline)
-        lblAbi.Visible = True
-        lblAjad.Visible = True
-        rtbAjad.Visible = True
         rtbAjad.Clear()
 
         InitChromeDriver()
@@ -265,8 +255,7 @@ Public Class UTimeTable
     End Sub
 
     Private Sub GetStopTimesRealTime()
-        lBoxRealTime.Visible = True
-        lblReaalajad.Visible = True
+
         lBoxRealTime.Items.Clear()
         'Dim wait As New WebDriverWait(driver, TimeSpan.FromSeconds(2))
         'Dim liElements = wait.Until(Function(driver) driver.FindElements(By.XPath("//*[@id='divScheduleContent']/div[1]/div[4]/ul/li")))
@@ -287,17 +276,12 @@ Public Class UTimeTable
     ' -----------------------------BUTTONS EVENTS--------------------------------------------
     Private Sub btnShowLines_Click(sender As Object, e As EventArgs) Handles btnShowLines.Click
         lBoxLiinid.Items.Clear()
-        lBoxLiinid.Visible = True
-        lblLiinid.Visible = True
-        'btnShowStops.Visible = False
         Suund = ""
         LoadLines()
     End Sub
 
     Private Sub btnShowStops_Click(sender As Object, e As EventArgs) Handles btnShowStops.Click
         Suund = Nothing
-        lBoxPeatused.Visible = True
-        lblPeatused.Visible = True
         'btnShowLines.Visible = False
         lBoxLiinid.Items.Clear()
         LoadLineStops(Suund, "select Distinct PeatuseNimi from koikpeatused Order by PeatuseNimi ASC;")
@@ -321,4 +305,17 @@ Public Class UTimeTable
         LoadLineSuund(SelectedLine)
     End Sub
 
+    Private Sub UTimeTable_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        lBoxLiinid.Visible = True
+        lblLiinid.Visible = True
+        lBoxPeatused.Visible = True
+        lblPeatused.Visible = True
+        lBoxRealTime.Visible = True
+        lblReaalajad.Visible = True
+        lblAbi.Visible = True
+        lblAjad.Visible = True
+        rtbAjad.Visible = True
+        btnAB.Visible = True
+        btnBA.Visible = True
+    End Sub
 End Class

@@ -205,6 +205,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PrjRealTime\PrjRealTime.vbproj">
+      <Project>{90ed1caf-dac2-4d51-bcc8-93680c20d7ce}</Project>
+      <Name>PrjRealTime</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UCtrlMapViewer\PrjMapViewer.vbproj">
+      <Project>{70b1f1ba-c294-4dce-941f-d765d3791429}</Project>
+      <Name>PrjMapViewer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UTimeTable\UTimeTable.vbproj">
       <Project>{957E8B01-520A-4786-880E-1168F4DA9D65}</Project>
       <Name>UTimeTable</Name>
