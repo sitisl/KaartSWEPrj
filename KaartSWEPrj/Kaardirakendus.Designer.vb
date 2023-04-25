@@ -41,22 +41,22 @@ Partial Class Kaardirakendus
         Me.UCtrlMapViewer.BackColor = System.Drawing.Color.Transparent
         Me.UCtrlMapViewer.Location = New System.Drawing.Point(130, 12)
         Me.UCtrlMapViewer.Name = "UCtrlMapViewer"
-        Me.UCtrlMapViewer.Size = New System.Drawing.Size(757, 406)
+        Me.UCtrlMapViewer.Size = New System.Drawing.Size(671, 411)
         Me.UCtrlMapViewer.TabIndex = 24
         '
         'UTimeTable
         '
         Me.UTimeTable.Font = New System.Drawing.Font("Consolas", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(186, Byte))
-        Me.UTimeTable.Location = New System.Drawing.Point(893, 12)
+        Me.UTimeTable.Location = New System.Drawing.Point(807, 12)
         Me.UTimeTable.Name = "UTimeTable"
-        Me.UTimeTable.Size = New System.Drawing.Size(559, 406)
+        Me.UTimeTable.Size = New System.Drawing.Size(669, 446)
         Me.UTimeTable.TabIndex = 21
         '
         'Kaardirakendus
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1464, 595)
+        Me.ClientSize = New System.Drawing.Size(1482, 660)
         Me.Controls.Add(Me.UCtrlMapViewer)
         Me.Controls.Add(Me.btnDisplayStops)
         Me.Controls.Add(Me.UTimeTable)

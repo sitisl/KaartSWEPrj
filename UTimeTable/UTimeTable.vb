@@ -1,11 +1,11 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.Data.SQLite
 Imports System.IO
+Imports System.Reflection.Emit
 Imports OpenQA.Selenium
 Imports OpenQA.Selenium.Chrome
 
 Public Class UTimeTable
-    '
     Dim options As OpenQA.Selenium.Chrome.ChromeOptions
     Dim driver As OpenQA.Selenium.Chrome.ChromeDriver
 
@@ -13,12 +13,12 @@ Public Class UTimeTable
     Dim SQLiteCmd As SQLiteCommand
     Dim SQLiteReader As SQLiteDataReader
 
-    Public Dim Suund As String = Nothing
+    Public Suund As String = Nothing
     Private LinkHalf As String = Nothing
-    Public Dim LinkFull As String = Nothing
-    Public Dim SelectedLine As String = Nothing
-    Public Dim SelectedStop As String = Nothing
-    Public Dim SelectedStopId As String = Nothing
+    Public LinkFull As String = Nothing
+    Public SelectedLine As String = Nothing
+    Public SelectedStop As String = Nothing
+    Public SelectedStopId As String = Nothing
     Dim dbFilePath As String = Path.Combine(Application.StartupPath, "mapdb.db")
 
     Public Structure StopStruct
@@ -179,6 +179,7 @@ Public Class UTimeTable
 
         If Suund = Nothing Then
             lBoxLiinid.Visible = True
+            lblLiinid.Visible = True
             lBoxLiinid.Items.Clear()
             LoadLines()
         Else
@@ -211,9 +212,13 @@ Public Class UTimeTable
         driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(250)
     End Sub
     Private Sub GetStopTimes()
-
-        lBoxAjad.Items.Clear()
-        lBoxAjad.Visible = True
+        Dim InvaColor As Color = Color.DeepSkyBlue
+        lblAbi.ForeColor = InvaColor
+        lblAbi.Font = New Font(lblAbi.Font, FontStyle.Underline)
+        lblAbi.Visible = True
+        lblAjad.Visible = True
+        rtbAjad.Visible = True
+        rtbAjad.Clear()
 
         InitChromeDriver()
         driver.Navigate().GoToUrl(LinkFull)
@@ -233,12 +238,26 @@ Public Class UTimeTable
             hourVal = hourVal.PadRight(3)
             Dim minuteElements As ReadOnlyCollection(Of IWebElement) = time.FindElements(By.XPath("./td/a"))
             Dim minuteValues As String = ""
-
+            rtbAjad.SelectionColor = Color.Black
+            rtbAjad.AppendText(hourVal & ": ")
             For Each minuteElement As IWebElement In minuteElements
-                minuteValues &= " " & minuteElement.Text
-            Next
+                Dim color As Color
+                If minuteElement.GetAttribute("class") = "highlighted" Or minuteElement.GetAttribute("class") = "other1 highlighted" Then
+                    color = InvaColor
+                    rtbAjad.SelectionFont = New Font(rtbAjad.Font, FontStyle.Underline)
+                Else
+                    color = Color.Black
+                    rtbAjad.SelectionFont = New Font(rtbAjad.Font, FontStyle.Regular)
+                End If
 
-            lBoxAjad.Items.Add(hourVal & ":" & minuteValues)
+                rtbAjad.SelectionColor = color
+                rtbAjad.AppendText(minuteElement.Text)
+                rtbAjad.SelectionColor = Color.Black
+                rtbAjad.SelectionFont = New Font(rtbAjad.Font, FontStyle.Regular)
+                rtbAjad.AppendText(" ")
+            Next
+            rtbAjad.SelectionColor = Color.Black
+            rtbAjad.AppendText(Environment.NewLine)
         Next
 
         GetStopTimesRealTime()
@@ -247,6 +266,7 @@ Public Class UTimeTable
 
     Private Sub GetStopTimesRealTime()
         lBoxRealTime.Visible = True
+        lblReaalajad.Visible = True
         lBoxRealTime.Items.Clear()
         'Dim wait As New WebDriverWait(driver, TimeSpan.FromSeconds(2))
         'Dim liElements = wait.Until(Function(driver) driver.FindElements(By.XPath("//*[@id='divScheduleContent']/div[1]/div[4]/ul/li")))
@@ -268,6 +288,7 @@ Public Class UTimeTable
     Private Sub btnShowLines_Click(sender As Object, e As EventArgs) Handles btnShowLines.Click
         lBoxLiinid.Items.Clear()
         lBoxLiinid.Visible = True
+        lblLiinid.Visible = True
         'btnShowStops.Visible = False
         Suund = ""
         LoadLines()
@@ -276,6 +297,7 @@ Public Class UTimeTable
     Private Sub btnShowStops_Click(sender As Object, e As EventArgs) Handles btnShowStops.Click
         Suund = Nothing
         lBoxPeatused.Visible = True
+        lblPeatused.Visible = True
         'btnShowLines.Visible = False
         lBoxLiinid.Items.Clear()
         LoadLineStops(Suund, "select Distinct PeatuseNimi from koikpeatused Order by PeatuseNimi ASC;")
@@ -298,6 +320,5 @@ Public Class UTimeTable
         SelectedLine = lBoxLiinid.SelectedItem
         LoadLineSuund(SelectedLine)
     End Sub
-
 
 End Class
