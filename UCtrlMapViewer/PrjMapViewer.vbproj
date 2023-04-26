@@ -173,6 +173,9 @@
       <Name>UTimeTable</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="img\bus_marker.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

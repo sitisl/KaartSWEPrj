@@ -32,43 +32,47 @@ Partial Class Kaardirakendus
         '
         Me.UCtrlMapViewer.BackColor = System.Drawing.Color.Transparent
         Me.UCtrlMapViewer.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.UCtrlMapViewer.Location = New System.Drawing.Point(3, 3)
+        Me.UCtrlMapViewer.Location = New System.Drawing.Point(5, 5)
+        Me.UCtrlMapViewer.Margin = New System.Windows.Forms.Padding(5, 5, 5, 5)
         Me.UCtrlMapViewer.Name = "UCtrlMapViewer"
-        Me.UCtrlMapViewer.Size = New System.Drawing.Size(990, 654)
+        Me.UCtrlMapViewer.Size = New System.Drawing.Size(1266, 802)
         Me.UCtrlMapViewer.TabIndex = 24
         '
         'UTimeTable
         '
         Me.UTimeTable.Dock = System.Windows.Forms.DockStyle.Fill
         Me.UTimeTable.Font = New System.Drawing.Font("Consolas", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(186, Byte))
-        Me.UTimeTable.Location = New System.Drawing.Point(999, 3)
+        Me.UTimeTable.Location = New System.Drawing.Point(1281, 5)
+        Me.UTimeTable.Margin = New System.Windows.Forms.Padding(5, 5, 5, 5)
         Me.UTimeTable.Name = "UTimeTable"
-        Me.UTimeTable.Size = New System.Drawing.Size(480, 654)
+        Me.UTimeTable.Size = New System.Drawing.Size(638, 802)
         Me.UTimeTable.TabIndex = 21
         '
         'TableLayoutPanel1
         '
         Me.TableLayoutPanel1.ColumnCount = 2
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 486.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 648.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.UTimeTable, 1, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.UCtrlMapViewer, 0, 0)
         Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 0)
+        Me.TableLayoutPanel1.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1482, 660)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1924, 812)
         Me.TableLayoutPanel1.TabIndex = 25
         '
         'Kaardirakendus
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1482, 660)
+        Me.ClientSize = New System.Drawing.Size(1924, 812)
         Me.Controls.Add(Me.TableLayoutPanel1)
+        Me.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.Name = "Kaardirakendus"
-        Me.Text = "Form1"
+        Me.Text = "Ühistranspordi rakendus"
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.ResumeLayout(False)
 

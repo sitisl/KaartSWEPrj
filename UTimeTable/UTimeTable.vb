@@ -20,7 +20,7 @@ Public Class UTimeTable
     Public SelectedStop As String = Nothing
     Public SelectedStopId As String = Nothing
     Dim desktopPath As String = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)
-    Dim dbFilePath As String = Path.Combine(desktopPath, "mapdb.db")
+    Dim dbFilePath As String = Path.Combine(desktopPath, "mapdb_tallinn_only.db")
 
     Public Structure StopStruct
         Public Name As String
@@ -65,9 +65,12 @@ Public Class UTimeTable
     Public Sub CloseConnections()
         Try
             SQLiteCon.Close()
-            driver.Quit()
-        Catch
-            Exit Sub
+
+            If driver IsNot Nothing Then
+                driver.Quit()
+            End If
+        Catch ex As Exception
+            ' Handle exception here
         End Try
     End Sub
 
@@ -318,4 +321,6 @@ Public Class UTimeTable
         btnAB.Visible = True
         btnBA.Visible = True
     End Sub
+
+
 End Class

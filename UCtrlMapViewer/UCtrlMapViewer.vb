@@ -14,12 +14,20 @@ Imports UTimeTable.UTimeTable
 Imports System.Windows
 Imports PrjRealTime
 Imports PrjRealTime.CRealTime
+Imports System.Windows.Forms.VisualStyles.VisualStyleElement
+Imports System.Reflection.Emit
+Imports Newtonsoft.Json.Linq
+Imports System.Text.RegularExpressions
 
 
 ' This class realizes the functionality of the map viewer graphic component
 Public Class UCtrlMapViewer
     ' Flag for checking if the layerPanel is resized
     Private isResized As Boolean = False
+    Private startCoord As PointLatLng
+    Private endCoord As PointLatLng
+    Private startStop As String
+    Private endStop As String
 
     Public timeT As New UTimeTable.UTimeTable
     Private WithEvents transportTimer As New Timer()
@@ -51,6 +59,10 @@ Public Class UCtrlMapViewer
         cbStops.Checked = True
         transportTimer.Interval = 5000 ' 1 second
         transportTimer.Enabled = True
+        lblStart.Parent = gMap1
+        lblDest.Parent = gMap1
+        btnClear.Enabled = False
+        btnRoute.Enabled = False
     End Sub
 
     Private Sub panelLayers_Init()
@@ -98,6 +110,8 @@ Public Class UCtrlMapViewer
         gMap1.MaxZoom = 20
         gMap1.Zoom = 11
         gMap1.DragButton = MouseButtons.Left
+        gMap1.ForceDoubleBuffer = True
+        'GMaps.Instance.UseMemoryCache = True
         'GMapControl1.BoundsOfMap = New RectLatLng(59.43, 24.75, 0.1, 0.1)
     End Sub
 
@@ -116,6 +130,26 @@ Public Class UCtrlMapViewer
         Return markerBitmap
     End Function
 
+
+    Private Sub btnRoute_Click(sender As Object, e As EventArgs) Handles btnRoute.Click
+        If lblStart.Text IsNot "" And lblDest.Text IsNot "" _
+            And lblStart.Text IsNot lblDest.Text Then
+            getRoute(startCoord, endCoord)
+        End If
+        btnRoute.Enabled = False
+        cbStops.Checked = False
+    End Sub
+
+    Private Sub btnClear_Click(sender As Object, e As EventArgs) Handles btnClear.Click
+        lblStart.Text = ""
+        lblDest.Text = ""
+        btnClear.Enabled = False
+        btnRoute.Enabled = False
+        clearRoute()
+        gMap1.Position = New GMap.NET.PointLatLng(59.43, 24.75)
+        gMap1.Zoom = 11
+    End Sub
+
     Public Sub gMap1_MouseDown(sender As Object, e As MouseEventArgs) _
         Handles gMap1.MouseDown
         If e.Button = MouseButtons.Right Then
@@ -128,11 +162,53 @@ Public Class UCtrlMapViewer
     Private Sub gMap1_OnMarkerClick(item As GMapMarker, e As MouseEventArgs) _
         Handles gMap1.OnMarkerClick
         Dim marker As GMarkerGoogle = TryCast(item, GMarkerGoogle)
-        If marker IsNot Nothing Then
-            RaiseEvent MarkerClicked(marker.ToolTipText, item.Position.Lat, item.Position.Lng)
-            RaiseEvent markerClick(marker.ToolTipText)
+        If marker IsNot Nothing And Regex.IsMatch(marker.ToolTipText, "^[a-zA-ZäöüõšžÄÖÜÕŠŽ\s\-]+$") Then
+            btnClear.Enabled = True
+            If (lblStart.Text = "") Then
+                lblStart.Text = marker.ToolTipText
+                startCoord = New PointLatLng(item.Position.Lat, item.Position.Lng)
+                startStop = marker.ToolTipText
+            Else
+                lblDest.Text = marker.ToolTipText
+                endStop = marker.ToolTipText
+                endCoord = New PointLatLng(item.Position.Lat, item.Position.Lng)
+                btnRoute.Enabled = True
+            End If
+            'RaiseEvent MarkerClicked(marker.ToolTipText, item.Position.Lat, item.Position.Lng)
+            'RaiseEvent markerClick(marker.ToolTipText)
         End If
     End Sub
+
+
+    Private Sub lblStart_Paint(sender As Object, e As PaintEventArgs) Handles lblStart.Paint
+        Using brush As New LinearGradientBrush(lblStart.ClientRectangle, Color.FromArgb(204, 255, 255, 255), Color.FromArgb(204, 245, 245, 245), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, lblStart.ClientRectangle)
+        End Using
+
+        Dim textColor = Color.Black
+        Dim textFont = New Font("Segoe UI", 10, FontStyle.Regular)
+        Dim textFormat = New StringFormat() With {.LineAlignment = StringAlignment.Center}
+        Dim textRect = New RectangleF(PointF.Empty, lblStart.Size)
+
+        e.Graphics.DrawString(lblStart.Text, textFont, New SolidBrush(textColor), textRect, textFormat)
+    End Sub
+
+    Private Sub lblDest_Paint(sender As Object, e As PaintEventArgs) Handles lblDest.Paint
+        Using brush As New LinearGradientBrush(lblDest.ClientRectangle, Color.FromArgb(204, 255, 255, 255), Color.FromArgb(204, 245, 245, 245), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, lblDest.ClientRectangle)
+        End Using
+
+        Dim textColor = Color.Black
+        Dim textFont = New Font("Segoe UI", 10, FontStyle.Regular)
+        Dim textFormat = New StringFormat() With {.LineAlignment = StringAlignment.Center}
+        Dim textRect = New RectangleF(PointF.Empty, lblDest.Size)
+
+        e.Graphics.DrawString(lblDest.Text, textFont, New SolidBrush(textColor), textRect, textFormat)
+    End Sub
+
+
+
+
 
 
     Private Sub btnLayers_MouseEnter(sender As Object, e As EventArgs) Handles btnLayers.MouseEnter
@@ -183,6 +259,43 @@ Public Class UCtrlMapViewer
             stopsOverlay.Markers.Clear()
             gMap1.Refresh()
         End If
+    End Sub
+
+    Public Sub getRoute(startCoord As PointLatLng, endCoord As PointLatLng)
+        showHideStops(False, getStopsSQL(drawMarker("Orange")))
+        ' Define the route overlay and add it to the map
+        Dim mapOverlay As GMapOverlay = New GMapOverlay("routes")
+        'Gets route using Bing API with start and destination coordinate
+        Dim route As MapRoute = GMapProviders.BingMap.GetRoute(startCoord, endCoord, False, False, 15)
+
+        If route IsNot Nothing AndAlso route.Points.Count > 1 Then
+            Dim routeOverlay As GMapRoute = New GMapRoute(route.Points, "Route")
+            routeOverlay.Stroke = New Pen(Color.FromArgb(128, Color.Red), 5)
+            Dim routePoints As List(Of PointLatLng) = route.Points
+            mapOverlay.Routes.Add(routeOverlay)
+
+            Dim startMarker As GMarkerGoogle = New GMarkerGoogle(startCoord, GMarkerGoogleType.green)
+            startMarker.ToolTipText = startStop
+            mapOverlay.Markers.Add(startMarker)
+
+            Dim endMarker As GMarkerGoogle = New GMarkerGoogle(endCoord, GMarkerGoogleType.red)
+            endMarker.ToolTipText = endStop
+            mapOverlay.Markers.Add(endMarker)
+
+            gMap1.Overlays.Clear()
+            gMap1.Overlays.Add(mapOverlay)
+
+            gMap1.ZoomAndCenterRoute(routeOverlay)
+        Else
+            MessageBox.Show("No route found.")
+        End If
+    End Sub
+
+    Public Sub clearRoute()
+        gMap1.Overlays.Clear()
+        gMap1.Refresh()
+        cbStops.Checked = False
+        cbStops.Checked = True
     End Sub
 
     Private Sub panelLayers_Paint(sender As Object, e As PaintEventArgs) Handles panelLayers.Paint
@@ -264,6 +377,8 @@ Public Class UCtrlMapViewer
         Return busesOverlay
     End Function
 
+
+
     Public Function GetTrams(ByRef markerBitmap As Bitmap)
 
         Dim realTime As New CRealTime
@@ -301,6 +416,8 @@ Public Class UCtrlMapViewer
         Next
         Return trolleysOverlay
     End Function
+
+
 End Class
 
 
@@ -340,7 +457,5 @@ Public Class CustomToolTip
 
 
 End Class
-
-
 
 
