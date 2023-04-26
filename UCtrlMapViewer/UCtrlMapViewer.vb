@@ -28,6 +28,7 @@ Public Class UCtrlMapViewer
     Private endCoord As PointLatLng
     Private startStop As String
     Private endStop As String
+    Private apiKey As String = "9uNDiiSRdZbV6ok9Ec5t~H2haoDb04SzxUDigaGoUfg~Ajj9p1O58cpXmy-Y-BbTNAF8M1Ws3HjoFHGWOaSgIYCucioMsIkP3BpBZGI3XtWr"
 
     Public timeT As New UTimeTable.UTimeTable
     Private WithEvents transportTimer As New Timer()
@@ -102,7 +103,7 @@ Public Class UCtrlMapViewer
     Private Sub initializeMap()
         gMap1.MapProvider = BingMapProvider.Instance 'Bing for map provider
         'API key
-        BingMapProvider.Instance.ClientKey = "9uNDiiSRdZbV6ok9Ec5t~H2haoDb04SzxUDigaGoUfg~Ajj9p1O58cpXmy-Y-BbTNAF8M1Ws3HjoFHGWOaSgIYCucioMsIkP3BpBZGI3XtWr"
+        BingMapProvider.Instance.ClientKey = apiKey
         GMaps.Instance.Mode = AccessMode.ServerAndCache
         gMap1.ShowCenter = False
         gMap1.Position = New GMap.NET.PointLatLng(59.43, 24.75)
@@ -290,6 +291,62 @@ Public Class UCtrlMapViewer
             MessageBox.Show("No route found.")
         End If
     End Sub
+
+    'Public Sub getRoute(startCoord As PointLatLng, endCoord As PointLatLng)
+    '    showHideStops(False, getStopsSQL(drawMarker("Orange")))
+
+    '    ' Define the route overlay and add it to the map
+    '    Dim mapOverlay As GMapOverlay = New GMapOverlay("routes")
+
+    '    ' Construct the Bing Maps REST API URL with necessary parameters
+    '    Dim request As RouteRequest = New RouteRequest()
+    '    request.Credentials = New BingMapsRESTToolkit.Credentials() With {.ApplicationId = "YOUR_BING_MAPS_API_KEY"}
+    '    request.TravelMode = TravelModeType.Transit
+    '    request.DepartureTime = DateTime.Now
+    '    request.Waypoints = New List(Of SimpleWaypoint)() From {
+    '    New SimpleWaypoint() With {.Latitude = startCoord.Latitude, .Longitude = startCoord.Longitude},
+    '    New SimpleWaypoint() With {.Latitude = endCoord.Latitude, .Longitude = endCoord.Longitude}
+    '}
+
+    '    ' Make the API request and retrieve the response
+    '    Dim response As Response = request.Execute()
+
+    '    ' Check if the response includes a transit route
+    '    If response.ResourceSets(0).Resources(0).RoutePath IsNot Nothing Then
+    '        ' Extract the route coordinates and add them to the map overlay
+    '        Dim routeCoords As List(Of PointLatLng) = New List(Of PointLatLng)
+    '        For Each point As Location In response.ResourceSets(0).Resources(0).RoutePath.Line.Coordinates
+    '            routeCoords.Add(New PointLatLng(point.Latitude, point.Longitude))
+    '        Next
+
+    '        Dim routeOverlay As GMapRoute = New GMapRoute(routeCoords, "Transit Route")
+    '        routeOverlay.Stroke = New Pen(Color.FromArgb(128, Color.Blue), 5)
+    '        mapOverlay.Routes.Add(routeOverlay)
+
+    '        Dim startMarker As GMarkerGoogle = New GMarkerGoogle(New PointLatLng(startCoord.Lat, startCoord.Lng), GMarkerGoogleType.green)
+    '        startMarker.ToolTipText = startStop
+    '        mapOverlay.Markers.Add(startMarker)
+
+    '        Dim endMarker As GMarkerGoogle = New GMarkerGoogle(New PointLatLng(endCoord.Lat, endCoord.Lng), GMarkerGoogleType.red)
+    '        endMarker.ToolTipText = endStop
+    '        mapOverlay.Markers.Add(endMarker)
+
+    '        gMap1.Overlays.Clear()
+    '        gMap1.Overlays.Add(mapOverlay)
+
+    '        gMap1.ZoomAndCenterRoute(routeOverlay)
+    '    Else
+    '        MessageBox.Show("Marsruuti ei leitud!")
+    '    End If
+    'End Sub
+
+
+
+
+
+
+
+
 
     Public Sub clearRoute()
         gMap1.Overlays.Clear()
