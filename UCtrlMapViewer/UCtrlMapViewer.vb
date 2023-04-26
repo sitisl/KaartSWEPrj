@@ -18,6 +18,8 @@ Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 Imports System.Reflection.Emit
 Imports Newtonsoft.Json.Linq
 Imports System.Text.RegularExpressions
+Imports System.Runtime.InteropServices
+Imports System.Reflection
 
 
 ' This class realizes the functionality of the map viewer graphic component
@@ -67,7 +69,7 @@ Public Class UCtrlMapViewer
     End Sub
 
     Private Sub panelLayers_Init()
-        panelLayers.Parent = gMap1
+        'panelLayers.Parent = gMap1
         panelLayers.BackColor = Color.Transparent
         panelLayers.Controls.Clear()
         panelLayers.Controls.Add(btnLayers)
@@ -109,12 +111,16 @@ Public Class UCtrlMapViewer
         gMap1.Position = New GMap.NET.PointLatLng(59.43, 24.75)
         gMap1.MinZoom = 11
         gMap1.MaxZoom = 20
-        gMap1.Zoom = 11
+        gMap1.Zoom = 12
         gMap1.DragButton = MouseButtons.Left
         gMap1.ForceDoubleBuffer = True
         'GMaps.Instance.UseMemoryCache = True
         'GMapControl1.BoundsOfMap = New RectLatLng(59.43, 24.75, 0.1, 0.1)
     End Sub
+
+
+    Private Const WM_SETREDRAW As Integer = &HB
+
 
     Public Function drawMarker(colorDot As String)
         ' Create a custom marker with 80% fill opacity, orange fill, black stroke, and circle shape
@@ -148,7 +154,7 @@ Public Class UCtrlMapViewer
         btnRoute.Enabled = False
         clearRoute()
         gMap1.Position = New GMap.NET.PointLatLng(59.43, 24.75)
-        gMap1.Zoom = 11
+        gMap1.Zoom = 12
     End Sub
 
     Public Sub gMap1_MouseDown(sender As Object, e As MouseEventArgs) _
@@ -163,7 +169,7 @@ Public Class UCtrlMapViewer
     Private Sub gMap1_OnMarkerClick(item As GMapMarker, e As MouseEventArgs) _
         Handles gMap1.OnMarkerClick
         Dim marker As GMarkerGoogle = TryCast(item, GMarkerGoogle)
-        If marker IsNot Nothing And Regex.IsMatch(marker.ToolTipText, "^[a-zA-ZäöüõšžÄÖÜÕŠŽ\s\-]+$") Then
+        If marker IsNot Nothing And Regex.IsMatch(marker.ToolTipText, "^[a-zA-ZäöüõšžÄÖÜÕŠŽ][a-zA-ZäöüõšžÄÖÜÕŠŽ\s\-0-9.]*$") Then
             btnClear.Enabled = True
             If (lblStart.Text = "") Then
                 lblStart.Text = marker.ToolTipText
@@ -209,10 +215,7 @@ Public Class UCtrlMapViewer
 
 
 
-
-
-
-    Private Sub btnLayers_MouseEnter(sender As Object, e As EventArgs) Handles btnLayers.MouseEnter
+    Private Sub btnLayers_MouseClick(sender As Object, e As EventArgs) Handles btnLayers.MouseClick
         panelLayers.Hide()
         panelLayers.Controls.Clear()
         panelLayers.Cursor = Cursors.Arrow
@@ -229,6 +232,8 @@ Public Class UCtrlMapViewer
         cbTroll.Location = New Point(10, 85)
         panelLayers.Show()
         isResized = True
+        'panelLayers.SuspendLayout()
+        'SuspendDrawing(panelLayers)
     End Sub
 
     Private Sub panelLayers_MouseLeave(sender As Object, e As EventArgs) Handles panelLayers.MouseLeave
@@ -276,10 +281,16 @@ Public Class UCtrlMapViewer
             mapOverlay.Routes.Add(routeOverlay)
 
             Dim startMarker As GMarkerGoogle = New GMarkerGoogle(startCoord, GMarkerGoogleType.green)
+            Dim toolTipStart As New CustomToolTip(startMarker)
+            'toolTip.Offset = New Point(5, -startMarker.Height / 2)
+            startMarker.ToolTip = toolTipStart
             startMarker.ToolTipText = startStop
             mapOverlay.Markers.Add(startMarker)
 
             Dim endMarker As GMarkerGoogle = New GMarkerGoogle(endCoord, GMarkerGoogleType.red)
+            Dim toolTipEnd As New CustomToolTip(endMarker)
+            'toolTip.Offset = New Point(5, -endMarker.Height / 2)
+            endMarker.ToolTip = toolTipEnd
             endMarker.ToolTipText = endStop
             mapOverlay.Markers.Add(endMarker)
 
@@ -514,5 +525,8 @@ Public Class CustomToolTip
 
 
 End Class
+
+
+
 
 
