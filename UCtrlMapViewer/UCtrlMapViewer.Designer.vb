@@ -166,7 +166,6 @@ Partial Class UCtrlMapViewer
         'lblStart
         '
         Me.lblStart.AutoSize = True
-        Me.lblStart.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.lblStart.Font = New System.Drawing.Font("Segoe UI", 10.0!)
         Me.lblStart.ForeColor = System.Drawing.Color.Transparent
         Me.lblStart.Location = New System.Drawing.Point(10, 10)
@@ -178,7 +177,6 @@ Partial Class UCtrlMapViewer
         'lblDest
         '
         Me.lblDest.AutoSize = True
-        Me.lblDest.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.lblDest.Font = New System.Drawing.Font("Segoe UI", 10.0!)
         Me.lblDest.ForeColor = System.Drawing.Color.Transparent
         Me.lblDest.Location = New System.Drawing.Point(10, 44)
@@ -189,11 +187,12 @@ Partial Class UCtrlMapViewer
         '
         'btnRoute
         '
-        Me.btnRoute.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.btnRoute.BackColor = System.Drawing.Color.FromArgb(CType(CType(204, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer))
         Me.btnRoute.FlatAppearance.BorderColor = System.Drawing.Color.Black
         Me.btnRoute.FlatAppearance.BorderSize = 0
         Me.btnRoute.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnRoute.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.btnRoute.ForeColor = System.Drawing.Color.White
         Me.btnRoute.Location = New System.Drawing.Point(124, 79)
         Me.btnRoute.Name = "btnRoute"
         Me.btnRoute.Size = New System.Drawing.Size(96, 35)
@@ -203,15 +202,17 @@ Partial Class UCtrlMapViewer
         '
         'btnClear
         '
-        Me.btnClear.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.btnClear.BackColor = System.Drawing.Color.FromArgb(CType(CType(204, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer))
         Me.btnClear.FlatAppearance.BorderSize = 0
         Me.btnClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnClear.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.btnClear.ForeColor = System.Drawing.Color.White
         Me.btnClear.Location = New System.Drawing.Point(12, 79)
         Me.btnClear.Name = "btnClear"
         Me.btnClear.Size = New System.Drawing.Size(96, 35)
         Me.btnClear.TabIndex = 11
         Me.btnClear.Text = "Tühjenda"
+        Me.btnClear.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
         Me.btnClear.UseVisualStyleBackColor = False
         '
         'UCtrlMapViewer
