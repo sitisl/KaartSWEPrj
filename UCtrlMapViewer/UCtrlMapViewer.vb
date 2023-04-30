@@ -331,6 +331,7 @@ Public Class UCtrlMapViewer
             'Parse the response And extract the route path
             Dim jsonResponse As JObject = JObject.Parse(responseBody)
             Dim routePath As List(Of PointLatLng) = Nothing
+            Dim busPath As List(Of PointLatLng) = Nothing
 
             If jsonResponse("statusCode").ToString() = "200" AndAlso jsonResponse("resourceSets")(0)("estimatedTotal").ToObject(Of Integer) > 0 Then
                 routePath = New List(Of PointLatLng)
@@ -341,6 +342,26 @@ Public Class UCtrlMapViewer
                     Dim loc As New PointLatLng(latitude, longitude)
                     routePath.Add(loc)
                 Next
+
+                For Each leg In jsonResponse("resourceSets")(0)("resources")(0)("routeLegs")
+                    For Each item In leg("itineraryItems")
+                        If item("transitStops") IsNot Nothing Then
+                            For Each point In item("transitStops")
+                                If point IsNot Nothing AndAlso point("position") IsNot Nothing AndAlso point("position")("coordinates") IsNot Nothing Then
+                                    Dim latitude As Double = point("position")("coordinates")(0)
+                                    Dim longitude As Double = point("position")("coordinates")(1)
+                                    Dim loc As New PointLatLng(latitude, longitude)
+                                    Dim stopMarker As GMarkerGoogle = New GMarkerGoogle(loc, CType(drawMarker("orange"), Bitmap))
+                                    Dim toolTipStop As New CustomToolTip(stopMarker)
+                                    stopMarker.ToolTip = toolTipStop
+                                    stopMarker.ToolTipText = point("stopName")
+                                    mapOverlay.Markers.Add(stopMarker)
+                                End If
+                            Next
+                        End If
+                    Next
+                Next
+
             Else
                 MessageBox.Show("Sobivat marsuuti ei leitud!")
             End If
