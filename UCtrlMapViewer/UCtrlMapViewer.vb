@@ -564,6 +564,17 @@ Public Class UCtrlMapViewer
         Return trolleysOverlay
     End Function
 
+    Private Sub btnLayers_MouseClick(sender As Object, e As MouseEventArgs) Handles btnLayers.MouseClick
+
+    End Sub
+
+    Private Sub btnZoomIn_Click(sender As Object, e As EventArgs) Handles btnZoomIn.Click
+        gMap1.Zoom = gMap1.Zoom + 1
+    End Sub
+
+    Private Sub btnZoomOut_Click(sender As Object, e As EventArgs) Handles btnZoomOut.Click
+        gMap1.Zoom = gMap1.Zoom - 1
+    End Sub
 End Class
 
 

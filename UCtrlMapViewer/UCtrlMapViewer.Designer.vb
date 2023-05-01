@@ -34,6 +34,8 @@ Partial Class UCtrlMapViewer
         Me.btnRoute = New System.Windows.Forms.Button()
         Me.btnClear = New System.Windows.Forms.Button()
         Me.panelPopup = New System.Windows.Forms.Panel()
+        Me.btnZoomIn = New System.Windows.Forms.Button()
+        Me.btnZoomOut = New System.Windows.Forms.Button()
         Me.panelLayers.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -218,16 +220,53 @@ Partial Class UCtrlMapViewer
         '
         'panelPopup
         '
-        Me.panelPopup.Location = New System.Drawing.Point(413, 117)
+        Me.panelPopup.Location = New System.Drawing.Point(676, 285)
         Me.panelPopup.Name = "panelPopup"
         Me.panelPopup.Size = New System.Drawing.Size(144, 127)
         Me.panelPopup.TabIndex = 12
+        '
+        'btnZoomIn
+        '
+        Me.btnZoomIn.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnZoomIn.BackColor = System.Drawing.Color.FromArgb(CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer))
+        Me.btnZoomIn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.btnZoomIn.FlatAppearance.BorderSize = 0
+        Me.btnZoomIn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnZoomIn.Font = New System.Drawing.Font("Segoe UI", 32.0!, System.Drawing.FontStyle.Bold)
+        Me.btnZoomIn.ForeColor = System.Drawing.Color.Transparent
+        Me.btnZoomIn.Location = New System.Drawing.Point(12, 129)
+        Me.btnZoomIn.Margin = New System.Windows.Forms.Padding(1)
+        Me.btnZoomIn.Name = "btnZoomIn"
+        Me.btnZoomIn.Size = New System.Drawing.Size(80, 70)
+        Me.btnZoomIn.TabIndex = 5
+        Me.btnZoomIn.Text = "+"
+        Me.btnZoomIn.UseVisualStyleBackColor = False
+        '
+        'btnZoomOut
+        '
+        Me.btnZoomOut.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnZoomOut.BackColor = System.Drawing.Color.FromArgb(CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer))
+        Me.btnZoomOut.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.btnZoomOut.FlatAppearance.BorderSize = 0
+        Me.btnZoomOut.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnZoomOut.Font = New System.Drawing.Font("Segoe UI", 32.0!, System.Drawing.FontStyle.Bold)
+        Me.btnZoomOut.ForeColor = System.Drawing.Color.Transparent
+        Me.btnZoomOut.Location = New System.Drawing.Point(12, 210)
+        Me.btnZoomOut.Margin = New System.Windows.Forms.Padding(1)
+        Me.btnZoomOut.Name = "btnZoomOut"
+        Me.btnZoomOut.Size = New System.Drawing.Size(80, 78)
+        Me.btnZoomOut.TabIndex = 13
+        Me.btnZoomOut.Text = "-"
+        Me.btnZoomOut.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
+        Me.btnZoomOut.UseVisualStyleBackColor = False
         '
         'UCtrlMapViewer
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.Transparent
+        Me.Controls.Add(Me.btnZoomOut)
+        Me.Controls.Add(Me.btnZoomIn)
         Me.Controls.Add(Me.panelPopup)
         Me.Controls.Add(Me.btnClear)
         Me.Controls.Add(Me.btnRoute)
@@ -257,4 +296,6 @@ Partial Class UCtrlMapViewer
     Friend WithEvents btnRoute As Button
     Friend WithEvents btnClear As Button
     Friend WithEvents panelPopup As Panel
+    Friend WithEvents btnZoomIn As Button
+    Friend WithEvents btnZoomOut As Button
 End Class
