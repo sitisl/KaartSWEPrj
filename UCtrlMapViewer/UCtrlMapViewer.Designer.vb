@@ -33,6 +33,7 @@ Partial Class UCtrlMapViewer
         Me.lblDest = New System.Windows.Forms.Label()
         Me.btnRoute = New System.Windows.Forms.Button()
         Me.btnClear = New System.Windows.Forms.Button()
+        Me.panelPopup = New System.Windows.Forms.Panel()
         Me.panelLayers.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -215,11 +216,19 @@ Partial Class UCtrlMapViewer
         Me.btnClear.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
         Me.btnClear.UseVisualStyleBackColor = False
         '
+        'panelPopup
+        '
+        Me.panelPopup.Location = New System.Drawing.Point(413, 117)
+        Me.panelPopup.Name = "panelPopup"
+        Me.panelPopup.Size = New System.Drawing.Size(144, 127)
+        Me.panelPopup.TabIndex = 12
+        '
         'UCtrlMapViewer
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.Transparent
+        Me.Controls.Add(Me.panelPopup)
         Me.Controls.Add(Me.btnClear)
         Me.Controls.Add(Me.btnRoute)
         Me.Controls.Add(Me.lblDest)
@@ -247,4 +256,5 @@ Partial Class UCtrlMapViewer
     Friend WithEvents lblDest As Label
     Friend WithEvents btnRoute As Button
     Friend WithEvents btnClear As Button
+    Friend WithEvents panelPopup As Panel
 End Class

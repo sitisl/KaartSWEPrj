@@ -22,6 +22,7 @@ Imports System.Runtime.InteropServices
 Imports System.Reflection
 Imports Newtonsoft.Json
 Imports System.Net.Http
+Imports HtmlAgilityPack
 
 
 ' This class realizes the functionality of the map viewer graphic component
@@ -41,6 +42,7 @@ Public Class UCtrlMapViewer
     Dim trolleysOverlay As New GMapOverlay("trolleysOverlay")
     Dim tramsOverlay As New GMapOverlay("tramsOverlay")
 
+
     Public Function getStopsSQL(ByRef markerBitmap As Bitmap)
 
         Dim stops As List(Of StopStruct) = timeT.GetStopsCoordinates()
@@ -58,6 +60,17 @@ Public Class UCtrlMapViewer
         Return stopsOverlay
     End Function
 
+    Private Sub panelPopupInit()
+        ' Create a Panel control
+        'Dim panelPopup As New Panel()
+        panelPopup.AutoSize = True
+        panelPopup.Visible = False
+
+        ' Add controls to the panel as needed
+        'Dim label As New Label()
+        'label.Text = "Hello, world!"
+        'panel.Controls.Add(label)
+    End Sub
     Private Sub UCtrlMapViewer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' This code will run when the user control is loaded into a form or another container control
         panelLayers_Init()
@@ -68,6 +81,7 @@ Public Class UCtrlMapViewer
         lblDest.Parent = gMap1
         btnClear.Enabled = False
         btnRoute.Enabled = False
+        panelPopupInit()
     End Sub
 
     Private Sub panelLayers_Init()
@@ -173,14 +187,25 @@ Public Class UCtrlMapViewer
                 startCoord = New PointLatLng(item.Position.Lat, item.Position.Lng)
                 startStop = marker.ToolTipText
             Else
-                lblDest.Text = marker.ToolTipText
-                endStop = marker.ToolTipText
-                endCoord = New PointLatLng(item.Position.Lat, item.Position.Lng)
-                btnRoute.Enabled = True
+                If (marker.ToolTipText <> lblStart.Text) Then
+                    lblDest.Text = marker.ToolTipText
+                    endStop = marker.ToolTipText
+                    endCoord = New PointLatLng(item.Position.Lat, item.Position.Lng)
+                    btnRoute.Enabled = True
+                End If
             End If
+            'panelPopup.Visible = True
+
+            ' Set the location of the panel to the marker's location
+            'panelPopup.Location = New Point(marker.Position.Lat, marker.Position.Lng)
+            'marker.ToolTipMode = MarkerTooltipMode.Never
+
+            ' Add the panel to the map control's Controls collection
+            'gMap1.Controls.Add(panelPopup)
             'RaiseEvent MarkerClicked(marker.ToolTipText, item.Position.Lat, item.Position.Lng)
             'RaiseEvent markerClick(marker.ToolTipText)
         End If
+
     End Sub
 
     Private Sub lblStart_Paint(sender As Object, e As PaintEventArgs) Handles lblStart.Paint
@@ -226,8 +251,6 @@ Public Class UCtrlMapViewer
         cbTroll.Location = New Point(10, 85)
         panelLayers.Show()
         isResized = True
-        'panelLayers.SuspendLayout()
-        'SuspendDrawing(panelLayers)
     End Sub
 
     Private Sub panelLayers_MouseLeave(sender As Object, e As EventArgs) Handles panelLayers.MouseLeave
@@ -260,42 +283,6 @@ Public Class UCtrlMapViewer
             gMap1.Refresh()
         End If
     End Sub
-
-    'Public Sub getRoute1(startCoord As PointLatLng, endCoord As PointLatLng)
-    '    showHideStops(False, getStopsSQL(drawMarker("Orange")))
-    '    ' Define the route overlay and add it to the map
-    '    Dim mapOverlay As GMapOverlay = New GMapOverlay("routes")
-    '    'Gets route using Bing API with start and destination coordinate
-    '    Dim route As MapRoute = GMapProviders.BingMap.GetRoute(startCoord, endCoord, False, False, 15)
-
-    '    If route IsNot Nothing AndAlso route.Points.Count > 1 Then
-    '        Dim routeOverlay As GMapRoute = New GMapRoute(route.Points, "Route")
-    '        routeOverlay.Stroke = New Pen(Color.FromArgb(128, Color.Red), 5)
-    '        Dim routePoints As List(Of PointLatLng) = route.Points
-    '        mapOverlay.Routes.Add(routeOverlay)
-
-    '        Dim startMarker As GMarkerGoogle = New GMarkerGoogle(startCoord, CType(drawMarker("lightgreen"), Bitmap))
-    '        Dim toolTipStart As New CustomToolTip(startMarker)
-    '        'toolTip.Offset = New Point(5, -startMarker.Height / 2)
-    '        startMarker.ToolTip = toolTipStart
-    '        startMarker.ToolTipText = startStop
-    '        mapOverlay.Markers.Add(startMarker)
-
-    '        Dim endMarker As GMarkerGoogle = New GMarkerGoogle(endCoord, CType(drawMarker("red"), Bitmap))
-    '        Dim toolTipEnd As New CustomToolTip(endMarker)
-    '        'toolTip.Offset = New Point(5, -endMarker.Height / 2)
-    '        endMarker.ToolTip = toolTipEnd
-    '        endMarker.ToolTipText = endStop
-    '        mapOverlay.Markers.Add(endMarker)
-
-    '        gMap1.Overlays.Clear()
-    '        gMap1.Overlays.Add(mapOverlay)
-
-    '        gMap1.ZoomAndCenterRoute(routeOverlay)
-    '    Else
-    '        MessageBox.Show("No route found.")
-    '    End If
-    'End Sub
 
     Public Sub getRoute(startCoord As PointLatLng, endCoord As PointLatLng)
         showHideStops(False, getStopsSQL(drawMarker("Orange")))
@@ -330,27 +317,48 @@ Public Class UCtrlMapViewer
 
             'Parse the response And extract the route path
             Dim jsonResponse As JObject = JObject.Parse(responseBody)
-            Dim routePath As List(Of PointLatLng) = Nothing
-            Dim busPath As List(Of PointLatLng) = Nothing
-
+            Dim busPath As List(Of List(Of PointLatLng)) = Nothing
+            Dim walkingPath As List(Of List(Of PointLatLng)) = Nothing
+            Dim walkCount As Integer = 0
+            Dim busCount As Integer = 0
             If jsonResponse("statusCode").ToString() = "200" AndAlso jsonResponse("resourceSets")(0)("estimatedTotal").ToObject(Of Integer) > 0 Then
-                routePath = New List(Of PointLatLng)
-
-                For Each point In jsonResponse("resourceSets")(0)("resources")(0)("routePath")("line")("coordinates")
-                    Dim latitude As Double = point(0)
-                    Dim longitude As Double = point(1)
-                    Dim loc As New PointLatLng(latitude, longitude)
-                    routePath.Add(loc)
-                Next
+                busPath = New List(Of List(Of PointLatLng))
+                walkingPath = New List(Of List(Of PointLatLng))
+                Dim coordinates As JArray = jsonResponse("resourceSets")(0)("resources")(0)("routePath")("line")("coordinates")
 
                 For Each leg In jsonResponse("resourceSets")(0)("resources")(0)("routeLegs")
                     For Each item In leg("itineraryItems")
+                        If item("details")(0)("startPathIndices") IsNot Nothing AndAlso item("details")(0)("startPathIndices") IsNot Nothing Then
+
+                            If item("iconType") IsNot Nothing AndAlso item("iconType") = "Walk" Then
+                                For i = CType(item("details")(0)("startPathIndices")(0), Integer) To CType(item("details")(0)("endPathIndices")(0), Integer)
+                                    Debug.WriteLine("startIndeks: " & item("details")(0)("startPathIndices")(0).ToString & " " & item("details")(0)("endPathIndices")(0).ToString)
+                                    walkingPath.Add(New List(Of PointLatLng))
+
+                                    Dim latitude As Double = coordinates(i)(0)
+                                    Dim longitude As Double = coordinates(i)(1)
+                                    Dim loc As New PointLatLng(latitude, longitude)
+                                    walkingPath(walkCount).Add(loc)
+                                Next
+                                walkCount = walkCount + 1
+
+                            Else
+                                For i = CType(item("details")(0)("startPathIndices")(0), Integer) To CType(item("details")(0)("endPathIndices")(0), Integer)
+                                    Debug.WriteLine("startIndeks: " & item("details")(0)("startPathIndices")(0).ToString & " " & item("details")(0)("endPathIndices")(0).ToString)
+                                    busPath.Add(New List(Of PointLatLng))
+                                    Dim latitude As Double = jsonResponse("resourceSets")(0)("resources")(0)("routePath")("line")("coordinates")(i)(0)
+                                    Dim longitude As Double = jsonResponse("resourceSets")(0)("resources")(0)("routePath")("line")("coordinates")(i)(1)
+                                    Dim loc As New PointLatLng(latitude, longitude)
+                                    busPath(busCount).Add(loc)
+                                Next
+                                busCount = busCount + 1
+                            End If
+                        End If
+
                         If item("transitStops") IsNot Nothing Then
                             For Each point In item("transitStops")
                                 If point IsNot Nothing AndAlso point("position") IsNot Nothing AndAlso point("position")("coordinates") IsNot Nothing Then
-                                    Dim latitude As Double = point("position")("coordinates")(0)
-                                    Dim longitude As Double = point("position")("coordinates")(1)
-                                    Dim loc As New PointLatLng(latitude, longitude)
+                                    Dim loc As New PointLatLng(point("position")("coordinates")(0), point("position")("coordinates")(1))
                                     Dim stopMarker As GMarkerGoogle = New GMarkerGoogle(loc, CType(drawMarker("orange"), Bitmap))
                                     Dim toolTipStop As New CustomToolTip(stopMarker)
                                     stopMarker.ToolTip = toolTipStop
@@ -361,27 +369,58 @@ Public Class UCtrlMapViewer
                         End If
                     Next
                 Next
-
             Else
                 MessageBox.Show("Sobivat marsuuti ei leitud!")
             End If
 
-            Dim routeOverlay As GMapRoute = New GMapRoute(routePath, "Transit Route")
-            routeOverlay.Stroke = New Pen(Color.FromArgb(200, Color.FromArgb(&HF, &H29, &H5A)), 5)
-            mapOverlay.Routes.Add(routeOverlay)
+            For Each busPathList As List(Of PointLatLng) In busPath
+                Dim busPathOverlay As New GMapRoute(busPathList, "Bus Path")
+                busPathOverlay.Stroke = New Pen(Color.Blue, 5)
+                mapOverlay.Routes.Add(busPathOverlay)
+            Next
+
+            For Each walkingPathList As List(Of PointLatLng) In walkingPath
+                Dim walkingPathOverlay As New GMapRoute(walkingPathList, "Walking Path")
+                walkingPathOverlay.Stroke = New Pen(Color.Blue, 4)
+                walkingPathOverlay.Stroke.DashStyle = Drawing2D.DashStyle.Dash
+                mapOverlay.Routes.Add(walkingPathOverlay)
+            Next
+
             Dim startMarker As GMarkerGoogle = New GMarkerGoogle(startCoord, CType(drawMarker("lightgreen"), Bitmap))
             Dim toolTipStart As New CustomToolTip(startMarker)
             startMarker.ToolTip = toolTipStart
-            startMarker.ToolTipText = startStop
+            startMarker.ToolTipText = "Algus: " & startStop
+            startMarker.Size = New Size(14, 14)
             mapOverlay.Markers.Add(startMarker)
+            gMap1.UpdateMarkerLocalPosition(startMarker)
             Dim endMarker As GMarkerGoogle = New GMarkerGoogle(endCoord, CType(drawMarker("red"), Bitmap))
             Dim toolTipEnd As New CustomToolTip(endMarker)
             endMarker.ToolTip = toolTipEnd
-            endMarker.ToolTipText = endStop
+            endMarker.ToolTipText = "Sihtkoht: " & endStop
+            endMarker.Size = New Size(14, 14)
             mapOverlay.Markers.Add(endMarker)
+
             gMap1.Overlays.Clear()
             gMap1.Overlays.Add(mapOverlay)
-            gMap1.ZoomAndCenterRoute(routeOverlay)
+
+            ' Code for zooming in on the route
+            Dim minLat As Double = Double.MaxValue
+            Dim maxLat As Double = Double.MinValue
+            Dim minLng As Double = Double.MaxValue
+            Dim maxLng As Double = Double.MinValue
+
+            For Each marker In gMap1.Overlays(0).Markers
+                minLat = Math.Min(minLat, marker.Position.Lat)
+                maxLat = Math.Max(maxLat, marker.Position.Lat)
+                minLng = Math.Min(minLng, marker.Position.Lng)
+                maxLng = Math.Max(maxLng, marker.Position.Lng)
+            Next
+
+            Dim boundingBox = RectLatLng.FromLTRB(minLng, maxLat, maxLng, minLat)
+            gMap1.SetZoomToFitRect(boundingBox)
+            gMap1.Position = New PointLatLng(boundingBox.Lat - ((maxLat - minLat) / 2), boundingBox.Lng + ((maxLng - minLng) / 2))
+            gMap1.Refresh()
+
 
         Catch ex As WebException
             ' Handle web request errors
@@ -398,7 +437,6 @@ Public Class UCtrlMapViewer
         End Try
 
     End Sub
-
 
 
     Public Sub clearRoute()
@@ -529,52 +567,12 @@ Public Class UCtrlMapViewer
 End Class
 
 
-'Class for creating a modern tooltip box for the bus stop markers
-'Public Class CustomToolTip
-'Inherits GMapToolTip
-
-'    Public Sub New(marker As GMapMarker)
-'        MyBase.New(marker)
-'    End Sub
-'    Public Overrides Sub OnRender(g As Graphics)
-'        Dim textSize As SizeF = g.MeasureString(Marker.ToolTipText, New Font("Segoe UI", 10))
-'        Dim padding As Integer = 5
-'        Dim rect As New RectangleF(Marker.ToolTipPosition.X, Marker.ToolTipPosition.Y - textSize.Height - padding, textSize.Width + padding * 2, textSize.Height + padding * 2)
-
-'        Dim path As New GraphicsPath()
-'        Dim radius As Integer = CInt(rect.Height / 2)
-'        path.AddArc(rect.X, rect.Y, radius, radius, 180, 90)
-'        path.AddArc(rect.Right - radius, rect.Y, radius, radius, 270, 90)
-'        path.AddArc(rect.Right - radius, rect.Bottom - radius, radius, radius, 0, 90)
-'        path.AddArc(rect.X, rect.Bottom - radius, radius, radius, 90, 90)
-'        path.CloseFigure()
-
-'        ' Use a gradient brush to fill the tooltip with a modern color scheme
-'        Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
-'        g.FillPath(brush, path)
-'        g.DrawPath(New Pen(Color.FromArgb(255, 15, 15, 15), 1), path)
-
-'        Dim format As New StringFormat()
-'        format.Alignment = StringAlignment.Center
-'        format.LineAlignment = StringAlignment.Center
-
-'        ' Use a light text color for the tooltip
-'        g.DrawString(Marker.ToolTipText, New Font("Segoe UI", 10), Brushes.Snow, rect, format)
-'    End Sub
-
-
-'End Class
-
-'Class for creating a modern tooltip box for the bus stop markers
-
-'Class for creating a modern tooltip box for the bus stop markers
+'Class for creating a modern tooltip box For the bus Stop markers
 Public Class CustomToolTip
     Inherits GMapToolTip
-
     Public Sub New(marker As GMapMarker)
         MyBase.New(marker)
     End Sub
-
     Public Overrides Sub OnRender(g As Graphics)
         Dim textSize As SizeF = g.MeasureString(Marker.ToolTipText, New Font("Segoe UI", 10))
         Dim padding As Integer = 8
@@ -600,7 +598,6 @@ Public Class CustomToolTip
         Dim trianglePath As New GraphicsPath()
         trianglePath.AddLine(triangle.X, triangle.Y, triangle.X + 10, triangle.Y - 8)
         trianglePath.AddLine(triangle.X + 1, triangle.Y - 8, triangle.X, triangle.Y)
-
         trianglePath.CloseFigure()
         g.FillPath(brush, trianglePath)
         g.DrawPath(New Pen(Color.FromArgb(255, 15, 15, 15), 1), trianglePath)
@@ -615,17 +612,4 @@ Public Class CustomToolTip
         g.DrawString(Marker.ToolTipText, New Font("Segoe UI", 10), Brushes.Snow, textRect, format)
         ' + (rect.Height - textSize.Height) / 2
     End Sub
-
-
-End Class
-
-Public Class ErrorResponse
-    Public Property authenticationResultCode As String
-    Public Property brandLogoUri As String
-    Public Property copyright As String
-    Public Property errorDetails As List(Of String)
-    Public Property resourceSets As List(Of Object)
-    Public Property statusCode As Integer
-    Public Property statusDescription As String
-    Public Property traceId As String
 End Class
