@@ -23,6 +23,9 @@ Imports System.Reflection
 Imports Newtonsoft.Json
 Imports System.Net.Http
 Imports HtmlAgilityPack
+'Imports GMap.NET.WindowsPresentation
+Imports System.Xml
+Imports GMap.NET.Entity.OpenStreetMapGeocodeEntity
 
 
 ' This class realizes the functionality of the map viewer graphic component
@@ -31,6 +34,8 @@ Public Class UCtrlMapViewer
     Private isResized As Boolean = False
     Private startCoord As PointLatLng
     Private endCoord As PointLatLng
+    Private startAddress As String
+    Private destAddress As String
     Private startStop As String
     Private endStop As String
     Private apiKey As String = "9uNDiiSRdZbV6ok9Ec5t~H2haoDb04SzxUDigaGoUfg~Ajj9p1O58cpXmy-Y-BbTNAF8M1Ws3HjoFHGWOaSgIYCucioMsIkP3BpBZGI3XtWr"
@@ -176,24 +181,60 @@ Public Class UCtrlMapViewer
             RaiseEvent LocationClicked(pointLatLng.Lat, pointLatLng.Lng)
         End If
     End Sub
+    Private Sub gMap1_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles gMap1.MouseDoubleClick
+        Dim point As PointLatLng = gMap1.FromLocalToLatLng(e.X, e.Y)
+        Dim lat As String = point.Lat.ToString.Replace(",", ".")
+        Dim lng As String = point.Lng.ToString.Replace(",", ".")
+
+        Dim apiUrl As String = "http://dev.virtualearth.net/REST/v1/Locations/{latitude},{longitude}?&key={apiKey}"
+        apiUrl = apiUrl.Replace("{latitude}", lat)
+        apiUrl = apiUrl.Replace("{longitude}", lng)
+        apiUrl = apiUrl.Replace("{apiKey}", apiKey)
+        ' Create a request to the API
+        Dim request As WebRequest = WebRequest.Create(apiUrl)
+        request.Method = "GET"
+        Try
+            ' Get the response from the API
+            Dim response As WebResponse = request.GetResponse()
+            Dim responseStream As Stream = response.GetResponseStream()
+            Dim reader As StreamReader = New StreamReader(responseStream)
+            Dim responseBody As String = reader.ReadToEnd()
+
+            'Parse the response And extract the route path
+            Dim jsonResponse As JObject = JObject.Parse(responseBody)
+
+            If jsonResponse("statusCode").ToString() = "200" AndAlso jsonResponse("resourceSets")(0)("estimatedTotal").ToObject(Of Integer) > 0 Then
+
+                Dim address As String = jsonResponse("resourceSets")(0)("resources")(0)("address")("addressLine").ToString()
+
+                If lblStart.Text = "" Then
+                    startCoord = point
+                    lblStart.Text = address
+                    btnClear.Enabled = True
+                    startAddress = address
+                Else
+                    endCoord = point
+                    lblDest.Text = address
+                    btnRoute.Enabled = True
+                    destAddress = address
+                End If
+            Else
+                MessageBox.Show("No address found for this location.")
+            End If
+        Catch ex As Exception
+            MessageBox.Show("Error: " & ex.Message)
+        End Try
+
+    End Sub
+
 
     Private Sub gMap1_OnMarkerClick(item As GMapMarker, e As MouseEventArgs) _
         Handles gMap1.OnMarkerClick
         Dim marker As GMarkerGoogle = TryCast(item, GMarkerGoogle)
+        'Checks if marker exists and is a stop marker not a bus or tram or trolley marker
         If marker IsNot Nothing And Regex.IsMatch(marker.ToolTipText, "^[a-zA-ZäöüõšžÄÖÜÕŠŽ][a-zA-ZäöüõšžÄÖÜÕŠŽ\s\-0-9.]*$") Then
             btnClear.Enabled = True
-            If (lblStart.Text = "") Then
-                lblStart.Text = marker.ToolTipText
-                startCoord = New PointLatLng(item.Position.Lat, item.Position.Lng)
-                startStop = marker.ToolTipText
-            Else
-                If (marker.ToolTipText <> lblStart.Text) Then
-                    lblDest.Text = marker.ToolTipText
-                    endStop = marker.ToolTipText
-                    endCoord = New PointLatLng(item.Position.Lat, item.Position.Lng)
-                    btnRoute.Enabled = True
-                End If
-            End If
+
             'panelPopup.Visible = True
 
             ' Set the location of the panel to the marker's location
@@ -389,14 +430,14 @@ Public Class UCtrlMapViewer
             Dim startMarker As GMarkerGoogle = New GMarkerGoogle(startCoord, CType(drawMarker("lightgreen"), Bitmap))
             Dim toolTipStart As New CustomToolTip(startMarker)
             startMarker.ToolTip = toolTipStart
-            startMarker.ToolTipText = "Algus: " & startStop
+            startMarker.ToolTipText = "Algus: " & startAddress
             startMarker.Size = New Size(14, 14)
             mapOverlay.Markers.Add(startMarker)
             gMap1.UpdateMarkerLocalPosition(startMarker)
             Dim endMarker As GMarkerGoogle = New GMarkerGoogle(endCoord, CType(drawMarker("red"), Bitmap))
             Dim toolTipEnd As New CustomToolTip(endMarker)
             endMarker.ToolTip = toolTipEnd
-            endMarker.ToolTipText = "Sihtkoht: " & endStop
+            endMarker.ToolTipText = "Sihtkoht: " & destAddress
             endMarker.Size = New Size(14, 14)
             mapOverlay.Markers.Add(endMarker)
 
