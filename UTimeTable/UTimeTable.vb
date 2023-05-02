@@ -126,6 +126,89 @@ Public Class UTimeTable
         End Try
     End Sub
 
+    Private Function GetCurrentTimeTripID()
+        Dim tempStop As String = lBoxPeatused.Items(0)
+        'MsgBox(tempStop)
+        Dim time As DateTime = DateTime.Now
+        Dim tripID As Integer
+        MsgBox(time.Hour & ":" & time.Minute)
+        Label1.Text = SelectedLine
+        Label2.Text = Suund
+
+        Dim hourMin As Integer
+        Dim hourMax As Integer
+        Dim minuteMax As Integer
+        Dim minuteMin As Integer
+        Dim firstIteration As Boolean = True
+
+        Dim query = "SELECT stoptimes.arrival_time
+             FROM stoptimes
+             JOIN stops ON stoptimes.stop_id = stops.stop_id
+             JOIN trips ON stoptimes.trip_id = trips.trip_id
+             JOIN calender ON trips.service_id = calender.service_id
+             JOIN routes ON trips.route_id = routes.route_id
+             WHERE routes.route_short_name = '" & SelectedLine & "'
+             AND stops.name = '" & SelectedStop & "'
+             AND trips.direction_code = '" & Suund & "'
+             AND calender.'" & SelectedDay & "' = ""1""
+             ORDER by arrival_time;"
+        Try
+            MakeSqlConn()
+            SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
+            SQLiteReader = SQLiteCmd.ExecuteReader()
+
+            Dim currentHour As Integer = -1 ' initialize current hour to -1
+            While SQLiteReader.Read()
+                rtbAjad.SelectionColor = Color.Black
+                Dim arrivalTime As String = SQLiteReader.GetString(0)
+                Dim hour As Integer = Integer.Parse(arrivalTime.Substring(0, 2))
+
+
+                If hour >= 24 Then
+                    hour = hour - 24
+                End If
+                Dim minute As Integer = Integer.Parse(arrivalTime.Substring(3, 2))
+
+                If firstIteration = True Then
+                    hourMin = hour
+                    hourMax = hour
+                    minuteMax = minute
+                    minuteMin = minute
+                    firstIteration = False
+                Else
+                    If hourMax < hour Then
+                        hourMax = hour
+                    End If
+                    If hourMin > hour Then
+                        hourMin = hour
+                    End If
+                End If
+
+                If 19 = hour And 25 < minute Then
+                    MsgBox(hour & minute)
+                End If
+
+                'If time.Hour < hourMax And time.Hour < hourMin Then
+                '    MsgBox("Jargmine aeg alles homme")
+                'End If
+
+                If currentHour <> hour Then ' new hour, add hour header
+                    If currentHour >= 0 Then ' not the first hour, add newline
+
+                    End If
+
+                    currentHour = hour
+                End If
+
+            End While
+            SQLiteReader.Close()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+        'MsgBox(hourMax & " " & minuteMax & " " & hourMin & " " & minuteMin)
+        Return tripID
+    End Function
+
     Private Sub LoadLineSuund()
         Try
             Dim query = "SELECT trips.trip_long_name FROM trips
@@ -387,5 +470,9 @@ Public Class UTimeTable
 
     Private Sub UTimeTable_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         btnDay1.Font = New Font(btnDay1.Font, FontStyle.Bold)
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        GetCurrentTimeTripID()
     End Sub
 End Class
