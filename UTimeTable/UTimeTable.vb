@@ -21,7 +21,7 @@ Public Class UTimeTable
     Public SelectedStop As String = Nothing
     Public SelectedDay As String = "monday"
     Dim desktopPath As String = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)
-    Dim dbFilePath As String = Path.Combine(desktopPath, "mapdb.db")
+    Dim dbFilePath As String = Path.Combine(desktopPath, "mapdb_old.db")
 
     Public Structure StopStruct
         Public Name As String
@@ -174,6 +174,9 @@ Public Class UTimeTable
         End Try
     End Sub
 
+    Public Event ShapesReady(ByVal routepoints As List(Of StopStruct), ByVal routestops As List(Of StopStruct))
+    Public Event ClearShapes()
+
     Private Function GetCurrentTimeTripID()
         Dim tempStop As String
         If SelectedStop = Nothing And Not String.IsNullOrEmpty(lBoxPeatused.Text) Then ' Kui pole veel valitud peatust, siis automaatselt valitakse esimene peatus
@@ -270,27 +273,44 @@ Public Class UTimeTable
     Private Sub LoadShapes()
         Try
             Dim routePoints As New List(Of StopStruct)
+            Dim routestops As New List(Of StopStruct)
             Dim query = "SELECT shape_pt_lat, shape_pt_lon FROM shapes
              JOIN trips ON shapes.shape_id = trips.shape_id
              JOIN routes ON trips.route_id = routes.route_id
              WHERE routes.route_short_name = '" & SelectedLine & "'
-             AND trips.direction_code = '" & Suund & "';"
+             AND trips.direction_code = '" & Suund & "'
+             ORDER BY shape_pt_sequence;"
             SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
             SQLiteReader = SQLiteCmd.ExecuteReader()
-            SQLiteReader.Read()
             While SQLiteReader.Read()
                 Dim point As New StopStruct
-                point.Latitude = SQLiteReader.GetDouble(2)
-                point.Longitude = SQLiteReader.GetDouble(2)
+                point.Latitude = SQLiteReader.GetDouble(0)
+                point.Longitude = SQLiteReader.GetDouble(1)
                 routePoints.Add(point)
             End While
             SQLiteReader.Close()
-
+            query = "SELECT name, lat, lon FROM stops
+             JOIN stoptimes ON stops.stop_id = stoptimes.stop_id
+             JOIN trips ON stoptimes.trip_id = trips.trip_id
+             JOIN routes ON trips.route_id = routes.route_id
+             WHERE routes.route_short_name = '" & SelectedLine & "'
+             AND trips.direction_code = '" & Suund & "'
+             ORDER BY CAST(stoptimes.stop_sequence AS UNSIGNED);"
+            SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
+            SQLiteReader = SQLiteCmd.ExecuteReader()
+            While SQLiteReader.Read()
+                Dim s As New StopStruct
+                s.Name = SQLiteReader.GetString(0)
+                s.Latitude = SQLiteReader.GetDouble(1)
+                s.Longitude = SQLiteReader.GetDouble(2)
+                routestops.Add(s)
+            End While
+            SQLiteReader.Close()
+            RaiseEvent ShapesReady(routePoints, routestops)
         Catch ex As Exception
             MsgBox(ex.Message)
             SQLiteCon.Close()
         End Try
-
     End Sub
 
     Private Sub GetStopTimesRealTime()
@@ -356,6 +376,7 @@ Public Class UTimeTable
         SelectedStop = Nothing
         SelectedLine = Nothing
         Suund = Nothing
+        RaiseEvent ClearShapes()
         rtbAjad.Clear()
         btnAB.Text = Nothing
         btnBA.Text = Nothing
@@ -369,6 +390,7 @@ Public Class UTimeTable
         SelectedStop = Nothing
         SelectedLine = Nothing
         Suund = Nothing
+        RaiseEvent ClearShapes()
         rtbAjad.Clear()
         btnAB.Text = Nothing
         btnBA.Text = Nothing
@@ -384,6 +406,7 @@ Public Class UTimeTable
         Suund = "A>B"
         LoadLineStops()
         lBoxPeatused.SelectedIndex = 0
+        RaiseEvent ClearShapes()
         'LoadShapes()
     End Sub
 
@@ -396,6 +419,7 @@ Public Class UTimeTable
         Suund = "B>A"
         LoadLineStops()
         lBoxPeatused.SelectedIndex = 0
+        RaiseEvent ClearShapes()
         'LoadShapes()
     End Sub
 
@@ -464,7 +488,7 @@ Public Class UTimeTable
                     hour = hour - 24
                 End If
                 Dim minute As Integer = Integer.Parse(arrivalTime.Substring(3, 2))
-                Dim wheelchairAccessible As Boolean = (SQLiteReader.GetString(1) = "1")
+                Dim wheelchairAccessible As Integer = Integer.Parse(SQLiteReader.GetString(1))
                 If currentHour <> hour Then ' new hour, add hour header
                     If currentHour >= 0 Then ' not the first hour, add newline
                         rtbAjad.AppendText(Environment.NewLine)
@@ -473,7 +497,7 @@ Public Class UTimeTable
                     rtbAjad.AppendText(": ") ' add space separator between minutes
                     currentHour = hour
                 End If
-                If wheelchairAccessible Then
+                If wheelchairAccessible = 1 Then
                     rtbAjad.SelectionColor = InvaColor
                 End If
                 rtbAjad.AppendText(minute) ' append minute string
@@ -519,8 +543,11 @@ Public Class UTimeTable
         btnDay1.Font = New Font(btnDay1.Font, FontStyle.Bold)
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs)
-        'GetCurrentTimeTripID()
+    Private Sub btnDisplayLines_Click(sender As Object, e As EventArgs) Handles btnDisplayLines.Click
+        If String.IsNullOrEmpty(Suund) Or String.IsNullOrEmpty(SelectedLine) Then
+            Return
+        Else
+            LoadShapes()
+        End If
     End Sub
-
 End Class
