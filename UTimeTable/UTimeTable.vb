@@ -16,6 +16,7 @@ Public Class UTimeTable
     Dim SQLiteCon As SQLiteConnection
     Dim SQLiteCmd As SQLiteCommand
     Dim SQLiteReader As SQLiteDataReader
+    Dim stopIndex As Integer = 10000
     Public Suund As String = Nothing
     Public SelectedLine As String = Nothing
     Public SelectedStop As String = Nothing
@@ -28,6 +29,11 @@ Public Class UTimeTable
         Public Name As String
         Public Latitude As Double
         Public Longitude As Double
+    End Structure
+
+    Private Structure TimeStruct
+        Dim Name As String
+        Dim Time As String
     End Structure
 
     Public Function GetStopsCoordinates() As List(Of StopStruct)
@@ -71,6 +77,106 @@ Public Class UTimeTable
             Exit Sub
         End Try
     End Sub
+
+    Private Sub AppendStopDepartureTimes(tripID As Integer)
+        If tripID = 0 Then
+            Exit Sub
+        End If
+        Dim routeTimeList As New List(Of TimeStruct)
+        Dim Query As String = "Select stoptimes.arrival_time, stops.name, routes.route_short_name
+             From stoptimes
+             Join stops On stoptimes.stop_id = stops.stop_id
+             Join trips On stoptimes.trip_id = trips.trip_id
+             Join calender On trips.service_id = calender.service_id
+             Join routes On trips.route_id = routes.route_id
+             Where trips.trip_id = '" & tripID & "'"
+        Try
+            MakeSqlConn()
+            SQLiteCmd = New SQLiteCommand(Query, SQLiteCon)
+            SQLiteReader = SQLiteCmd.ExecuteReader()
+            While SQLiteReader.Read()
+                Dim r As New TimeStruct
+                r.Time = SQLiteReader.GetString(0).Substring(0, 5)
+                r.Name = SQLiteReader.GetString(1)
+                routeTimeList.Add(r)
+            End While
+            Dim updatedItems As New List(Of String)
+            For Each item As String In lBoxPeatused.Items
+                For Each r As TimeStruct In routeTimeList
+                    If item.Contains(":") Then
+                        item = item.Substring(6)
+                    End If
+                    If r.Name = item Then
+                        updatedItems.Add(r.Time & " " & item)
+                        Exit For ' Exit inner loop once a match is found
+                    End If
+                Next
+            Next
+            lBoxPeatused.Items.Clear()
+            lBoxPeatused.Items.AddRange(updatedItems.ToArray())
+            SQLiteReader.Close()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Private Function GetCurrentTimeTripID()
+        Dim tempStop As String
+        If SelectedStop = Nothing And Not String.IsNullOrEmpty(lBoxPeatused.Text) Then ' Kui pole veel valitud peatust, siis automaatselt valitakse esimene peatus
+            tempStop = lBoxPeatused.Items(0)
+        Else
+            tempStop = SelectedStop
+        End If
+        If tempStop = Nothing Then
+            Return 0
+        End If
+
+        Dim tripID As Integer
+        Dim query = "SELECT stoptimes.arrival_time, trips.trip_id
+             FROM stoptimes
+             JOIN stops ON stoptimes.stop_id = stops.stop_id
+             JOIN trips ON stoptimes.trip_id = trips.trip_id
+             JOIN calender ON trips.service_id = calender.service_id
+             JOIN routes ON trips.route_id = routes.route_id
+             WHERE routes.route_short_name = '" & SelectedLine & "'
+             AND stops.name = '" & tempStop & "'
+             AND trips.direction_code = '" & Suund & "'
+             AND calender.'" & SelectedDay & "' = ""1""
+             ORDER by arrival_time;"
+
+        Dim time As DateTime = DateTime.Now
+        Dim closestTime As String = Nothing
+        Try
+            MakeSqlConn()
+            SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
+            SQLiteReader = SQLiteCmd.ExecuteReader()
+            While SQLiteReader.Read()
+                Dim arrivalTime As String = SQLiteReader.GetString(0)
+                tripID = SQLiteReader.GetInt32(1)
+                Dim hour As Integer = Integer.Parse(arrivalTime.Substring(0, 2))
+                Dim minute As Integer = Integer.Parse(arrivalTime.Substring(3, 2))
+                If hour = 24 Then
+                    hour = 0
+                End If
+                Dim arrivalDateTime As DateTime = New DateTime(time.Year, time.Month, time.Day, hour, minute, 0)
+
+                If arrivalDateTime > time AndAlso (closestTime Is Nothing OrElse arrivalDateTime < DateTime.Parse(closestTime)) Then
+                    closestTime = arrivalTime
+                    Exit While
+                End If
+
+            End While
+            SQLiteReader.Close()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+        If closestTime IsNot Nothing Then
+            'MsgBox("Next closest arrival time is: " & closestTime & " " & tripID)
+        Else
+            MsgBox("There are no more arrivals today.")
+        End If
+        Return tripID
+    End Function
 
     Private Sub LoadLines()
         Dim query As String
@@ -302,6 +408,7 @@ Public Class UTimeTable
         RaiseEvent ClearShapes()
         Suund = "A>B"
         LoadLineStops()
+        lBoxPeatused.SelectedIndex = 0
     End Sub
 
     Private Sub btnBA_Click(sender As Object, e As EventArgs) Handles btnBA.Click
@@ -313,6 +420,7 @@ Public Class UTimeTable
         RaiseEvent ClearShapes()
         Suund = "B>A"
         LoadLineStops()
+        lBoxPeatused.SelectedIndex = 0
     End Sub
 
     Private Sub lBoxLiinid_SelectedValueChanged(sender As Object, e As EventArgs) Handles lBoxLiinid.SelectedValueChanged
@@ -327,19 +435,36 @@ Public Class UTimeTable
     End Sub
 
     Private Sub lBoxPeatused_SelectedValueChanged(sender As Object, e As EventArgs) Handles lBoxPeatused.SelectedIndexChanged
-        SelectedStop = lBoxPeatused.SelectedItem
+        If lBoxPeatused.SelectedIndex = stopIndex Then
+            Exit Sub
+        Else
+            stopIndex = lBoxPeatused.SelectedIndex
+        End If
+
+        If lBoxPeatused.SelectedItem.ToString().Contains(":") Then
+            SelectedStop = lBoxPeatused.SelectedItem.Substring(6)
+        Else
+            SelectedStop = lBoxPeatused.SelectedItem
+        End If
+
         rtbAjad.Clear()
         lBoxRealTime.Items.Clear()
-
         If String.IsNullOrEmpty(lBoxLiinid.Text) Then
+            SelectedLine = Nothing
             LoadLines()
         Else
             GetStopTimes()
             GetStopTimesRealTime()
+            Dim tripID As Integer = GetCurrentTimeTripID()
+            AppendStopDepartureTimes(tripID)
+            lBoxPeatused.SelectedIndex = stopIndex
         End If
     End Sub
 
     Private Sub GetStopTimes()
+        If SelectedStop = Nothing Then
+            Exit Sub
+        End If
         Dim InvaColor As Color = Color.DeepSkyBlue
         lblAbi.ForeColor = InvaColor
         lblAbi.Font = New Font(lblAbi.Font, FontStyle.Regular)
@@ -399,6 +524,9 @@ Public Class UTimeTable
         btnDay2.Font = New Font(btnDay2.Font, FontStyle.Regular)
         btnDay3.Font = New Font(btnDay3.Font, FontStyle.Regular)
         GetStopTimes()
+        Dim tripID As Integer = GetCurrentTimeTripID()
+        AppendStopDepartureTimes(tripID)
+        lBoxPeatused.SelectedIndex = stopIndex
     End Sub
 
     Private Sub btnDay2_Click(sender As Object, e As EventArgs) Handles btnDay2.Click
@@ -407,6 +535,9 @@ Public Class UTimeTable
         btnDay2.Font = New Font(btnDay2.Font, FontStyle.Bold)
         btnDay3.Font = New Font(btnDay3.Font, FontStyle.Regular)
         GetStopTimes()
+        Dim tripID As Integer = GetCurrentTimeTripID()
+        AppendStopDepartureTimes(tripID)
+        lBoxPeatused.SelectedIndex = stopIndex
     End Sub
 
     Private Sub btnDay3_Click(sender As Object, e As EventArgs) Handles btnDay3.Click
@@ -415,6 +546,9 @@ Public Class UTimeTable
         btnDay2.Font = New Font(btnDay2.Font, FontStyle.Regular)
         btnDay3.Font = New Font(btnDay3.Font, FontStyle.Bold)
         GetStopTimes()
+        Dim tripID As Integer = GetCurrentTimeTripID()
+        AppendStopDepartureTimes(tripID)
+        lBoxPeatused.SelectedIndex = stopIndex
     End Sub
 
     Private Sub UTimeTable_Load(sender As Object, e As EventArgs) Handles MyBase.Load
