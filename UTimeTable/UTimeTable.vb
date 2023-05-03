@@ -21,7 +21,7 @@ Public Class UTimeTable
     Public SelectedStop As String = Nothing
     Public SelectedDay As String = "monday"
     Dim desktopPath As String = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)
-    Dim dbFilePath As String = Path.Combine(desktopPath, "mapdb_old.db")
+    Dim dbFilePath As String = Path.Combine(desktopPath, "mapdb.db")
 
     Public Structure StopStruct
         Public Name As String
@@ -188,7 +188,7 @@ Public Class UTimeTable
             Return 0
         End If
 
-        Dim tripID As Integer
+        Dim tripID As Int32
         Dim query = "SELECT stoptimes.arrival_time, trips.trip_id
              FROM stoptimes
              JOIN stops ON stoptimes.stop_id = stops.stop_id
@@ -209,7 +209,7 @@ Public Class UTimeTable
             SQLiteReader = SQLiteCmd.ExecuteReader()
             While SQLiteReader.Read()
                 Dim arrivalTime As String = SQLiteReader.GetString(0)
-                tripID = Integer.Parse(SQLiteReader.GetString(1))
+                tripID = SQLiteReader.GetInt32(1)
                 Dim hour As Integer = Integer.Parse(arrivalTime.Substring(0, 2))
                 Dim minute As Integer = Integer.Parse(arrivalTime.Substring(3, 2))
                 If hour = 24 Then
@@ -488,7 +488,7 @@ Public Class UTimeTable
                     hour = hour - 24
                 End If
                 Dim minute As Integer = Integer.Parse(arrivalTime.Substring(3, 2))
-                Dim wheelchairAccessible As Integer = Integer.Parse(SQLiteReader.GetString(1))
+                Dim wheelchairAccessible As Int32 = (SQLiteReader.GetInt32(1))
                 If currentHour <> hour Then ' new hour, add hour header
                     If currentHour >= 0 Then ' not the first hour, add newline
                         rtbAjad.AppendText(Environment.NewLine)
