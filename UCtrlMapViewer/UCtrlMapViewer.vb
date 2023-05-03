@@ -23,9 +23,8 @@ Imports System.Reflection
 Imports Newtonsoft.Json
 Imports System.Net.Http
 Imports HtmlAgilityPack
-'Imports GMap.NET.WindowsPresentation
 Imports System.Xml
-Imports GMap.NET.Entity.OpenStreetMapGeocodeEntity
+Imports System.Security.Authentication.ExtendedProtection
 
 
 ' This class realizes the functionality of the map viewer graphic component
@@ -36,8 +35,7 @@ Public Class UCtrlMapViewer
     Private endCoord As PointLatLng
     Private startAddress As String
     Private destAddress As String
-    Private startStop As String
-    Private endStop As String
+    Private stopMarker As GMarkerGoogle
     Private apiKey As String = "9uNDiiSRdZbV6ok9Ec5t~H2haoDb04SzxUDigaGoUfg~Ajj9p1O58cpXmy-Y-BbTNAF8M1Ws3HjoFHGWOaSgIYCucioMsIkP3BpBZGI3XtWr"
 
     Public timeT As New UTimeTable.UTimeTable
@@ -48,8 +46,33 @@ Public Class UCtrlMapViewer
     Dim tramsOverlay As New GMapOverlay("tramsOverlay")
 
 
-    Public Function getStopsSQL(ByRef markerBitmap As Bitmap)
+    Private Sub UCtrlMapViewer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ' This code will run when the user control is loaded into a form or another container control
+        panelLayers_Init()
+        cbStops.Checked = True
+        transportTimer.Interval = 5000 ' 1 second
+        transportTimer.Enabled = True
+        lblStart.Parent = gMap1
+        lblDest.Parent = gMap1
+        btnClear.Enabled = False
+        btnRoute.Enabled = False
+        panelPopup.Visible = False
+    End Sub
 
+    Private Sub panelLayers_Init()
+        'panelLayers.Parent = gMap1
+        panelLayers.BackColor = Color.Transparent
+        panelLayers.Controls.Clear()
+        panelLayers.Controls.Add(btnLayers)
+        Dim padding As Integer = 10 ' Padding from the right and top edges of the form
+        Dim menuLocation As New Point(Me.ClientSize.Width - btnLayers.Width - padding, padding)
+        panelLayers.Location = menuLocation
+        panelLayers.Size = btnLayers.Size
+        btnLayers.Location = New Point(panelLayers.Width - btnLayers.Width, 0)
+    End Sub
+
+    'Gets stops from database and adds them to the map
+    Public Function getStopsSQL(ByRef markerBitmap As Bitmap)
         Dim stops As List(Of StopStruct) = timeT.GetStopsCoordinates()
         Dim marker As GMarkerGoogle
         For Each stop_el As StopStruct In stops
@@ -64,42 +87,6 @@ Public Class UCtrlMapViewer
         Next
         Return stopsOverlay
     End Function
-
-    Private Sub panelPopupInit()
-        ' Create a Panel control
-        'Dim panelPopup As New Panel()
-        panelPopup.AutoSize = True
-        panelPopup.Visible = False
-
-        ' Add controls to the panel as needed
-        'Dim label As New Label()
-        'label.Text = "Hello, world!"
-        'panel.Controls.Add(label)
-    End Sub
-    Private Sub UCtrlMapViewer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        ' This code will run when the user control is loaded into a form or another container control
-        panelLayers_Init()
-        cbStops.Checked = True
-        transportTimer.Interval = 5000 ' 1 second
-        transportTimer.Enabled = True
-        lblStart.Parent = gMap1
-        lblDest.Parent = gMap1
-        btnClear.Enabled = False
-        btnRoute.Enabled = False
-        panelPopupInit()
-    End Sub
-
-    Private Sub panelLayers_Init()
-        'panelLayers.Parent = gMap1
-        panelLayers.BackColor = Color.Transparent
-        panelLayers.Controls.Clear()
-        panelLayers.Controls.Add(btnLayers)
-        Dim padding As Integer = 10 ' Padding from the right and top edges of the form
-        Dim menuLocation As New Point(Me.ClientSize.Width - btnLayers.Width - padding, padding)
-        panelLayers.Location = menuLocation
-        panelLayers.Size = btnLayers.Size
-        btnLayers.Location = New Point(panelLayers.Width - btnLayers.Width, 0)
-    End Sub
     Private Sub btnLayers_Paint(sender As Object, e As PaintEventArgs) Handles btnLayers.Paint
         Dim originalImage As Image = My.Resources.layers_white
         ' Create a smaller copy of the original image
@@ -116,8 +103,6 @@ Public Class UCtrlMapViewer
     Public Event LocationClicked(ByVal latitude As Double, ByVal longitude As Double)
     Public Event MarkerClicked(ByVal value As String, ByVal latitude As Double, ByVal longitude As Double)
 
-    'Event to get stop name, when clicking on marker
-    Public Event markerClick(ByVal stopName As String)
 
     Public Sub initMap()
         initializeMap()
@@ -204,22 +189,24 @@ Public Class UCtrlMapViewer
             Dim jsonResponse As JObject = JObject.Parse(responseBody)
 
             If jsonResponse("statusCode").ToString() = "200" AndAlso jsonResponse("resourceSets")(0)("estimatedTotal").ToObject(Of Integer) > 0 Then
-
-                Dim address As String = jsonResponse("resourceSets")(0)("resources")(0)("address")("addressLine").ToString()
-
-                If lblStart.Text = "" Then
-                    startCoord = point
-                    lblStart.Text = address
-                    btnClear.Enabled = True
-                    startAddress = address
+                If jsonResponse("resourceSets")(0)("resources")(0)("address")("addressLine") IsNot Nothing Then
+                    Dim address As String = jsonResponse("resourceSets")(0)("resources")(0)("address")("addressLine").ToString()
+                    If lblStart.Text = "" Then
+                        startCoord = point
+                        lblStart.Text = address
+                        btnClear.Enabled = True
+                        startAddress = address
+                    Else
+                        endCoord = point
+                        lblDest.Text = address
+                        btnRoute.Enabled = True
+                        destAddress = address
+                    End If
                 Else
-                    endCoord = point
-                    lblDest.Text = address
-                    btnRoute.Enabled = True
-                    destAddress = address
+                    MessageBox.Show("No address found for this location!")
                 End If
             Else
-                MessageBox.Show("No address found for this location.")
+                MessageBox.Show("No address found for this location!")
             End If
         Catch ex As Exception
             MessageBox.Show("Error: " & ex.Message)
@@ -230,21 +217,32 @@ Public Class UCtrlMapViewer
 
     Private Sub gMap1_OnMarkerClick(item As GMapMarker, e As MouseEventArgs) _
         Handles gMap1.OnMarkerClick
-        Dim marker As GMarkerGoogle = TryCast(item, GMarkerGoogle)
+        stopMarker = TryCast(item, GMarkerGoogle)
         'Checks if marker exists and is a stop marker not a bus or tram or trolley marker
-        If marker IsNot Nothing And Regex.IsMatch(marker.ToolTipText, "^[a-zA-ZäöüõšžÄÖÜÕŠŽ][a-zA-ZäöüõšžÄÖÜÕŠŽ\s\-0-9.]*$") Then
-            btnClear.Enabled = True
+        If stopMarker IsNot Nothing And Regex.IsMatch(stopMarker.ToolTipText, "^[a-zA-ZäöüõšžÄÖÜÕŠŽ][a-zA-ZäöüõšžÄÖÜÕŠŽ\s\-0-9.]*$") Then
 
-            'panelPopup.Visible = True
+            stopMarker.ToolTipMode = MarkerTooltipMode.Never
+            Dim clientPoint As Point = Me.PointToClient(e.Location)
+            Dim screenPoint As Point = Me.PointToScreen(clientPoint)
+            panelPopup.Location = New Point(screenPoint.X, screenPoint.Y - panelPopup.Height)
+            panelPopup.Visible = True
 
-            ' Set the location of the panel to the marker's location
-            'panelPopup.Location = New Point(marker.Position.Lat, marker.Position.Lng)
-            'marker.ToolTipMode = MarkerTooltipMode.Never
+        End If
+    End Sub
 
-            ' Add the panel to the map control's Controls collection
-            'gMap1.Controls.Add(panelPopup)
-            'RaiseEvent MarkerClicked(marker.ToolTipText, item.Position.Lat, item.Position.Lng)
-            'RaiseEvent markerClick(marker.ToolTipText)
+
+    'RaiseEvent MarkerClicked(marker.ToolTipText, item.Position.Lat, item.Position.Lng)
+
+    Private Sub gMap1_OnMarkerLeave(item As GMapMarker) _
+        Handles gMap1.OnMarkerLeave
+        panelPopup.Visible = False
+    End Sub
+    Private Sub panelPopup_OnMouseLeave(sender As Object, e As EventArgs) _
+        Handles panelPopup.MouseLeave
+        Dim panelBounds As Rectangle = panelPopup.RectangleToScreen(panelPopup.ClientRectangle)
+        If Not panelBounds.Contains(Control.MousePosition) Then
+            panelPopup.Visible = False
+            stopMarker.ToolTipMode = MarkerTooltipMode.OnMouseOver
         End If
 
     End Sub

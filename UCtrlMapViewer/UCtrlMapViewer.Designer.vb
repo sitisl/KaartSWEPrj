@@ -34,9 +34,11 @@ Partial Class UCtrlMapViewer
         Me.btnRoute = New System.Windows.Forms.Button()
         Me.btnClear = New System.Windows.Forms.Button()
         Me.panelPopup = New System.Windows.Forms.Panel()
+        Me.lBoxRealTime = New System.Windows.Forms.ListBox()
         Me.btnZoomIn = New System.Windows.Forms.Button()
         Me.btnZoomOut = New System.Windows.Forms.Button()
         Me.panelLayers.SuspendLayout()
+        Me.panelPopup.SuspendLayout()
         Me.SuspendLayout()
         '
         'gMap1
@@ -220,10 +222,26 @@ Partial Class UCtrlMapViewer
         '
         'panelPopup
         '
+        Me.panelPopup.AutoSize = True
+        Me.panelPopup.BackColor = System.Drawing.Color.FromArgb(CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer))
+        Me.panelPopup.Controls.Add(Me.lBoxRealTime)
         Me.panelPopup.Location = New System.Drawing.Point(676, 285)
         Me.panelPopup.Name = "panelPopup"
         Me.panelPopup.Size = New System.Drawing.Size(144, 127)
         Me.panelPopup.TabIndex = 12
+        '
+        'lBoxRealTime
+        '
+        Me.lBoxRealTime.BackColor = System.Drawing.Color.FromArgb(CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer))
+        Me.lBoxRealTime.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.lBoxRealTime.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.lBoxRealTime.ForeColor = System.Drawing.Color.Snow
+        Me.lBoxRealTime.FormattingEnabled = True
+        Me.lBoxRealTime.ItemHeight = 20
+        Me.lBoxRealTime.Location = New System.Drawing.Point(9, 19)
+        Me.lBoxRealTime.Name = "lBoxRealTime"
+        Me.lBoxRealTime.Size = New System.Drawing.Size(120, 80)
+        Me.lBoxRealTime.TabIndex = 0
         '
         'btnZoomIn
         '
@@ -231,13 +249,15 @@ Partial Class UCtrlMapViewer
         Me.btnZoomIn.BackColor = System.Drawing.Color.FromArgb(CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer))
         Me.btnZoomIn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
         Me.btnZoomIn.FlatAppearance.BorderSize = 0
+        Me.btnZoomIn.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.Control
         Me.btnZoomIn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnZoomIn.Font = New System.Drawing.Font("Segoe UI", 32.0!, System.Drawing.FontStyle.Bold)
         Me.btnZoomIn.ForeColor = System.Drawing.Color.Transparent
+        Me.btnZoomIn.ImageAlign = System.Drawing.ContentAlignment.BottomCenter
         Me.btnZoomIn.Location = New System.Drawing.Point(12, 129)
-        Me.btnZoomIn.Margin = New System.Windows.Forms.Padding(1)
+        Me.btnZoomIn.Margin = New System.Windows.Forms.Padding(50, 0, 50, 0)
         Me.btnZoomIn.Name = "btnZoomIn"
-        Me.btnZoomIn.Size = New System.Drawing.Size(80, 70)
+        Me.btnZoomIn.Size = New System.Drawing.Size(80, 80)
         Me.btnZoomIn.TabIndex = 5
         Me.btnZoomIn.Text = "+"
         Me.btnZoomIn.UseVisualStyleBackColor = False
@@ -252,9 +272,9 @@ Partial Class UCtrlMapViewer
         Me.btnZoomOut.Font = New System.Drawing.Font("Segoe UI", 32.0!, System.Drawing.FontStyle.Bold)
         Me.btnZoomOut.ForeColor = System.Drawing.Color.Transparent
         Me.btnZoomOut.Location = New System.Drawing.Point(12, 210)
-        Me.btnZoomOut.Margin = New System.Windows.Forms.Padding(1)
+        Me.btnZoomOut.Margin = New System.Windows.Forms.Padding(50, 0, 50, 1)
         Me.btnZoomOut.Name = "btnZoomOut"
-        Me.btnZoomOut.Size = New System.Drawing.Size(80, 78)
+        Me.btnZoomOut.Size = New System.Drawing.Size(80, 80)
         Me.btnZoomOut.TabIndex = 13
         Me.btnZoomOut.Text = "-"
         Me.btnZoomOut.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
@@ -279,6 +299,7 @@ Partial Class UCtrlMapViewer
         Me.Size = New System.Drawing.Size(823, 415)
         Me.panelLayers.ResumeLayout(False)
         Me.panelLayers.PerformLayout()
+        Me.panelPopup.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -298,4 +319,5 @@ Partial Class UCtrlMapViewer
     Friend WithEvents panelPopup As Panel
     Friend WithEvents btnZoomIn As Button
     Friend WithEvents btnZoomOut As Button
+    Friend WithEvents lBoxRealTime As ListBox
 End Class
