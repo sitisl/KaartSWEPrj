@@ -40,6 +40,7 @@ Partial Class UTimeTable
         Me.btnDay2 = New System.Windows.Forms.Button()
         Me.btnDay3 = New System.Windows.Forms.Button()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.btnDisplayLines = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'lBoxRealTime
@@ -186,10 +187,20 @@ Partial Class UTimeTable
         '
         Me.Timer1.Enabled = True
         '
+        'btnDisplayLines
+        '
+        Me.btnDisplayLines.Location = New System.Drawing.Point(3, 450)
+        Me.btnDisplayLines.Name = "btnDisplayLines"
+        Me.btnDisplayLines.Size = New System.Drawing.Size(100, 23)
+        Me.btnDisplayLines.TabIndex = 41
+        Me.btnDisplayLines.Text = "Button1"
+        Me.btnDisplayLines.UseVisualStyleBackColor = True
+        '
         'UTimeTable
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.Controls.Add(Me.btnDisplayLines)
         Me.Controls.Add(Me.btnDay3)
         Me.Controls.Add(Me.btnDay2)
         Me.Controls.Add(Me.btnDay1)
@@ -207,7 +218,7 @@ Partial Class UTimeTable
         Me.Controls.Add(Me.lBoxLiinid)
         Me.Controls.Add(Me.btnShowLines)
         Me.Name = "UTimeTable"
-        Me.Size = New System.Drawing.Size(482, 448)
+        Me.Size = New System.Drawing.Size(482, 479)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -230,4 +241,5 @@ Partial Class UTimeTable
     Friend WithEvents btnDay2 As Button
     Friend WithEvents btnDay3 As Button
     Friend WithEvents Timer1 As Timer
+    Friend WithEvents btnDisplayLines As Button
 End Class
