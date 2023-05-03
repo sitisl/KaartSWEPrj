@@ -89,7 +89,6 @@ Public Class UTimeTable
              JOIN stops ON stoptimes.stop_id = stops.stop_id
              WHERE stops.name = '" & SelectedStop & "';"
         End If
-
         Try
             lBoxLiinid.Items.Clear()
             MakeSqlConn()
