@@ -488,7 +488,7 @@ Public Class UTimeTable
                     hour = hour - 24
                 End If
                 Dim minute As Integer = Integer.Parse(arrivalTime.Substring(3, 2))
-                Dim wheelchairAccessible As Boolean = (SQLiteReader.GetInt32(1) = 1)
+                Dim wheelchairAccessible As Integer = Integer.Parse(SQLiteReader.GetString(1))
                 If currentHour <> hour Then ' new hour, add hour header
                     If currentHour >= 0 Then ' not the first hour, add newline
                         rtbAjad.AppendText(Environment.NewLine)
@@ -497,7 +497,7 @@ Public Class UTimeTable
                     rtbAjad.AppendText(": ") ' add space separator between minutes
                     currentHour = hour
                 End If
-                If wheelchairAccessible Then
+                If wheelchairAccessible = 1 Then
                     rtbAjad.SelectionColor = InvaColor
                 End If
                 rtbAjad.AppendText(minute) ' append minute string
