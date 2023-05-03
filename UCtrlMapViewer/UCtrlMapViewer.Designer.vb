@@ -192,7 +192,6 @@ Partial Class UCtrlMapViewer
         '
         'btnRoute
         '
-        Me.btnRoute.BackColor = System.Drawing.Color.FromArgb(CType(CType(204, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer))
         Me.btnRoute.FlatAppearance.BorderColor = System.Drawing.Color.Black
         Me.btnRoute.FlatAppearance.BorderSize = 0
         Me.btnRoute.FlatStyle = System.Windows.Forms.FlatStyle.Flat
@@ -202,12 +201,10 @@ Partial Class UCtrlMapViewer
         Me.btnRoute.Name = "btnRoute"
         Me.btnRoute.Size = New System.Drawing.Size(96, 35)
         Me.btnRoute.TabIndex = 10
-        Me.btnRoute.Text = "Mine"
         Me.btnRoute.UseVisualStyleBackColor = False
         '
         'btnClear
         '
-        Me.btnClear.BackColor = System.Drawing.Color.FromArgb(CType(CType(204, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer))
         Me.btnClear.FlatAppearance.BorderSize = 0
         Me.btnClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnClear.Font = New System.Drawing.Font("Segoe UI", 9.0!)
@@ -216,7 +213,6 @@ Partial Class UCtrlMapViewer
         Me.btnClear.Name = "btnClear"
         Me.btnClear.Size = New System.Drawing.Size(96, 35)
         Me.btnClear.TabIndex = 11
-        Me.btnClear.Text = "Tühjenda"
         Me.btnClear.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
         Me.btnClear.UseVisualStyleBackColor = False
         '
@@ -246,37 +242,35 @@ Partial Class UCtrlMapViewer
         'btnZoomIn
         '
         Me.btnZoomIn.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.btnZoomIn.BackColor = System.Drawing.Color.FromArgb(CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer))
+        Me.btnZoomIn.BackColor = System.Drawing.Color.Transparent
         Me.btnZoomIn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
         Me.btnZoomIn.FlatAppearance.BorderSize = 0
         Me.btnZoomIn.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.Control
         Me.btnZoomIn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnZoomIn.Font = New System.Drawing.Font("Segoe UI", 32.0!, System.Drawing.FontStyle.Bold)
+        Me.btnZoomIn.Font = New System.Drawing.Font("Shapiro 65 Light Heavy Extd", 32.0!, System.Drawing.FontStyle.Bold)
         Me.btnZoomIn.ForeColor = System.Drawing.Color.Transparent
         Me.btnZoomIn.ImageAlign = System.Drawing.ContentAlignment.BottomCenter
         Me.btnZoomIn.Location = New System.Drawing.Point(12, 129)
         Me.btnZoomIn.Margin = New System.Windows.Forms.Padding(50, 0, 50, 0)
         Me.btnZoomIn.Name = "btnZoomIn"
-        Me.btnZoomIn.Size = New System.Drawing.Size(80, 80)
+        Me.btnZoomIn.Size = New System.Drawing.Size(50, 50)
         Me.btnZoomIn.TabIndex = 5
-        Me.btnZoomIn.Text = "+"
         Me.btnZoomIn.UseVisualStyleBackColor = False
         '
         'btnZoomOut
         '
         Me.btnZoomOut.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.btnZoomOut.BackColor = System.Drawing.Color.FromArgb(CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer))
         Me.btnZoomOut.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
         Me.btnZoomOut.FlatAppearance.BorderSize = 0
+        Me.btnZoomOut.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.Control
         Me.btnZoomOut.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnZoomOut.Font = New System.Drawing.Font("Segoe UI", 32.0!, System.Drawing.FontStyle.Bold)
+        Me.btnZoomOut.Font = New System.Drawing.Font("Shapiro 65 Light Heavy Extd", 32.0!, System.Drawing.FontStyle.Bold)
         Me.btnZoomOut.ForeColor = System.Drawing.Color.Transparent
-        Me.btnZoomOut.Location = New System.Drawing.Point(12, 210)
+        Me.btnZoomOut.Location = New System.Drawing.Point(12, 188)
         Me.btnZoomOut.Margin = New System.Windows.Forms.Padding(50, 0, 50, 1)
         Me.btnZoomOut.Name = "btnZoomOut"
-        Me.btnZoomOut.Size = New System.Drawing.Size(80, 80)
+        Me.btnZoomOut.Size = New System.Drawing.Size(50, 50)
         Me.btnZoomOut.TabIndex = 13
-        Me.btnZoomOut.Text = "-"
         Me.btnZoomOut.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
         Me.btnZoomOut.UseVisualStyleBackColor = False
         '

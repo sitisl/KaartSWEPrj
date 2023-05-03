@@ -25,6 +25,7 @@ Imports System.Net.Http
 Imports HtmlAgilityPack
 Imports System.Xml
 Imports System.Security.Authentication.ExtendedProtection
+Imports System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar
 
 
 ' This class realizes the functionality of the map viewer graphic component
@@ -57,6 +58,10 @@ Public Class UCtrlMapViewer
         btnClear.Enabled = False
         btnRoute.Enabled = False
         panelPopup.Visible = False
+        btnZoomIn.Parent = gMap1
+        btnZoomOut.Parent = gMap1
+        btnRoute.Parent = gMap1
+        btnClear.Parent = gMap1
     End Sub
 
     Private Sub panelLayers_Init()
@@ -87,6 +92,13 @@ Public Class UCtrlMapViewer
         Next
         Return stopsOverlay
     End Function
+
+    ' Events to see coordinates and stops on the form
+    Public Event LocationClicked(ByVal latitude As Double, ByVal longitude As Double)
+    Public Event MarkerClicked(ByVal value As String, ByVal latitude As Double, ByVal longitude As Double)
+
+    '------------------Paint events and personalization of the user controls-------------------
+    'These events and functions override the default behaviour and appearance of the controls
     Private Sub btnLayers_Paint(sender As Object, e As PaintEventArgs) Handles btnLayers.Paint
         Dim originalImage As Image = My.Resources.layers_white
         ' Create a smaller copy of the original image
@@ -98,11 +110,146 @@ Public Class UCtrlMapViewer
         e.Graphics.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
         e.Graphics.DrawImage(resizedImage, targetLocation)
     End Sub
+    Public Function drawMarker(colorDot As String)
+        ' Create a custom marker with 80% fill opacity, orange fill, black stroke, and circle shape
+        Dim markerSize As Integer = 10
+        Dim markerBitmap As New Bitmap(markerSize, markerSize)
+        Using g As Graphics = Graphics.FromImage(markerBitmap)
+            g.SmoothingMode = SmoothingMode.AntiAlias
+            Dim brush As New SolidBrush(Color.FromArgb(204, Color.FromName(colorDot)))
+            Dim pen As New Pen(Color.Black)
+            Dim circleRect As New Rectangle(0, 0, markerSize - 1, markerSize - 1)
+            g.FillEllipse(brush, circleRect)
+            g.DrawEllipse(pen, circleRect)
+        End Using
+        Return markerBitmap
+    End Function
 
-    ' Events to see coordinates and stops on the form
-    Public Event LocationClicked(ByVal latitude As Double, ByVal longitude As Double)
-    Public Event MarkerClicked(ByVal value As String, ByVal latitude As Double, ByVal longitude As Double)
+    Private Sub lblStart_Paint(sender As Object, e As PaintEventArgs) Handles lblStart.Paint
+        Using brush As New LinearGradientBrush(lblStart.ClientRectangle, Color.FromArgb(204, 25, 25, 25), Color.FromArgb(204, 10, 10, 10), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, lblStart.ClientRectangle)
+        End Using
 
+        Dim textColor = Color.White
+        Dim textFont = New Font("Segoe UI", 10, FontStyle.Regular)
+        Dim textFormat = New StringFormat() With {.LineAlignment = StringAlignment.Center}
+        Dim textRect = New RectangleF(PointF.Empty, lblStart.Size)
+
+        e.Graphics.DrawString(lblStart.Text, textFont, New SolidBrush(textColor), textRect, textFormat)
+    End Sub
+
+    Private Sub lblDest_Paint(sender As Object, e As PaintEventArgs) Handles lblDest.Paint
+        Using brush As New LinearGradientBrush(lblDest.ClientRectangle, Color.FromArgb(204, 25, 25, 25), Color.FromArgb(204, 10, 10, 10), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, lblDest.ClientRectangle)
+        End Using
+
+        Dim textColor = Color.White
+        Dim textFont = New Font("Segoe UI", 10, FontStyle.Regular)
+        Dim textFormat = New StringFormat() With {.LineAlignment = StringAlignment.Center}
+        Dim textRect = New RectangleF(PointF.Empty, lblDest.Size)
+
+        e.Graphics.DrawString(lblDest.Text, textFont, New SolidBrush(textColor), textRect, textFormat)
+    End Sub
+
+    Private Sub btnZoomIn_Paint(sender As Object, e As PaintEventArgs) Handles btnZoomIn.Paint
+        ' Draw background gradient
+        If btnZoomIn.ClientRectangle.Contains(btnZoomIn.PointToClient(Control.MousePosition)) Then
+            e.Graphics.FillRectangle(SystemBrushes.Control, btnZoomIn.ClientRectangle)
+        Else
+            Dim rect As Rectangle = New Rectangle(0, 0, btnZoomIn.Width, btnZoomIn.Height)
+            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, rect)
+        End If
+
+        Dim text As String = "+"
+        Dim font As New Font("Segoe UI", 32, FontStyle.Bold)
+        Dim textSize As SizeF = e.Graphics.MeasureString(text, font)
+        Dim textX As Single = (btnZoomIn.Width - textSize.Width) / 2
+        Dim textY As Single = (btnZoomIn.Height - textSize.Height / 1.15)
+        e.Graphics.DrawString(text, font, Brushes.Snow, textX, textY)
+    End Sub
+
+    Private Sub btnZoomOut_Paint(sender As Object, e As PaintEventArgs) Handles btnZoomOut.Paint
+        ' Draw background gradient
+        If btnZoomOut.ClientRectangle.Contains(btnZoomOut.PointToClient(Control.MousePosition)) Then
+            e.Graphics.FillRectangle(SystemBrushes.Control, btnZoomOut.ClientRectangle)
+        Else
+            Dim rect As Rectangle = New Rectangle(0, 0, btnZoomOut.Width, btnZoomOut.Height)
+            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, rect)
+        End If
+
+        ' Draw centered text
+        Dim text As String = ChrW(&H2212)
+        Dim font As New Font("Segoe UI", 32, FontStyle.Bold)
+        Dim textSize As SizeF = e.Graphics.MeasureString(text, font)
+        Dim textX As Single = (btnZoomIn.Width - textSize.Width) / 2
+        Dim textY As Single = (btnZoomIn.Height - textSize.Height / 1.15)
+        e.Graphics.DrawString(text, font, Brushes.Snow, textX, textY)
+    End Sub
+
+    Private Sub btnRoute_Paint(sender As Object, e As PaintEventArgs) Handles btnRoute.Paint
+        ' Draw background gradient
+        If btnRoute.ClientRectangle.Contains(btnRoute.PointToClient(Control.MousePosition)) AndAlso btnRoute.Enabled = True Then
+            e.Graphics.FillRectangle(SystemBrushes.Control, btnRoute.ClientRectangle)
+        Else
+            Dim rect As Rectangle = New Rectangle(0, 0, btnRoute.Width, btnRoute.Height)
+            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, rect)
+        End If
+        ' Draw centered text
+        Dim text As String = "Mine"
+        Dim font As New Font("Segoe UI", 10)
+        Dim textSize As SizeF = e.Graphics.MeasureString(text, font)
+
+        Dim textRect As New RectangleF(0, 0, btnRoute.Width, btnRoute.Height)
+        Dim format As New StringFormat()
+        format.Alignment = StringAlignment.Center
+        format.LineAlignment = StringAlignment.Center
+
+        If btnRoute.Enabled = True Then
+            e.Graphics.DrawString(text, font, Brushes.Snow, textRect, format)
+        Else
+            e.Graphics.DrawString(text, font, Brushes.Gray, textRect, format)
+        End If
+    End Sub
+
+    Private Sub btnClear_Paint(sender As Object, e As PaintEventArgs) Handles btnClear.Paint
+        ' Draw background gradient
+        If btnClear.ClientRectangle.Contains(btnClear.PointToClient(Control.MousePosition)) AndAlso btnClear.Enabled = True Then
+            e.Graphics.FillRectangle(SystemBrushes.Control, btnClear.ClientRectangle)
+        Else
+            Dim rect As Rectangle = New Rectangle(0, 0, btnClear.Width, btnClear.Height)
+            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, rect)
+        End If
+        ' Draw centered text
+        Dim text As String = "Tühjenda"
+        Dim font As New Font("Segoe UI", 10)
+        Dim textSize As SizeF = e.Graphics.MeasureString(text, font)
+
+        Dim textRect As New RectangleF(0, 0, btnClear.Width, btnClear.Height)
+        Dim format As New StringFormat()
+        format.Alignment = StringAlignment.Center
+        format.LineAlignment = StringAlignment.Center
+        If btnClear.Enabled = True Then
+            e.Graphics.DrawString(text, font, Brushes.Snow, textRect, format)
+        Else
+            e.Graphics.DrawString(text, font, Brushes.Gray, textRect, format)
+        End If
+
+    End Sub
+    Private Sub panelLayers_Paint(sender As Object, e As PaintEventArgs) Handles panelLayers.Paint
+        Dim g As Graphics = e.Graphics
+        Dim rect As Rectangle = panelLayers.ClientRectangle
+        Dim padding As Integer = 5
+        Dim path As New GraphicsPath()
+        path.AddRectangle(rect)
+        ' Use a gradient brush to fill the panel with a modern color scheme
+        Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+        g.FillPath(brush, path)
+        g.DrawPath(New Pen(Color.FromArgb(255, 15, 15, 15), 1), path)
+    End Sub
 
     Public Sub initMap()
         initializeMap()
@@ -123,21 +270,6 @@ Public Class UCtrlMapViewer
         'GMaps.Instance.UseMemoryCache = True
         'GMapControl1.BoundsOfMap = New RectLatLng(59.43, 24.75, 0.1, 0.1)
     End Sub
-
-    Public Function drawMarker(colorDot As String)
-        ' Create a custom marker with 80% fill opacity, orange fill, black stroke, and circle shape
-        Dim markerSize As Integer = 10
-        Dim markerBitmap As New Bitmap(markerSize, markerSize)
-        Using g As Graphics = Graphics.FromImage(markerBitmap)
-            g.SmoothingMode = SmoothingMode.AntiAlias
-            Dim brush As New SolidBrush(Color.FromArgb(204, Color.FromName(colorDot)))
-            Dim pen As New Pen(Color.Black)
-            Dim circleRect As New Rectangle(0, 0, markerSize - 1, markerSize - 1)
-            g.FillEllipse(brush, circleRect)
-            g.DrawEllipse(pen, circleRect)
-        End Using
-        Return markerBitmap
-    End Function
 
     Private Sub btnRoute_Click(sender As Object, e As EventArgs) Handles btnRoute.Click
         If lblStart.Text IsNot "" And lblDest.Text IsNot "" _
@@ -203,13 +335,13 @@ Public Class UCtrlMapViewer
                         destAddress = address
                     End If
                 Else
-                    MessageBox.Show("No address found for this location!")
+                    MessageBox.Show("Aadressi ei leitud!")
                 End If
             Else
-                MessageBox.Show("No address found for this location!")
+                MessageBox.Show("Aadressi ei leitud!")
             End If
         Catch ex As Exception
-            MessageBox.Show("Error: " & ex.Message)
+            MessageBox.Show("Viga: " & ex.Message)
         End Try
 
     End Sub
@@ -230,9 +362,6 @@ Public Class UCtrlMapViewer
         End If
     End Sub
 
-
-    'RaiseEvent MarkerClicked(marker.ToolTipText, item.Position.Lat, item.Position.Lng)
-
     Private Sub gMap1_OnMarkerLeave(item As GMapMarker) _
         Handles gMap1.OnMarkerLeave
         panelPopup.Visible = False
@@ -245,32 +374,6 @@ Public Class UCtrlMapViewer
             stopMarker.ToolTipMode = MarkerTooltipMode.OnMouseOver
         End If
 
-    End Sub
-
-    Private Sub lblStart_Paint(sender As Object, e As PaintEventArgs) Handles lblStart.Paint
-        Using brush As New LinearGradientBrush(lblStart.ClientRectangle, Color.FromArgb(204, 25, 25, 25), Color.FromArgb(204, 10, 10, 10), LinearGradientMode.Vertical)
-            e.Graphics.FillRectangle(brush, lblStart.ClientRectangle)
-        End Using
-
-        Dim textColor = Color.White
-        Dim textFont = New Font("Segoe UI", 10, FontStyle.Regular)
-        Dim textFormat = New StringFormat() With {.LineAlignment = StringAlignment.Center}
-        Dim textRect = New RectangleF(PointF.Empty, lblStart.Size)
-
-        e.Graphics.DrawString(lblStart.Text, textFont, New SolidBrush(textColor), textRect, textFormat)
-    End Sub
-
-    Private Sub lblDest_Paint(sender As Object, e As PaintEventArgs) Handles lblDest.Paint
-        Using brush As New LinearGradientBrush(lblDest.ClientRectangle, Color.FromArgb(204, 25, 25, 25), Color.FromArgb(204, 10, 10, 10), LinearGradientMode.Vertical)
-            e.Graphics.FillRectangle(brush, lblDest.ClientRectangle)
-        End Using
-
-        Dim textColor = Color.White
-        Dim textFont = New Font("Segoe UI", 10, FontStyle.Regular)
-        Dim textFormat = New StringFormat() With {.LineAlignment = StringAlignment.Center}
-        Dim textRect = New RectangleF(PointF.Empty, lblDest.Size)
-
-        e.Graphics.DrawString(lblDest.Text, textFont, New SolidBrush(textColor), textRect, textFormat)
     End Sub
 
     Private Sub btnLayers_MouseClick(sender As Object, e As EventArgs) Handles btnLayers.MouseClick
@@ -307,7 +410,6 @@ Public Class UCtrlMapViewer
             panelLayers.Show()
         End If
     End Sub
-
 
     Private Sub cbStops_CheckedChanged(sender As Object, e As EventArgs) Handles cbStops.CheckedChanged
         showHideStops(cbStops.Checked, getStopsSQL(drawMarker("Orange")))
@@ -477,7 +579,6 @@ Public Class UCtrlMapViewer
 
     End Sub
 
-
     Public Sub clearRoute()
         gMap1.Overlays.Clear()
         gMap1.Refresh()
@@ -485,16 +586,31 @@ Public Class UCtrlMapViewer
         cbStops.Checked = True
     End Sub
 
-    Private Sub panelLayers_Paint(sender As Object, e As PaintEventArgs) Handles panelLayers.Paint
-        Dim g As Graphics = e.Graphics
-        Dim rect As Rectangle = panelLayers.ClientRectangle
-        Dim padding As Integer = 5
-        Dim path As New GraphicsPath()
-        path.AddRectangle(rect)
-        ' Use a gradient brush to fill the panel with a modern color scheme
-        Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
-        g.FillPath(brush, path)
-        g.DrawPath(New Pen(Color.FromArgb(255, 15, 15, 15), 1), path)
+    Private Sub GMap1_OnMapZoomChanged() Handles gMap1.OnMapZoomChanged
+        Dim zoomLevel As Double = gMap1.Zoom
+        Dim markerSize As Integer
+        ' Adjust the marker size based on the zoom level
+        Select Case zoomLevel
+            Case Is <= 11
+                markerSize = 8
+            Case Is <= 14
+                markerSize = 9
+            Case Is <= 16
+                markerSize = 11
+            Case Is <= 17
+                markerSize = 13
+            Case Is <= 20
+                markerSize = 15
+            Case Else
+                markerSize = 10
+        End Select
+
+        ' Set the new marker size for each marker
+        For Each marker As GMarkerGoogle In gMap1.Overlays.SelectMany(Function(o) o.Markers).OfType(Of GMarkerGoogle)()
+            If Regex.IsMatch(marker.ToolTipText, "^[a-zA-ZäöüõšžÄÖÜÕŠŽ][a-zA-ZäöüõšžÄÖÜÕŠŽ\s\-0-9.]*$") Then
+                marker.Size = New Size(markerSize, markerSize)
+            End If
+        Next
     End Sub
 
     Private Sub cbBuses_CheckedChanged(sender As Object, e As EventArgs) Handles cbBuses.CheckedChanged
@@ -564,8 +680,6 @@ Public Class UCtrlMapViewer
         Return busesOverlay
     End Function
 
-
-
     Public Function GetTrams(ByRef markerBitmap As Bitmap)
         Dim realTime As New CRealTime
         Dim trams As List(Of TransportStruct) = realTime.GetRealTimeTransport("tram")
@@ -603,9 +717,9 @@ Public Class UCtrlMapViewer
         Return trolleysOverlay
     End Function
 
-    Private Sub btnLayers_MouseClick(sender As Object, e As MouseEventArgs) Handles btnLayers.MouseClick
+    'Private Sub btnLayers_MouseClick(sender As Object, e As MouseEventArgs) Handles btnLayers.MouseClick
 
-    End Sub
+    'End Sub
 
     Private Sub btnZoomIn_Click(sender As Object, e As EventArgs) Handles btnZoomIn.Click
         gMap1.Zoom = gMap1.Zoom + 1
