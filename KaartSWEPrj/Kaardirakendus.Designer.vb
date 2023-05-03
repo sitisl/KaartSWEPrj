@@ -34,14 +34,14 @@ Partial Class Kaardirakendus
         Me.UCtrlMapViewer.Dock = System.Windows.Forms.DockStyle.Fill
         Me.UCtrlMapViewer.Location = New System.Drawing.Point(3, 3)
         Me.UCtrlMapViewer.Name = "UCtrlMapViewer"
-        Me.UCtrlMapViewer.Size = New System.Drawing.Size(990, 654)
+        Me.UCtrlMapViewer.Size = New System.Drawing.Size(1100, 654)
         Me.UCtrlMapViewer.TabIndex = 24
         '
         'UTimeTable
         '
         Me.UTimeTable.Dock = System.Windows.Forms.DockStyle.Fill
         Me.UTimeTable.Font = New System.Drawing.Font("Consolas", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(186, Byte))
-        Me.UTimeTable.Location = New System.Drawing.Point(999, 3)
+        Me.UTimeTable.Location = New System.Drawing.Point(1109, 3)
         Me.UTimeTable.Name = "UTimeTable"
         Me.UTimeTable.Size = New System.Drawing.Size(480, 654)
         Me.UTimeTable.TabIndex = 21
@@ -58,14 +58,14 @@ Partial Class Kaardirakendus
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1482, 660)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1592, 660)
         Me.TableLayoutPanel1.TabIndex = 25
         '
         'Kaardirakendus
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1482, 660)
+        Me.ClientSize = New System.Drawing.Size(1592, 660)
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.Name = "Kaardirakendus"
         Me.Text = "Form1"
