@@ -12,6 +12,8 @@ Imports System.Data.SQLite
 Imports System.Data.SqlClient
 Imports UTimeTable.UTimeTable
 Imports System.Windows
+Imports PrjRealTime
+Imports PrjRealTime.CRealTime
 
 
 ' This class realizes the functionality of the map viewer graphic component
@@ -20,12 +22,15 @@ Public Class UCtrlMapViewer
     Private isResized As Boolean = False
 
     Public timeT As New UTimeTable.UTimeTable
+    Private WithEvents transportTimer As New Timer()
+    Dim busesOverlay As New GMapOverlay("busesOverlay")
+    Dim stopsOverlay As New GMapOverlay("stopsOverlay")
+    Dim trolleysOverlay As New GMapOverlay("trolleysOverlay")
+    Dim tramsOverlay As New GMapOverlay("tramsOverlay")
 
     Public Function getStopsSQL(ByRef markerBitmap As Bitmap)
 
         Dim stops As List(Of StopStruct) = timeT.GetStopsCoordinates()
-
-        Dim stopsOverlay As New GMapOverlay("stopsOverlay")
         Dim marker As GMarkerGoogle
         For Each stop_el As StopStruct In stops
             marker = New GMarkerGoogle(New PointLatLng(stop_el.Latitude, stop_el.Longitude), markerBitmap)
@@ -44,6 +49,8 @@ Public Class UCtrlMapViewer
         ' This code will run when the user control is loaded into a form or another container control
         panelLayers_Init()
         cbStops.Checked = True
+        transportTimer.Interval = 5000 ' 1 second
+        transportTimer.Enabled = True
     End Sub
 
     Private Sub panelLayers_Init()
@@ -94,27 +101,13 @@ Public Class UCtrlMapViewer
         'GMapControl1.BoundsOfMap = New RectLatLng(59.43, 24.75, 0.1, 0.1)
     End Sub
 
-    Public Sub test()
-        MsgBox("tere koik tootab")
-    End Sub
-
-    Public Sub showHideStops(ByRef isChecked As Boolean, ByRef stopsOverlay As GMapOverlay)
-        If (isChecked = True) Then
-            gMap1.Overlays.Add(stopsOverlay)
-            gMap1.Refresh()
-        Else
-            gMap1.Overlays.Clear()
-            gMap1.Refresh()
-        End If
-    End Sub
-
-    Public Function drawMarker()
+    Public Function drawMarker(colorDot As String)
         ' Create a custom marker with 80% fill opacity, orange fill, black stroke, and circle shape
         Dim markerSize As Integer = 10
         Dim markerBitmap As New Bitmap(markerSize, markerSize)
         Using g As Graphics = Graphics.FromImage(markerBitmap)
             g.SmoothingMode = SmoothingMode.AntiAlias
-            Dim brush As New SolidBrush(Color.FromArgb(204, Color.Orange))
+            Dim brush As New SolidBrush(Color.FromArgb(204, Color.FromName(colorDot)))
             Dim pen As New Pen(Color.Black)
             Dim circleRect As New Rectangle(0, 0, markerSize - 1, markerSize - 1)
             g.FillEllipse(brush, circleRect)
@@ -130,79 +123,6 @@ Public Class UCtrlMapViewer
             Dim pointLatLng As PointLatLng = gMap1.FromLocalToLatLng(e.X, e.Y)
             RaiseEvent LocationClicked(pointLatLng.Lat, pointLatLng.Lng)
         End If
-    End Sub
-
-    Public Function getStops(ByRef markerBitmap As Bitmap)
-        ' Read the stops data from the URL
-        Dim url As String = "https://transport.tallinn.ee/data/stops.txt"
-        Dim request As HttpWebRequest = CType(WebRequest.Create(url), HttpWebRequest)
-        request.Method = "GET"
-        Dim response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
-
-        ' Parse the CSV data and add markers for each stop
-        Dim stopsOverlay As New GMapOverlay("stopsOverlay")
-        Dim marker As GMarkerGoogle
-        Dim latitude, longitude As Double
-        Dim stopName As String
-        Using reader As New StreamReader(response.GetResponseStream())
-            reader.ReadLine() ' skip the first line
-            While Not reader.EndOfStream
-                Dim line As String = reader.ReadLine()
-                Dim fields As String() = line.Split(";")
-                If fields.Length >= 6 Then
-                    stopName = fields(5)
-                    latitude = Double.Parse(fields(2), CultureInfo.InvariantCulture) / 100000
-                    longitude = Double.Parse(fields(3), CultureInfo.InvariantCulture) / 100000
-                    marker = New GMarkerGoogle(New PointLatLng(latitude, longitude), markerBitmap)
-                    marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
-                    Dim toolTip As New CustomToolTip(marker)
-                    toolTip.Offset = New Point(5, -markerBitmap.Height / 2)
-                    marker.ToolTip = toolTip
-                    marker.ToolTipText = stopName
-                    gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
-                    stopsOverlay.Markers.Add(marker)               'without refreshing in the beginning
-                End If
-            End While
-        End Using
-        response.Close()
-        Return stopsOverlay
-    End Function
-
-    Public Sub getRoute(startPoint As PointLatLng, endPoint As PointLatLng)
-        showHideStops(False, getStopsSQL(drawMarker()))
-        ' Define the route overlay and add it to the map
-        Dim mapOverlay As GMapOverlay = New GMapOverlay("routes")
-        'Gets route using Bing API with start and destination coordinate
-        Dim route As MapRoute = GMapProviders.BingMap.GetRoute(startPoint, endPoint, False, False, 15)
-
-        If route IsNot Nothing AndAlso route.Points.Count > 1 Then
-            Dim routeOverlay As GMapRoute = New GMapRoute(route.Points, "Route")
-            routeOverlay.Stroke = New Pen(Color.FromArgb(128, Color.Red), 5)
-            Dim routePoints As List(Of PointLatLng) = route.Points
-            mapOverlay.Routes.Add(routeOverlay)
-
-            Dim startMarker As GMarkerGoogle = New GMarkerGoogle(startPoint, GMarkerGoogleType.green)
-            'startMarker.ToolTipText = "Start"
-            mapOverlay.Markers.Add(startMarker)
-
-            Dim endMarker As GMarkerGoogle = New GMarkerGoogle(endPoint, GMarkerGoogleType.red)
-            'endMarker.ToolTipText = "End"
-            mapOverlay.Markers.Add(endMarker)
-
-            gMap1.Overlays.Clear()
-            gMap1.Overlays.Add(mapOverlay)
-
-            gMap1.ZoomAndCenterRoute(routeOverlay)
-        Else
-            MessageBox.Show("No route found.")
-        End If
-    End Sub
-
-    Public Sub clearRoute()
-        gMap1.Overlays.Clear()
-        gMap1.Refresh()
-        cbStops.Checked = False
-        cbStops.Checked = True
     End Sub
 
     Private Sub gMap1_OnMarkerClick(item As GMapMarker, e As MouseEventArgs) _
@@ -252,9 +172,18 @@ Public Class UCtrlMapViewer
 
 
     Private Sub cbStops_CheckedChanged(sender As Object, e As EventArgs) Handles cbStops.CheckedChanged
-        showHideStops(cbStops.Checked, getStopsSQL(drawMarker()))
+        showHideStops(cbStops.Checked, getStopsSQL(drawMarker("Orange")))
     End Sub
 
+    Public Sub showHideStops(ByRef isChecked As Boolean, ByRef stopsOverlay As GMapOverlay)
+        If (isChecked = True) Then
+            gMap1.Overlays.Add(stopsOverlay)
+            gMap1.Refresh()
+        Else
+            stopsOverlay.Markers.Clear()
+            gMap1.Refresh()
+        End If
+    End Sub
 
     Private Sub panelLayers_Paint(sender As Object, e As PaintEventArgs) Handles panelLayers.Paint
         Dim g As Graphics = e.Graphics
@@ -268,7 +197,112 @@ Public Class UCtrlMapViewer
         g.DrawPath(New Pen(Color.FromArgb(255, 15, 15, 15), 1), path)
     End Sub
 
+    Private Sub cbBuses_CheckedChanged(sender As Object, e As EventArgs) Handles cbBuses.CheckedChanged
+        showHideBuses(cbBuses.Checked, GetBuses(drawMarker("Cyan")))
+    End Sub
+
+    Private Sub transportTimer_Tick(sender As Object, e As EventArgs) Handles transportTimer.Tick
+        showHideBuses(cbBuses.Checked, GetBuses(drawMarker("Cyan")))
+        showHideTrams(cbTram.Checked, GetTrams(drawMarker("LightGreen")))
+        showHideTrolleys(cbTroll.Checked, GetTrolleys(drawMarker("Yellow")))
+    End Sub
+
+    Public Sub showHideBuses(ByRef isChecked As Boolean, ByRef busesOverlay As GMapOverlay)
+        If (isChecked = True) Then
+            gMap1.Overlays.Add(busesOverlay)
+            gMap1.Refresh()
+        Else
+            busesOverlay.Markers.Clear()
+            gMap1.Refresh()
+        End If
+    End Sub
+
+    Private Sub cbTram_CheckedChanged(sender As Object, e As EventArgs) Handles cbTram.CheckedChanged
+        showHideTrams(cbTram.Checked, GetTrams(drawMarker("LightGreen")))
+    End Sub
+
+    Public Sub showHideTrams(ByRef isChecked As Boolean, ByRef tramsOverlay As GMapOverlay)
+        If (isChecked = True) Then
+            gMap1.Overlays.Add(tramsOverlay)
+            gMap1.Refresh()
+        Else
+            tramsOverlay.Markers.Clear()
+            gMap1.Refresh()
+        End If
+    End Sub
+
+    Private Sub cbTroll_CheckedChanged(sender As Object, e As EventArgs) Handles cbTroll.CheckedChanged
+        showHideTrolleys(cbTroll.Checked, GetTrolleys(drawMarker("Yellow")))
+    End Sub
+
+    Public Sub showHideTrolleys(ByRef isChecked As Boolean, ByRef trolleysOverlay As GMapOverlay)
+        If (isChecked = True) Then
+            gMap1.Overlays.Add(trolleysOverlay)
+            gMap1.Refresh()
+        Else
+            trolleysOverlay.Markers.Clear()
+            gMap1.Refresh()
+        End If
+    End Sub
+
+    Public Function GetBuses(ByRef markerBitmap As Bitmap)
+
+        Dim realTime As New CRealTime
+        Dim buses As List(Of TransportStruct) = realTime.GetRealTimeTransport("bus")
+        Dim marker As GMarkerGoogle
+        busesOverlay.Markers.Clear()
+        For Each buses_el As TransportStruct In buses
+            marker = New GMarkerGoogle(New PointLatLng(buses_el.Latitude, buses_el.Longitude), markerBitmap)
+            marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
+            Dim toolTip As New CustomToolTip(marker)
+            toolTip.Offset = New Point(5, -markerBitmap.Height / 2)
+            marker.ToolTip = toolTip
+            marker.ToolTipText = buses_el.Number
+            gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
+            busesOverlay.Markers.Add(marker)
+        Next
+        Return busesOverlay
+    End Function
+
+    Public Function GetTrams(ByRef markerBitmap As Bitmap)
+
+        Dim realTime As New CRealTime
+        Dim trams As List(Of TransportStruct) = realTime.GetRealTimeTransport("tram")
+        Dim marker As GMarkerGoogle
+        tramsOverlay.Markers.Clear()
+        For Each trams_el As TransportStruct In trams
+            marker = New GMarkerGoogle(New PointLatLng(trams_el.Latitude, trams_el.Longitude), markerBitmap)
+            marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
+            Dim toolTip As New CustomToolTip(marker)
+            toolTip.Offset = New Point(5, -markerBitmap.Height / 2)
+            marker.ToolTip = toolTip
+            marker.ToolTipText = trams_el.Number
+            gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
+            tramsOverlay.Markers.Add(marker)
+        Next
+        Return tramsOverlay
+    End Function
+
+    Public Function GetTrolleys(ByRef markerBitmap As Bitmap)
+
+        Dim realTime As New CRealTime
+        Dim trolleys As List(Of TransportStruct) = realTime.GetRealTimeTransport("trolley")
+        Dim marker As GMarkerGoogle
+        trolleysOverlay.Markers.Clear()
+        For Each trolleys_el As TransportStruct In trolleys
+            marker = New GMarkerGoogle(New PointLatLng(trolleys_el.Latitude, trolleys_el.Longitude), markerBitmap)
+            marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
+            Dim toolTip As New CustomToolTip(marker)
+            toolTip.Offset = New Point(5, -markerBitmap.Height / 2)
+            marker.ToolTip = toolTip
+            marker.ToolTipText = trolleys_el.Number
+            gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
+            trolleysOverlay.Markers.Add(marker)
+        Next
+        Return trolleysOverlay
+    End Function
 End Class
+
 
 
 'Class for creating a modern tooltip box for the bus stop markers
