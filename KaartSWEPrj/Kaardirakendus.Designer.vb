@@ -22,29 +22,12 @@ Partial Class Kaardirakendus
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.UCtrlMapViewer = New UCtrlMapViewer.UCtrlMapViewer()
-        Me.UTimeTable = New UTimeTable.UTimeTable()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Kaardirakendus))
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+        Me.UTimeTable = New UTimeTable.UTimeTable()
+        Me.UCtrlMapViewer = New UCtrlMapViewer.UCtrlMapViewer()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
-        '
-        'UCtrlMapViewer
-        '
-        Me.UCtrlMapViewer.BackColor = System.Drawing.Color.Transparent
-        Me.UCtrlMapViewer.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.UCtrlMapViewer.Location = New System.Drawing.Point(3, 3)
-        Me.UCtrlMapViewer.Name = "UCtrlMapViewer"
-        Me.UCtrlMapViewer.Size = New System.Drawing.Size(990, 654)
-        Me.UCtrlMapViewer.TabIndex = 24
-        '
-        'UTimeTable
-        '
-        Me.UTimeTable.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.UTimeTable.Font = New System.Drawing.Font("Consolas", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(186, Byte))
-        Me.UTimeTable.Location = New System.Drawing.Point(999, 3)
-        Me.UTimeTable.Name = "UTimeTable"
-        Me.UTimeTable.Size = New System.Drawing.Size(480, 654)
-        Me.UTimeTable.TabIndex = 21
         '
         'TableLayoutPanel1
         '
@@ -61,14 +44,33 @@ Partial Class Kaardirakendus
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(1482, 660)
         Me.TableLayoutPanel1.TabIndex = 25
         '
+        'UTimeTable
+        '
+        Me.UTimeTable.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.UTimeTable.Font = New System.Drawing.Font("Consolas", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(186, Byte))
+        Me.UTimeTable.Location = New System.Drawing.Point(999, 3)
+        Me.UTimeTable.Name = "UTimeTable"
+        Me.UTimeTable.Size = New System.Drawing.Size(480, 654)
+        Me.UTimeTable.TabIndex = 21
+        '
+        'UCtrlMapViewer
+        '
+        Me.UCtrlMapViewer.BackColor = System.Drawing.Color.Transparent
+        Me.UCtrlMapViewer.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.UCtrlMapViewer.Location = New System.Drawing.Point(3, 3)
+        Me.UCtrlMapViewer.Name = "UCtrlMapViewer"
+        Me.UCtrlMapViewer.Size = New System.Drawing.Size(990, 654)
+        Me.UCtrlMapViewer.TabIndex = 24
+        '
         'Kaardirakendus
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1482, 660)
         Me.Controls.Add(Me.TableLayoutPanel1)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "Kaardirakendus"
-        Me.Text = "Form1"
+        Me.Text = "Bussirakendus"
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.ResumeLayout(False)
 

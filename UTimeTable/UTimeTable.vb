@@ -23,6 +23,7 @@ Public Class UTimeTable
     Dim desktopPath As String = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)
     Dim dbFilePath As String = Path.Combine(desktopPath, "mapdb.db")
 
+
     Public Structure StopStruct
         Public Name As String
         Public Latitude As Double
@@ -161,26 +162,46 @@ Public Class UTimeTable
 
     End Sub
 
+    Public Event ShapesReady(ByVal routepoints As List(Of StopStruct), ByVal routestops As List(Of StopStruct))
+    Public Event ClearShapes()
 
     Private Sub LoadShapes()
         Try
             Dim routePoints As New List(Of StopStruct)
+            Dim routestops As New List(Of StopStruct)
             Dim query = "SELECT shape_pt_lat, shape_pt_lon FROM shapes
              JOIN trips ON shapes.shape_id = trips.shape_id
              JOIN routes ON trips.route_id = routes.route_id
              WHERE routes.route_short_name = '" & SelectedLine & "'
-             AND trips.direction_code = '" & Suund & "';"
+             AND trips.direction_code = '" & Suund & "'
+             ORDER BY shape_pt_sequence;"
             SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
             SQLiteReader = SQLiteCmd.ExecuteReader()
-            SQLiteReader.Read()
             While SQLiteReader.Read()
                 Dim point As New StopStruct
-                point.Latitude = SQLiteReader.GetDouble(2)
-                point.Longitude = SQLiteReader.GetDouble(2)
+                point.Latitude = SQLiteReader.GetDouble(0)
+                point.Longitude = SQLiteReader.GetDouble(1)
                 routePoints.Add(point)
             End While
             SQLiteReader.Close()
-
+            query = "SELECT name, lat, lon FROM stops
+             JOIN stoptimes ON stops.stop_id = stoptimes.stop_id
+             JOIN trips ON stoptimes.trip_id = trips.trip_id
+             JOIN routes ON trips.route_id = routes.route_id
+             WHERE routes.route_short_name = '" & SelectedLine & "'
+             AND trips.direction_code = '" & Suund & "'
+             ORDER BY CAST(stoptimes.stop_sequence AS UNSIGNED);"
+            SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
+            SQLiteReader = SQLiteCmd.ExecuteReader()
+            While SQLiteReader.Read()
+                Dim s As New StopStruct
+                s.Name = SQLiteReader.GetString(0)
+                s.Latitude = SQLiteReader.GetDouble(1)
+                s.Longitude = SQLiteReader.GetDouble(2)
+                routestops.Add(s)
+            End While
+            SQLiteReader.Close()
+            RaiseEvent ShapesReady(routePoints, routestops)
         Catch ex As Exception
             MsgBox(ex.Message)
             SQLiteCon.Close()
@@ -251,6 +272,10 @@ Public Class UTimeTable
         rtbAjad.Clear()
         btnAB.Text = Nothing
         btnBA.Text = Nothing
+        Suund = Nothing
+        SelectedLine = Nothing
+        SelectedStop = Nothing
+        RaiseEvent ClearShapes()
         LoadLines()
     End Sub
 
@@ -261,6 +286,10 @@ Public Class UTimeTable
         rtbAjad.Clear()
         btnAB.Text = Nothing
         btnBA.Text = Nothing
+        Suund = Nothing
+        SelectedLine = Nothing
+        SelectedStop = Nothing
+        RaiseEvent ClearShapes()
         LoadLineStops()
     End Sub
 
@@ -270,9 +299,9 @@ Public Class UTimeTable
         End If
         rtbAjad.Clear()
         lBoxRealTime.Items.Clear()
+        RaiseEvent ClearShapes()
         Suund = "A>B"
         LoadLineStops()
-        'LoadShapes()
     End Sub
 
     Private Sub btnBA_Click(sender As Object, e As EventArgs) Handles btnBA.Click
@@ -281,15 +310,18 @@ Public Class UTimeTable
         End If
         rtbAjad.Clear()
         lBoxRealTime.Items.Clear()
+        RaiseEvent ClearShapes()
         Suund = "B>A"
         LoadLineStops()
-        'LoadShapes()
     End Sub
 
     Private Sub lBoxLiinid_SelectedValueChanged(sender As Object, e As EventArgs) Handles lBoxLiinid.SelectedValueChanged
         lBoxPeatused.Items.Clear()
         lBoxRealTime.Items.Clear()
         rtbAjad.Clear()
+        Suund = Nothing
+        SelectedStop = Nothing
+        RaiseEvent ClearShapes()
         SelectedLine = lBoxLiinid.SelectedItem
         LoadLineSuund()
     End Sub
@@ -340,7 +372,7 @@ Public Class UTimeTable
                     hour = hour - 24
                 End If
                 Dim minute As Integer = Integer.Parse(arrivalTime.Substring(3, 2))
-                Dim wheelchairAccessible As Boolean = (SQLiteReader.GetString(1) = "1")
+                Dim wheelchairAccessible As Boolean = (SQLiteReader.GetInt32(1) = 1)
                 If currentHour <> hour Then ' new hour, add hour header
                     If currentHour >= 0 Then ' not the first hour, add newline
                         rtbAjad.AppendText(Environment.NewLine)
@@ -387,5 +419,13 @@ Public Class UTimeTable
 
     Private Sub UTimeTable_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         btnDay1.Font = New Font(btnDay1.Font, FontStyle.Bold)
+    End Sub
+
+    Private Sub btnDisplayLine_Click(sender As Object, e As EventArgs) Handles btnDisplayLine.Click
+        If String.IsNullOrEmpty(Suund) Or String.IsNullOrEmpty(SelectedLine) Then
+            Return
+        Else
+            LoadShapes()
+        End If
     End Sub
 End Class
