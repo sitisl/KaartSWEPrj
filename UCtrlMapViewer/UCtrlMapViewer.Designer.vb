@@ -184,7 +184,7 @@ Partial Class UCtrlMapViewer
         Me.lblDest.AutoSize = True
         Me.lblDest.Font = New System.Drawing.Font("Segoe UI", 10.0!)
         Me.lblDest.ForeColor = System.Drawing.Color.Transparent
-        Me.lblDest.Location = New System.Drawing.Point(10, 44)
+        Me.lblDest.Location = New System.Drawing.Point(10, 40)
         Me.lblDest.MinimumSize = New System.Drawing.Size(210, 30)
         Me.lblDest.Name = "lblDest"
         Me.lblDest.Size = New System.Drawing.Size(210, 30)
@@ -197,9 +197,9 @@ Partial Class UCtrlMapViewer
         Me.btnRoute.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnRoute.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.btnRoute.ForeColor = System.Drawing.Color.White
-        Me.btnRoute.Location = New System.Drawing.Point(124, 79)
+        Me.btnRoute.Location = New System.Drawing.Point(120, 73)
         Me.btnRoute.Name = "btnRoute"
-        Me.btnRoute.Size = New System.Drawing.Size(96, 35)
+        Me.btnRoute.Size = New System.Drawing.Size(100, 35)
         Me.btnRoute.TabIndex = 10
         Me.btnRoute.UseVisualStyleBackColor = False
         '
@@ -209,9 +209,9 @@ Partial Class UCtrlMapViewer
         Me.btnClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnClear.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.btnClear.ForeColor = System.Drawing.Color.White
-        Me.btnClear.Location = New System.Drawing.Point(12, 79)
+        Me.btnClear.Location = New System.Drawing.Point(11, 73)
         Me.btnClear.Name = "btnClear"
-        Me.btnClear.Size = New System.Drawing.Size(96, 35)
+        Me.btnClear.Size = New System.Drawing.Size(100, 35)
         Me.btnClear.TabIndex = 11
         Me.btnClear.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
         Me.btnClear.UseVisualStyleBackColor = False
@@ -252,6 +252,8 @@ Partial Class UCtrlMapViewer
         Me.btnZoomIn.ImageAlign = System.Drawing.ContentAlignment.BottomCenter
         Me.btnZoomIn.Location = New System.Drawing.Point(12, 129)
         Me.btnZoomIn.Margin = New System.Windows.Forms.Padding(50, 0, 50, 0)
+        Me.btnZoomIn.MaximumSize = New System.Drawing.Size(50, 50)
+        Me.btnZoomIn.MinimumSize = New System.Drawing.Size(50, 50)
         Me.btnZoomIn.Name = "btnZoomIn"
         Me.btnZoomIn.Size = New System.Drawing.Size(50, 50)
         Me.btnZoomIn.TabIndex = 5
@@ -266,8 +268,10 @@ Partial Class UCtrlMapViewer
         Me.btnZoomOut.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnZoomOut.Font = New System.Drawing.Font("Shapiro 65 Light Heavy Extd", 32.0!, System.Drawing.FontStyle.Bold)
         Me.btnZoomOut.ForeColor = System.Drawing.Color.Transparent
-        Me.btnZoomOut.Location = New System.Drawing.Point(12, 188)
-        Me.btnZoomOut.Margin = New System.Windows.Forms.Padding(50, 0, 50, 1)
+        Me.btnZoomOut.Location = New System.Drawing.Point(12, 179)
+        Me.btnZoomOut.Margin = New System.Windows.Forms.Padding(50, 0, 50, 0)
+        Me.btnZoomOut.MaximumSize = New System.Drawing.Size(50, 50)
+        Me.btnZoomOut.MinimumSize = New System.Drawing.Size(50, 50)
         Me.btnZoomOut.Name = "btnZoomOut"
         Me.btnZoomOut.Size = New System.Drawing.Size(50, 50)
         Me.btnZoomOut.TabIndex = 13

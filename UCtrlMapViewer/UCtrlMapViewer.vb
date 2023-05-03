@@ -129,26 +129,35 @@ Public Class UCtrlMapViewer
         Using brush As New LinearGradientBrush(lblStart.ClientRectangle, Color.FromArgb(204, 25, 25, 25), Color.FromArgb(204, 10, 10, 10), LinearGradientMode.Vertical)
             e.Graphics.FillRectangle(brush, lblStart.ClientRectangle)
         End Using
-
-        Dim textColor = Color.White
         Dim textFont = New Font("Segoe UI", 10, FontStyle.Regular)
         Dim textFormat = New StringFormat() With {.LineAlignment = StringAlignment.Center}
         Dim textRect = New RectangleF(PointF.Empty, lblStart.Size)
+        If lblStart.Text = "" Then
+            Dim textColor = Color.Gray
+            Dim text As String = "Algus"
+            e.Graphics.DrawString(" " + text, textFont, New SolidBrush(textColor), textRect, textFormat)
+        Else
+            Dim textColor = Color.Snow
+            e.Graphics.DrawString(" " + lblStart.Text, textFont, New SolidBrush(textColor), textRect, textFormat)
+        End If
 
-        e.Graphics.DrawString(lblStart.Text, textFont, New SolidBrush(textColor), textRect, textFormat)
     End Sub
 
     Private Sub lblDest_Paint(sender As Object, e As PaintEventArgs) Handles lblDest.Paint
         Using brush As New LinearGradientBrush(lblDest.ClientRectangle, Color.FromArgb(204, 25, 25, 25), Color.FromArgb(204, 10, 10, 10), LinearGradientMode.Vertical)
             e.Graphics.FillRectangle(brush, lblDest.ClientRectangle)
         End Using
-
-        Dim textColor = Color.White
         Dim textFont = New Font("Segoe UI", 10, FontStyle.Regular)
         Dim textFormat = New StringFormat() With {.LineAlignment = StringAlignment.Center}
         Dim textRect = New RectangleF(PointF.Empty, lblDest.Size)
-
-        e.Graphics.DrawString(lblDest.Text, textFont, New SolidBrush(textColor), textRect, textFormat)
+        If lblDest.Text = "" Then
+            Dim textColor = Color.Gray
+            Dim text As String = "Sihtkoht"
+            e.Graphics.DrawString(" " + text, textFont, New SolidBrush(textColor), textRect, textFormat)
+        Else
+            Dim textColor = Color.Snow
+            e.Graphics.DrawString(" " + lblDest.Text, textFont, New SolidBrush(textColor), textRect, textFormat)
+        End If
     End Sub
 
     Private Sub btnZoomIn_Paint(sender As Object, e As PaintEventArgs) Handles btnZoomIn.Paint
@@ -165,7 +174,7 @@ Public Class UCtrlMapViewer
         Dim font As New Font("Segoe UI", 32, FontStyle.Bold)
         Dim textSize As SizeF = e.Graphics.MeasureString(text, font)
         Dim textX As Single = (btnZoomIn.Width - textSize.Width) / 2
-        Dim textY As Single = (btnZoomIn.Height - textSize.Height / 1.15)
+        Dim textY As Single = (btnZoomIn.Height - textSize.Height / 1.05)
         e.Graphics.DrawString(text, font, Brushes.Snow, textX, textY)
     End Sub
 
@@ -184,7 +193,7 @@ Public Class UCtrlMapViewer
         Dim font As New Font("Segoe UI", 32, FontStyle.Bold)
         Dim textSize As SizeF = e.Graphics.MeasureString(text, font)
         Dim textX As Single = (btnZoomIn.Width - textSize.Width) / 2
-        Dim textY As Single = (btnZoomIn.Height - textSize.Height / 1.15)
+        Dim textY As Single = (btnZoomIn.Height - textSize.Height / 1.05)
         e.Graphics.DrawString(text, font, Brushes.Snow, textX, textY)
     End Sub
 
