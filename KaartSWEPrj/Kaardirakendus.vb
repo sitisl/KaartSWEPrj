@@ -14,7 +14,6 @@ Public Class Kaardirakendus
     Private Sub Kaardirakendus_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         UCtrlMapViewer.initMap()
         'InitChromeDriverIfNeeded()
-
     End Sub
 
 
