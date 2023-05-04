@@ -1,15 +1,31 @@
 ﻿Imports System.Drawing.Drawing2D
+Imports System.Drawing.Imaging
+Imports System.Globalization
 Imports System.IO
 Imports System.Net
-Imports System.Text.RegularExpressions
+Imports System.Windows.Forms.VisualStyles
 Imports GMap.NET
 Imports GMap.NET.MapProviders
 Imports GMap.NET.WindowsForms
 Imports GMap.NET.WindowsForms.Markers
-Imports Newtonsoft.Json.Linq
+Imports System.Data.SQLite
+Imports System.Data.SqlClient
+Imports UTimeTable.UTimeTable
+Imports System.Windows
 Imports PrjRealTime
 Imports PrjRealTime.CRealTime
-Imports UTimeTable.UTimeTable
+Imports System.Windows.Forms.VisualStyles.VisualStyleElement
+Imports System.Reflection.Emit
+Imports Newtonsoft.Json.Linq
+Imports System.Text.RegularExpressions
+Imports System.Runtime.InteropServices
+Imports System.Reflection
+Imports Newtonsoft.Json
+Imports System.Net.Http
+Imports HtmlAgilityPack
+Imports System.Xml
+Imports System.Security.Authentication.ExtendedProtection
+Imports System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar
 
 
 
@@ -33,22 +49,7 @@ Public Class UCtrlMapViewer
     Dim routesOverlay As New WindowsForms.GMapOverlay("RoutesOverlay")
 
 
-    Public Function getStopsSQL(ByRef markerBitmap As Bitmap)
 
-        Dim stops As List(Of StopStruct) = timeT.GetStopsCoordinates()
-        Dim marker As GMarkerGoogle
-        For Each stop_el As StopStruct In stops
-            marker = New GMarkerGoogle(New PointLatLng(stop_el.Latitude, stop_el.Longitude), markerBitmap)
-            marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
-            Dim toolTip As New CustomToolTip(marker)
-            toolTip.Offset = New Point(5, -markerBitmap.Height / 2)
-            marker.ToolTip = toolTip
-            marker.ToolTipText = stop_el.Name
-            gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
-            stopsOverlay.Markers.Add(marker)
-        Next
-        Return stopsOverlay
-    End Function
     Public Sub DisplayShapes(ByVal routePoints As List(Of StopStruct), ByVal routeStops As List(Of StopStruct))
         Dim route As New WindowsForms.GMapRoute(New List(Of PointLatLng), "My Route")
         For Each point As StopStruct In routePoints
@@ -96,26 +97,7 @@ Public Class UCtrlMapViewer
         btnZoomOut.Parent = gMap1
         btnRoute.Parent = gMap1
         btnClear.Parent = gMap1
-    End Sub
-
-    Public Sub initMap()
-        initializeMap()
-    End Sub
-    'The map is initialized in this sub
-    Private Sub initializeMap()
-        gMap1.MapProvider = BingMapProvider.Instance 'Bing for map provider
-        'API key
-        BingMapProvider.Instance.ClientKey = apiKey
-        GMaps.Instance.Mode = AccessMode.ServerAndCache
-        gMap1.ShowCenter = False
-        gMap1.Position = New GMap.NET.PointLatLng(59.43, 24.75)
-        gMap1.MinZoom = 11
-        gMap1.MaxZoom = 20
-        gMap1.Zoom = 12
-        gMap1.DragButton = MouseButtons.Left
-        'gMap1.ForceDoubleBuffer = True
-        'GMaps.Instance.UseMemoryCache = True
-        'GMapControl1.BoundsOfMap = New RectLatLng(59.43, 24.75, 0.1, 0.1)
+        gMap1.Refresh()
     End Sub
 
     Private Sub panelLayers_Init()
@@ -138,7 +120,7 @@ Public Class UCtrlMapViewer
             marker = New GMarkerGoogle(New PointLatLng(stop_el.Latitude, stop_el.Longitude), markerBitmap)
             marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
             Dim toolTip As New CustomToolTip(marker)
-            toolTip.Offset = New Point(5, -markerBitmap.Height / 2)
+            'toolTip.Offset = New Point(20, -markerBitmap.Height / 2)
             marker.ToolTip = toolTip
             marker.ToolTipText = stop_el.Name
             gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
@@ -146,38 +128,6 @@ Public Class UCtrlMapViewer
         Next
         Return stopsOverlay
     End Function
-
-    Public Sub DisplayShapes(ByVal routePoints As List(Of StopStruct), ByVal routeStops As List(Of StopStruct))
-        Dim route As New WindowsForms.GMapRoute(New List(Of PointLatLng), "My Route")
-        For Each point As StopStruct In routePoints
-            route.Points.Add(New PointLatLng(point.Latitude, point.Longitude))
-        Next
-        Dim marker As GMarkerGoogle
-        Dim markerBitmap As Bitmap = drawMarker("Orange")
-        For i As Integer = 0 To routeStops.Count - 1
-            Dim stop_el As StopStruct = routeStops(i)
-            marker = New GMarkerGoogle(New PointLatLng(stop_el.Latitude, stop_el.Longitude), markerBitmap)
-            If i = 0 OrElse i = routeStops.Count - 1 Then
-                marker.ToolTipMode = MarkerTooltipMode.Always
-            Else
-                marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
-            End If
-            Dim toolTip As New CustomToolTip(marker)
-            toolTip.Offset = New Point(5, -drawMarker("Orange").Height / 2)
-            marker.ToolTip = toolTip
-            marker.ToolTipText = stop_el.Name
-            gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
-            routesOverlay.Markers.Add(marker)
-        Next
-        routesOverlay.Routes.Add(route)
-        gMap1.Overlays.Insert(0, routesOverlay)
-        gMap1.UpdateRouteLocalPosition(route)
-        gMap1.Refresh()
-    End Sub
-    Public Sub ClearShapes()
-        routesOverlay.Clear()
-        gMap1.Refresh()
-    End Sub
 
     ' Events to see coordinates and stops on the form
     Public Event LocationClicked(ByVal latitude As Double, ByVal longitude As Double)
@@ -346,7 +296,25 @@ Public Class UCtrlMapViewer
         g.DrawPath(New Pen(Color.FromArgb(255, 15, 15, 15), 1), path)
     End Sub
 
-
+    Public Sub initMap()
+        initializeMap()
+    End Sub
+    'The map is initialized in this sub
+    Private Sub initializeMap()
+        gMap1.MapProvider = BingMapProvider.Instance 'Bing for map provider
+        'API key
+        BingMapProvider.Instance.ClientKey = apiKey
+        GMaps.Instance.Mode = AccessMode.ServerAndCache
+        gMap1.ShowCenter = False
+        gMap1.Position = New GMap.NET.PointLatLng(59.43, 24.75)
+        gMap1.MinZoom = 11
+        gMap1.MaxZoom = 20
+        gMap1.Zoom = 12
+        gMap1.DragButton = MouseButtons.Left
+        gMap1.Refresh()
+        'GMaps.Instance.UseMemoryCache = True
+        'GMapControl1.BoundsOfMap = New RectLatLng(59.43, 24.75, 0.1, 0.1)
+    End Sub
 
     Private Sub btnRoute_Click(sender As Object, e As EventArgs) Handles btnRoute.Click
         If lblStart.Text IsNot "" And lblDest.Text IsNot "" _
