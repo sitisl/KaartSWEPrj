@@ -53,6 +53,7 @@ Partial Class UCtrlMapViewer
         Me.gMap1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.gMap1.EmptyTileColor = System.Drawing.SystemColors.ControlDarkDark
         Me.gMap1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.gMap1.ForeColor = System.Drawing.SystemColors.ControlDarkDark
         Me.gMap1.GrayScaleMode = False
         Me.gMap1.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow
         Me.gMap1.LevelsKeepInMemory = 5
@@ -268,7 +269,7 @@ Partial Class UCtrlMapViewer
         Me.btnZoomOut.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnZoomOut.Font = New System.Drawing.Font("Shapiro 65 Light Heavy Extd", 32.0!, System.Drawing.FontStyle.Bold)
         Me.btnZoomOut.ForeColor = System.Drawing.Color.Transparent
-        Me.btnZoomOut.Location = New System.Drawing.Point(12, 179)
+        Me.btnZoomOut.Location = New System.Drawing.Point(12, 178)
         Me.btnZoomOut.Margin = New System.Windows.Forms.Padding(50, 0, 50, 0)
         Me.btnZoomOut.MaximumSize = New System.Drawing.Size(50, 50)
         Me.btnZoomOut.MinimumSize = New System.Drawing.Size(50, 50)

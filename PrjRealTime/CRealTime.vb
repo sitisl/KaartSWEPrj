@@ -1,7 +1,6 @@
 ﻿Imports System.Globalization
 Imports System.IO
 Imports System.Net
-Imports System.Security.Policy
 
 Public Class CRealTime
 
