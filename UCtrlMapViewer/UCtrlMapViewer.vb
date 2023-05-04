@@ -48,9 +48,7 @@ Public Class UCtrlMapViewer
     Dim tramsOverlay As New GMapOverlay("tramsOverlay")
     Dim routesOverlay As New WindowsForms.GMapOverlay("RoutesOverlay")
 
-
     Public Function getStopsSQL(ByRef markerBitmap As Bitmap)
-
         Dim stops As List(Of StopStruct) = timeT.GetStopsCoordinates()
         Dim marker As GMarkerGoogle
         For Each stop_el As StopStruct In stops
@@ -126,22 +124,6 @@ Public Class UCtrlMapViewer
         btnLayers.Location = New Point(panelLayers.Width - btnLayers.Width, 0)
     End Sub
 
-    'Gets stops from database and adds them to the map
-    Public Function getStopsSQL(ByRef markerBitmap As Bitmap)
-        Dim stops As List(Of StopStruct) = timeT.GetStopsCoordinates()
-        Dim marker As GMarkerGoogle
-        For Each stop_el As StopStruct In stops
-            marker = New GMarkerGoogle(New PointLatLng(stop_el.Latitude, stop_el.Longitude), markerBitmap)
-            marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
-            Dim toolTip As New CustomToolTip(marker)
-            'toolTip.Offset = New Point(20, -markerBitmap.Height / 2)
-            marker.ToolTip = toolTip
-            marker.ToolTipText = stop_el.Name
-            gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
-            stopsOverlay.Markers.Add(marker)
-        Next
-        Return stopsOverlay
-    End Function
 
     ' Events to see coordinates and stops on the form
     Public Event LocationClicked(ByVal latitude As Double, ByVal longitude As Double)
