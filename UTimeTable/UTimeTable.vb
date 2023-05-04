@@ -25,6 +25,7 @@ Public Class UTimeTable
 
     Public Structure StopStruct
         Public Name As String
+        Public ID As Integer
         Public Latitude As Double
         Public Longitude As Double
     End Structure
@@ -35,7 +36,7 @@ Public Class UTimeTable
     End Structure
 
     Public Function GetStopsCoordinates() As List(Of StopStruct)
-        Dim query As String = "SELECT name, lat, lon FROM stops;"
+        Dim query As String = "SELECT name, stop_id, lat, lon FROM stops;"
         Dim stops As New List(Of StopStruct)
 
         Try
@@ -46,8 +47,9 @@ Public Class UTimeTable
             While SQLiteReader.Read()
                 Dim s As New StopStruct
                 s.Name = SQLiteReader.GetString(0)
-                s.Latitude = SQLiteReader.GetDouble(1)
-                s.Longitude = SQLiteReader.GetDouble(2)
+                s.ID = SQLiteReader.GetInt32(1)
+                s.Latitude = SQLiteReader.GetDouble(2)
+                s.Longitude = SQLiteReader.GetDouble(3)
                 stops.Add(s)
             End While
 
@@ -137,7 +139,7 @@ Public Class UTimeTable
             Exit Sub
         End If
         Dim routeTimeList As New List(Of TimeStruct)
-        Dim Query As String = "Select arrival_time, name, route_short_name
+        Dim Query As String = "Select stoptimes.arrival_time, stops.name, routes.route_short_name
              From stoptimes
              Join stops On stoptimes.stop_id = stops.stop_id
              Join trips On stoptimes.trip_id = trips.trip_id
@@ -166,8 +168,12 @@ Public Class UTimeTable
                     End If
                 Next
             Next
+            RemoveHandler lBoxPeatused.SelectedValueChanged, AddressOf lBoxPeatused_SelectedValueChanged
+            Dim index As Integer = lBoxPeatused.SelectedIndex
             lBoxPeatused.Items.Clear()
             lBoxPeatused.Items.AddRange(updatedItems.ToArray())
+            lBoxPeatused.SelectedIndex = index
+            AddHandler lBoxPeatused.SelectedValueChanged, AddressOf lBoxPeatused_SelectedValueChanged
             SQLiteReader.Close()
         Catch ex As Exception
             MsgBox(ex.Message)
@@ -433,7 +439,7 @@ Public Class UTimeTable
         LoadLineSuund()
     End Sub
 
-    Private Sub lBoxPeatused_SelectedValueChanged(sender As Object, e As EventArgs) Handles lBoxPeatused.SelectedIndexChanged
+    Private Sub lBoxPeatused_SelectedValueChanged(sender As Object, e As EventArgs) Handles lBoxPeatused.SelectedValueChanged
         If lBoxPeatused.SelectedItem.ToString().Contains(":") Then
             SelectedStop = lBoxPeatused.SelectedItem.Substring(6)
         Else
