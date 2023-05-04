@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class UTimeTable
     Inherits System.Windows.Forms.UserControl
 
     'UserControl1 overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,8 +20,9 @@ Partial Class UTimeTable
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Me.lBoxRealTime = New System.Windows.Forms.ListBox()
         Me.btnBA = New System.Windows.Forms.Button()
         Me.btnAB = New System.Windows.Forms.Button()
@@ -38,7 +39,10 @@ Partial Class UTimeTable
         Me.btnDay1 = New System.Windows.Forms.Button()
         Me.btnDay2 = New System.Windows.Forms.Button()
         Me.btnDay3 = New System.Windows.Forms.Button()
-        Me.btnDisplayLine = New System.Windows.Forms.Button()
+
+        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.btnDisplayLines = New System.Windows.Forms.Button()
+
         Me.SuspendLayout()
         '
         'lBoxRealTime
@@ -181,20 +185,28 @@ Partial Class UTimeTable
         Me.btnDay3.Text = "Pühapäev"
         Me.btnDay3.UseVisualStyleBackColor = True
         '
-        'btnDisplayLine
+
+        'Timer1
         '
-        Me.btnDisplayLine.Location = New System.Drawing.Point(3, 450)
-        Me.btnDisplayLine.Name = "btnDisplayLine"
-        Me.btnDisplayLine.Size = New System.Drawing.Size(100, 23)
-        Me.btnDisplayLine.TabIndex = 41
-        Me.btnDisplayLine.Text = "Display line"
-        Me.btnDisplayLine.UseVisualStyleBackColor = True
+        Me.Timer1.Enabled = True
+        '
+        'btnDisplayLines
+        '
+        Me.btnDisplayLines.Location = New System.Drawing.Point(3, 450)
+        Me.btnDisplayLines.Name = "btnDisplayLines"
+        Me.btnDisplayLines.Size = New System.Drawing.Size(100, 23)
+        Me.btnDisplayLines.TabIndex = 41
+        Me.btnDisplayLines.Text = "Button1"
+        Me.btnDisplayLines.UseVisualStyleBackColor = True
+
         '
         'UTimeTable
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.Controls.Add(Me.btnDisplayLine)
+
+        Me.Controls.Add(Me.btnDisplayLines)
+
         Me.Controls.Add(Me.btnDay3)
         Me.Controls.Add(Me.btnDay2)
         Me.Controls.Add(Me.btnDay1)
@@ -212,7 +224,9 @@ Partial Class UTimeTable
         Me.Controls.Add(Me.lBoxLiinid)
         Me.Controls.Add(Me.btnShowLines)
         Me.Name = "UTimeTable"
-        Me.Size = New System.Drawing.Size(486, 478)
+
+        Me.Size = New System.Drawing.Size(482, 479)
+
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -234,5 +248,8 @@ Partial Class UTimeTable
     Friend WithEvents btnDay1 As Button
     Friend WithEvents btnDay2 As Button
     Friend WithEvents btnDay3 As Button
-    Friend WithEvents btnDisplayLine As Button
+
+    Friend WithEvents Timer1 As Timer
+    Friend WithEvents btnDisplayLines As Button
+
 End Class

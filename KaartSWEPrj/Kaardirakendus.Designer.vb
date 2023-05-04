@@ -24,6 +24,7 @@ Partial Class Kaardirakendus
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Kaardirakendus))
         Me.UTimeTable = New UTimeTable.UTimeTable()
+        Me.UCtrlMapViewer = New UCtrlMapViewer.UCtrlMapViewer()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.UCtrlMapViewer = New UCtrlMapViewer.UCtrlMapViewer()
         Me.TableLayoutPanel1.SuspendLayout()
@@ -39,6 +40,15 @@ Partial Class Kaardirakendus
         Me.UTimeTable.Size = New System.Drawing.Size(638, 661)
         Me.UTimeTable.TabIndex = 21
         '
+        'UCtrlMapViewer
+        '
+        Me.UCtrlMapViewer.BackColor = System.Drawing.Color.Transparent
+        Me.UCtrlMapViewer.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.UCtrlMapViewer.Location = New System.Drawing.Point(3, 3)
+        Me.UCtrlMapViewer.Name = "UCtrlMapViewer"
+        Me.UCtrlMapViewer.Size = New System.Drawing.Size(990, 654)
+        Me.UCtrlMapViewer.TabIndex = 24
+        '
         'TableLayoutPanel1
         '
         Me.TableLayoutPanel1.ColumnCount = 2
@@ -52,7 +62,9 @@ Partial Class Kaardirakendus
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(1262, 673)
+
         Me.TableLayoutPanel1.TabIndex = 25
         '
         'UCtrlMapViewer
@@ -67,17 +79,21 @@ Partial Class Kaardirakendus
         '
         'Kaardirakendus
         '
+
         Me.AutoScaleDimensions = New System.Drawing.SizeF(120.0!, 120.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.ClientSize = New System.Drawing.Size(1262, 673)
+
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.DoubleBuffered = True
         Me.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Margin = New System.Windows.Forms.Padding(5)
         Me.Name = "Kaardirakendus"
+
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Ühistranspordi rakendus"
+
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.ResumeLayout(False)
 

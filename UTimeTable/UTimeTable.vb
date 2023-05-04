@@ -542,7 +542,9 @@ Public Class UTimeTable
     Private Sub UTimeTable_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         btnDay1.Font = New Font(btnDay1.Font, FontStyle.Bold)
     End Sub
-    Private Sub btnDisplayLine_Click(sender As Object, e As EventArgs) Handles btnDisplayLine.Click
+
+    Private Sub btnDisplayLines_Click(sender As Object, e As EventArgs) Handles btnDisplayLines.Click
+    
         If String.IsNullOrEmpty(Suund) Or String.IsNullOrEmpty(SelectedLine) Then
             Return
         Else
