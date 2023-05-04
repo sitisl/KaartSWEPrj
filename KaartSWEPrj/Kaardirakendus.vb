@@ -4,7 +4,7 @@ Imports GMap.NET.WindowsForms
 Imports GMap.NET.WindowsForms.Markers
 Imports System.IO
 Imports System.Net
-
+Imports UTimeTable.UTimeTable
 
 Public Class Kaardirakendus
 
@@ -24,6 +24,15 @@ Public Class Kaardirakendus
             MsgBox(ex)
         End Try
 
+    End Sub
+    Private Sub UTimeTale_ShapesReady(ByVal routepoints As List(Of StopStruct), ByVal routestops As List(Of StopStruct)) _
+    Handles UTimeTable.ShapesReady
+        UCtrlMapViewer.DisplayShapes(routepoints, routestops)
+    End Sub
+
+    Private Sub UTimeTale_ClearShapes() _
+    Handles UTimeTable.ClearShapes
+        UCtrlMapViewer.ClearShapes()
     End Sub
 
 End Class

@@ -45,7 +45,7 @@ Public Class UCtrlMapViewer
     Dim stopsOverlay As New GMapOverlay("stopsOverlay")
     Dim trolleysOverlay As New GMapOverlay("trolleysOverlay")
     Dim tramsOverlay As New GMapOverlay("tramsOverlay")
-
+    Dim routesOverlay As New WindowsForms.GMapOverlay("RoutesOverlay")
 
     Private Sub UCtrlMapViewer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' This code will run when the user control is loaded into a form or another container control
@@ -87,11 +87,45 @@ Public Class UCtrlMapViewer
             'toolTip.Offset = New Point(20, -markerBitmap.Height / 2)
             marker.ToolTip = toolTip
             marker.ToolTipText = stop_el.Name
+            marker.Tag = stop_el.ID
             gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
             stopsOverlay.Markers.Add(marker)
         Next
         Return stopsOverlay
     End Function
+
+    Public Sub DisplayShapes(ByVal routePoints As List(Of StopStruct), ByVal routeStops As List(Of StopStruct))
+        Dim route As New WindowsForms.GMapRoute(New List(Of PointLatLng), "My Route")
+        For Each point As StopStruct In routePoints
+            route.Points.Add(New PointLatLng(point.Latitude, point.Longitude))
+        Next
+        Dim marker As GMarkerGoogle
+        Dim markerBitmap As Bitmap = drawMarker("Orange")
+        For i As Integer = 0 To routeStops.Count - 1
+            Dim stop_el As StopStruct = routeStops(i)
+            marker = New GMarkerGoogle(New PointLatLng(stop_el.Latitude, stop_el.Longitude), markerBitmap)
+            If i = 0 OrElse i = routeStops.Count - 1 Then
+                marker.ToolTipMode = MarkerTooltipMode.Always
+            Else
+                marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
+            End If
+            Dim toolTip As New CustomToolTip(marker)
+            toolTip.Offset = New Point(5, -drawMarker("Orange").Height / 2)
+            marker.ToolTip = toolTip
+            marker.ToolTipText = stop_el.Name
+            gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
+            routesOverlay.Markers.Add(marker)
+        Next
+        routesOverlay.Routes.Add(route)
+        gMap1.Overlays.Insert(0, routesOverlay)
+        gMap1.UpdateRouteLocalPosition(route)
+        gMap1.Refresh()
+    End Sub
+
+    Public Sub ClearShapes()
+        routesOverlay.Clear()
+        gMap1.Refresh()
+    End Sub
 
     ' Events to see coordinates and stops on the form
     Public Event LocationClicked(ByVal latitude As Double, ByVal longitude As Double)
@@ -366,19 +400,60 @@ Public Class UCtrlMapViewer
             Dim clientPoint As Point = Me.PointToClient(e.Location)
             Dim screenPoint As Point = Me.PointToScreen(clientPoint)
             panelPopup.Location = New Point(screenPoint.X, screenPoint.Y - panelPopup.Height)
+            lBoxRealTime.Items.Add(stopMarker.ToolTipText)
+            Dim url As String = "https://transport.tallinn.ee/siri-stop-departures.php?stopid="
+            url &= stopMarker.Tag.ToString()
+            Dim time As Double
+            Dim request As HttpWebRequest = CType(WebRequest.Create(url), HttpWebRequest)
+            request.Method = "GET"
+            Dim response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+            Using reader As New StreamReader(response.GetResponseStream())
+                Dim linetime As String = reader.ReadLine()
+                Dim fieldstime As String() = linetime.Split(",")
+                time = Double.Parse(fieldstime(4), CultureInfo.InvariantCulture)
+                While Not reader.EndOfStream
+                    Dim line As String = reader.ReadLine()
+                    Dim fields As String() = line.Split(",")
+                    If fields.Length >= 7 Then
+                        Dim routetype As String = fields(0)
+                        If routetype = "bus" Then
+                            routetype = "Buss"
+                        End If
+                        If routetype = "trol" Then
+                            routetype = "Troll"
+                        End If
+                        If routetype = "tram" Then
+                            routetype = "Tramm"
+                        End If
+                        Dim routenum As Integer = Integer.Parse(fields(1))
+                        Dim timebuf As Integer = Integer.Parse(fields(2))
+                        timebuf = (timebuf - time) / 60
+                        Dim formatted As String = timebuf.ToString("F0")
+                        Dim lineRealTime As String = routetype & " " & routenum & "   " & formatted & " min"
+                        lBoxRealTime.Items.Add(lineRealTime)
+                    End If
+                End While
+            End Using
+            response.Close()
+            If lBoxRealTime.Items.Count = 1 Then
+                lBoxRealTime.Items.Add("Reaalaja")
+                lBoxRealTime.Items.Add("väljumised")
+                lBoxRealTime.Items.Add("puuduvad")
+            End If
             panelPopup.Visible = True
-
         End If
     End Sub
 
     Private Sub gMap1_OnMarkerLeave(item As GMapMarker) _
         Handles gMap1.OnMarkerLeave
+        lBoxRealTime.Items.Clear()
         panelPopup.Visible = False
     End Sub
     Private Sub panelPopup_OnMouseLeave(sender As Object, e As EventArgs) _
         Handles panelPopup.MouseLeave
         Dim panelBounds As Rectangle = panelPopup.RectangleToScreen(panelPopup.ClientRectangle)
         If Not panelBounds.Contains(Control.MousePosition) Then
+            lBoxRealTime.Items.Clear()
             panelPopup.Visible = False
             stopMarker.ToolTipMode = MarkerTooltipMode.OnMouseOver
         End If
