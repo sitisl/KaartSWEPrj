@@ -16,7 +16,6 @@ Public Class UTimeTable
     Dim SQLiteCon As SQLiteConnection
     Dim SQLiteCmd As SQLiteCommand
     Dim SQLiteReader As SQLiteDataReader
-    Dim stopIndex As Integer = 10000
     Public Suund As String = Nothing
     Public SelectedLine As String = Nothing
     Public SelectedStop As String = Nothing
@@ -73,50 +72,12 @@ Public Class UTimeTable
     Public Sub CloseConnections()
         Try
             SQLiteCon.Close()
-        Catch
-            Exit Sub
-        End Try
-    End Sub
 
-    Private Sub AppendStopDepartureTimes(tripID As Integer)
-        If tripID = 0 Then
-            Exit Sub
-        End If
-        Dim routeTimeList As New List(Of TimeStruct)
-        Dim Query As String = "Select stoptimes.arrival_time, stops.name, routes.route_short_name
-             From stoptimes
-             Join stops On stoptimes.stop_id = stops.stop_id
-             Join trips On stoptimes.trip_id = trips.trip_id
-             Join calender On trips.service_id = calender.service_id
-             Join routes On trips.route_id = routes.route_id
-             Where trips.trip_id = '" & tripID & "'"
-        Try
-            MakeSqlConn()
-            SQLiteCmd = New SQLiteCommand(Query, SQLiteCon)
-            SQLiteReader = SQLiteCmd.ExecuteReader()
-            While SQLiteReader.Read()
-                Dim r As New TimeStruct
-                r.Time = SQLiteReader.GetString(0).Substring(0, 5)
-                r.Name = SQLiteReader.GetString(1)
-                routeTimeList.Add(r)
-            End While
-            Dim updatedItems As New List(Of String)
-            For Each item As String In lBoxPeatused.Items
-                For Each r As TimeStruct In routeTimeList
-                    If item.Contains(":") Then
-                        item = item.Substring(6)
-                    End If
-                    If r.Name = item Then
-                        updatedItems.Add(r.Time & " " & item)
-                        Exit For ' Exit inner loop once a match is found
-                    End If
-                Next
-            Next
-            lBoxPeatused.Items.Clear()
-            lBoxPeatused.Items.AddRange(updatedItems.ToArray())
-            SQLiteReader.Close()
+            If driver IsNot Nothing Then
+                driver.Quit()
+            End If
         Catch ex As Exception
-            MsgBox(ex.Message)
+            ' Handle exception here
         End Try
     End Sub
 
@@ -180,8 +141,9 @@ Public Class UTimeTable
 
     Private Sub LoadLines()
         Dim query As String
-        If String.IsNullOrEmpty(lBoxPeatused.Text) Then
-            query = "SELECT route_short_name FROM routes ORDER BY CAST(SUBSTRING(route_short_name, 6) AS UNSIGNED) ASC;"
+        If (Suund Is Nothing) Then
+            query = "Select Distinct Liin From koikpeatused where PeatuseID In (Select Distinct PeatuseID from koikpeatused where PeatuseNimi = '" & SelectedStop & "');"
+            lBoxLiinid.Visible = True
         Else
             query = "SELECT DISTINCT routes.route_short_name FROM routes
              JOIN trips ON routes.route_id = trips.route_id
@@ -189,7 +151,6 @@ Public Class UTimeTable
              JOIN stops ON stoptimes.stop_id = stops.stop_id
              WHERE stops.name = '" & SelectedStop & "';"
         End If
-
         Try
             lBoxLiinid.Items.Clear()
             MakeSqlConn()
@@ -207,8 +168,8 @@ Public Class UTimeTable
 
     Private Sub LoadLineStops()
         Dim query As String
-        If String.IsNullOrEmpty(lBoxLiinid.Text) Then
-            query = "select Distinct name from stops Order by name ASC;"
+        If allStopsQuery Is Nothing Then
+            query = "select Distinct PeatuseNimi from koikpeatused where Liin = '" & SelectedLine & "' And Suund ='" & Suund & "';"
         Else
             query = "SELECT DISTINCT name FROM stops
              JOIN stoptimes ON stops.stop_id = stoptimes.stop_id
@@ -233,6 +194,49 @@ Public Class UTimeTable
         End Try
     End Sub
 
+    Private Sub LoadLineSuund(Liin As String)
+        btnAB.Text = Nothing
+        btnBA.Text = Nothing
+
+        Try
+            Dim query As String = "select `a-b`,`b-a` from liinid where Line = '" & Liin & "';"
+            SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
+            SQLiteReader = SQLiteCmd.ExecuteReader()
+
+            While SQLiteReader.Read()
+                btnAB.Text = SQLiteReader.GetString(0)
+                btnBA.Text = SQLiteReader.GetString(1)
+            End While
+            SQLiteReader.Close()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+
+    End Sub
+
+    Private Sub LoadLineLink(Suund As String)
+
+        Dim SelectElement As String
+        If Suund = "a-b" Then
+            SelectElement = "link_a-b"
+        ElseIf Suund = "b-a" Then
+            SelectElement = "link_b-a"
+        Else
+            SelectElement = Nothing
+            Exit Sub
+        End If
+        Try
+
+            Dim query As String = "select `" & SelectElement & "` from liinid Where line = '" & SelectedLine & "';"
+            SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
+            SQLiteReader = SQLiteCmd.ExecuteReader()
+
+            While SQLiteReader.Read()
+                LinkHalf = SQLiteReader.GetString(0)
+
+            End While
+            SQLiteReader.Close()
+
     Private Sub LoadLineSuund()
         Try
             Dim query = "SELECT trips.trip_long_name FROM trips
@@ -249,70 +253,93 @@ Public Class UTimeTable
             MsgBox(ex.Message)
             SQLiteCon.Close()
         End Try
-
-        Try
-            Dim query = "SELECT trips.trip_long_name FROM trips
-             JOIN routes ON trips.route_id = routes.route_id
-             WHERE routes.route_short_name = '" & SelectedLine & "'
-             AND trips.direction_code = ""B>A""
-             GROUP BY trips.trip_long_name;"
-            SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
-            SQLiteReader = SQLiteCmd.ExecuteReader()
-            SQLiteReader.Read()
-            btnBA.Text = SQLiteReader.GetString(0)
-            SQLiteReader.Close()
-        Catch ex As Exception
-            MsgBox(ex.Message)
-            SQLiteCon.Close()
-        End Try
-
     End Sub
 
-    Public Event ShapesReady(ByVal routepoints As List(Of StopStruct), ByVal routestops As List(Of StopStruct))
-    Public Event ClearShapes()
+    Private Sub lBoxPeatused_SelectedValueChanged(sender As Object, e As EventArgs) Handles lBoxPeatused.SelectedIndexChanged
+        SelectedStop = lBoxPeatused.SelectedItem
 
-    Private Sub LoadShapes()
-        Try
-            Dim routePoints As New List(Of StopStruct)
-            Dim routestops As New List(Of StopStruct)
-            Dim query = "SELECT shape_pt_lat, shape_pt_lon FROM shapes
-             JOIN trips ON shapes.shape_id = trips.shape_id
-             JOIN routes ON trips.route_id = routes.route_id
-             WHERE routes.route_short_name = '" & SelectedLine & "'
-             AND trips.direction_code = '" & Suund & "'
-             ORDER BY shape_pt_sequence;"
-            SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
-            SQLiteReader = SQLiteCmd.ExecuteReader()
-            While SQLiteReader.Read()
-                Dim point As New StopStruct
-                point.Latitude = SQLiteReader.GetDouble(0)
-                point.Longitude = SQLiteReader.GetDouble(1)
-                routePoints.Add(point)
-            End While
-            SQLiteReader.Close()
-            query = "SELECT name, lat, lon FROM stops
-             JOIN stoptimes ON stops.stop_id = stoptimes.stop_id
-             JOIN trips ON stoptimes.trip_id = trips.trip_id
-             JOIN routes ON trips.route_id = routes.route_id
-             WHERE routes.route_short_name = '" & SelectedLine & "'
-             AND trips.direction_code = '" & Suund & "'
-             ORDER BY CAST(stoptimes.stop_sequence AS UNSIGNED);"
-            SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
-            SQLiteReader = SQLiteCmd.ExecuteReader()
-            While SQLiteReader.Read()
-                Dim s As New StopStruct
-                s.Name = SQLiteReader.GetString(0)
-                s.Latitude = SQLiteReader.GetDouble(1)
-                s.Longitude = SQLiteReader.GetDouble(2)
-                routestops.Add(s)
-            End While
-            SQLiteReader.Close()
-            RaiseEvent ShapesReady(routePoints, routestops)
-        Catch ex As Exception
-            MsgBox(ex.Message)
-            SQLiteCon.Close()
-        End Try
+        Dim PeatuseID As String = Nothing
 
+        If Suund = Nothing Then
+            lBoxLiinid.Visible = True
+            lblLiinid.Visible = True
+            lBoxLiinid.Items.Clear()
+            LoadLines()
+        Else
+            Try
+                Dim query As String = "select PeatuseID from koikpeatused where PeatuseNimi = '" & SelectedStop & "' And Suund ='" & Suund & "' And Liin ='" & SelectedLine & "';"
+                SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
+                SQLiteReader = SQLiteCmd.ExecuteReader()
+                While SQLiteReader.Read()
+                    PeatuseID = SQLiteReader.GetString(0)
+                End While
+                SQLiteReader.Close()
+            Catch ex As Exception
+                MsgBox(ex.Message)
+                SQLiteCon.Close()
+            End Try
+            LinkFull = LinkHalf & "/" & PeatuseID
+            GetStopTimes()
+        End If
+    End Sub
+
+
+    Private Sub InitChromeDriver()
+        options = New OpenQA.Selenium.Chrome.ChromeOptions()
+        options.AddArguments("headless", "disable-logging", "disable-extensions")
+        Dim driverService As ChromeDriverService = ChromeDriverService.CreateDefaultService()
+        driverService.HideCommandPromptWindow = True
+        driver = New OpenQA.Selenium.Chrome.ChromeDriver(driverService, options)
+        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(250)
+    End Sub
+    Private Sub GetStopTimes()
+        Dim InvaColor As Color = Color.DeepSkyBlue
+        lblAbi.ForeColor = InvaColor
+        lblAbi.Font = New Font(lblAbi.Font, FontStyle.Underline)
+        rtbAjad.Clear()
+
+        InitChromeDriver()
+        driver.Navigate().GoToUrl(LinkFull)
+
+        Dim timeTable As ReadOnlyCollection(Of IWebElement)
+        timeTable = driver.FindElements(By.XPath("//*[@id='divScheduleContentInner']/table[1]/tbody/tr"))
+
+        Dim isFirstIteration As Boolean = True
+        For Each time As IWebElement In timeTable
+            If isFirstIteration Then
+                isFirstIteration = False
+                Continue For
+            End If
+
+            Dim hourEl As IWebElement = time.FindElement(By.XPath("./th"))
+            Dim hourVal As String = hourEl.Text
+            hourVal = hourVal.PadRight(3)
+            Dim minuteElements As ReadOnlyCollection(Of IWebElement) = time.FindElements(By.XPath("./td/a"))
+            Dim minuteValues As String = ""
+            rtbAjad.SelectionColor = Color.Black
+            rtbAjad.AppendText(hourVal & ": ")
+            For Each minuteElement As IWebElement In minuteElements
+                Dim color As Color
+                If minuteElement.GetAttribute("class") = "highlighted" Or minuteElement.GetAttribute("class") = "other1 highlighted" Then
+                    color = InvaColor
+                    rtbAjad.SelectionFont = New Font(rtbAjad.Font, FontStyle.Underline)
+                Else
+                    color = color.Black
+                    rtbAjad.SelectionFont = New Font(rtbAjad.Font, FontStyle.Regular)
+                End If
+
+                rtbAjad.SelectionColor = color
+                rtbAjad.AppendText(minuteElement.Text)
+                rtbAjad.SelectionColor = color.Black
+                rtbAjad.SelectionFont = New Font(rtbAjad.Font, FontStyle.Regular)
+                rtbAjad.AppendText(" ")
+            Next
+            rtbAjad.SelectionColor = Color.Black
+            rtbAjad.AppendText(Environment.NewLine)
+        Next
+
+        GetStopTimesRealTime()
+        driver.Quit()
     End Sub
 
     Private Sub GetStopTimesRealTime()
@@ -373,92 +400,31 @@ Public Class UTimeTable
 
     Private Sub btnShowLines_Click(sender As Object, e As EventArgs) Handles btnShowLines.Click
         lBoxLiinid.Items.Clear()
-        lBoxPeatused.Items.Clear()
-        lBoxRealTime.Items.Clear()
-        rtbAjad.Clear()
-        btnAB.Text = Nothing
-        btnBA.Text = Nothing
-        Suund = Nothing
-        SelectedLine = Nothing
-        SelectedStop = Nothing
-        RaiseEvent ClearShapes()
+        Suund = ""
         LoadLines()
     End Sub
 
     Private Sub btnShowStops_Click(sender As Object, e As EventArgs) Handles btnShowStops.Click
         lBoxLiinid.Items.Clear()
-        lBoxPeatused.Items.Clear()
-        lBoxRealTime.Items.Clear()
-        rtbAjad.Clear()
-        btnAB.Text = Nothing
-        btnBA.Text = Nothing
-        Suund = Nothing
-        SelectedLine = Nothing
-        SelectedStop = Nothing
-        RaiseEvent ClearShapes()
-        LoadLineStops()
+        LoadLineStops(Suund, "select Distinct PeatuseNimi from koikpeatused Order by PeatuseNimi ASC;")
     End Sub
 
     Private Sub btnAB_Click(sender As Object, e As EventArgs) Handles btnAB.Click
-        If String.IsNullOrEmpty(lBoxLiinid.Text) And String.IsNullOrEmpty(lBoxPeatused.Text) Then
-            Return
-        End If
-        rtbAjad.Clear()
-        lBoxRealTime.Items.Clear()
-        RaiseEvent ClearShapes()
-        Suund = "A>B"
-        LoadLineStops()
-        lBoxPeatused.SelectedIndex = 0
+        Suund = "a-b"
+        LoadLineLink(Suund)
+        LoadLineStops(Suund)
     End Sub
 
     Private Sub btnBA_Click(sender As Object, e As EventArgs) Handles btnBA.Click
-        If String.IsNullOrEmpty(lBoxLiinid.Text) And String.IsNullOrEmpty(lBoxPeatused.Text) Then
-            Return
-        End If
-        rtbAjad.Clear()
-        lBoxRealTime.Items.Clear()
-        RaiseEvent ClearShapes()
-        Suund = "B>A"
-        LoadLineStops()
-        lBoxPeatused.SelectedIndex = 0
+        Suund = "b-a"
+        LoadLineLink(Suund)
+        LoadLineStops(Suund)
     End Sub
 
     Private Sub lBoxLiinid_SelectedValueChanged(sender As Object, e As EventArgs) Handles lBoxLiinid.SelectedValueChanged
         lBoxPeatused.Items.Clear()
-        lBoxRealTime.Items.Clear()
-        rtbAjad.Clear()
-        Suund = Nothing
-        SelectedStop = Nothing
-        RaiseEvent ClearShapes()
         SelectedLine = lBoxLiinid.SelectedItem
-        LoadLineSuund()
-    End Sub
-
-    Private Sub lBoxPeatused_SelectedValueChanged(sender As Object, e As EventArgs) Handles lBoxPeatused.SelectedIndexChanged
-        If lBoxPeatused.SelectedIndex = stopIndex Then
-            Exit Sub
-        Else
-            stopIndex = lBoxPeatused.SelectedIndex
-        End If
-
-        If lBoxPeatused.SelectedItem.ToString().Contains(":") Then
-            SelectedStop = lBoxPeatused.SelectedItem.Substring(6)
-        Else
-            SelectedStop = lBoxPeatused.SelectedItem
-        End If
-
-        rtbAjad.Clear()
-        lBoxRealTime.Items.Clear()
-        If String.IsNullOrEmpty(lBoxLiinid.Text) Then
-            SelectedLine = Nothing
-            LoadLines()
-        Else
-            GetStopTimes()
-            GetStopTimesRealTime()
-            Dim tripID As Integer = GetCurrentTimeTripID()
-            AppendStopDepartureTimes(tripID)
-            lBoxPeatused.SelectedIndex = stopIndex
-        End If
+        LoadLineSuund(SelectedLine)
     End Sub
 
     Private Sub GetStopTimes()
@@ -470,96 +436,9 @@ Public Class UTimeTable
         lblAbi.Font = New Font(lblAbi.Font, FontStyle.Regular)
         lblAbi.Visible = True
         rtbAjad.Visible = True
-        rtbAjad.Clear()
-
-        Dim query = "SELECT stoptimes.arrival_time, trips.wheelchair_accessible
-             FROM stoptimes
-             JOIN stops ON stoptimes.stop_id = stops.stop_id
-             JOIN trips ON stoptimes.trip_id = trips.trip_id
-             JOIN calender ON trips.service_id = calender.service_id
-             JOIN routes ON trips.route_id = routes.route_id
-             WHERE routes.route_short_name = '" & SelectedLine & "'
-             AND stops.name = '" & SelectedStop & "'
-             AND trips.direction_code = '" & Suund & "'
-             AND calender.'" & SelectedDay & "' = ""1""
-             ORDER by arrival_time;"
-
-        Try
-            MakeSqlConn()
-            SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
-            SQLiteReader = SQLiteCmd.ExecuteReader()
-            Dim currentHour As Integer = -1 ' initialize current hour to -1
-            While SQLiteReader.Read()
-                rtbAjad.SelectionColor = Color.Black
-                Dim arrivalTime As String = SQLiteReader.GetString(0)
-                Dim hour As Integer = Integer.Parse(arrivalTime.Substring(0, 2))
-                If hour >= 24 Then
-                    hour = hour - 24
-                End If
-                Dim minute As Integer = Integer.Parse(arrivalTime.Substring(3, 2))
-                Dim wheelchairAccessible As Boolean = (SQLiteReader.GetInt32(1) = 1)
-                If currentHour <> hour Then ' new hour, add hour header
-                    If currentHour >= 0 Then ' not the first hour, add newline
-                        rtbAjad.AppendText(Environment.NewLine)
-                    End If
-                    rtbAjad.AppendText(hour) ' add hour header
-                    rtbAjad.AppendText(": ") ' add space separator between minutes
-                    currentHour = hour
-                End If
-                If wheelchairAccessible Then
-                    rtbAjad.SelectionColor = InvaColor
-                End If
-                rtbAjad.AppendText(minute) ' append minute string
-                rtbAjad.AppendText(" ") ' add space separator between minutes
-            End While
-            SQLiteReader.Close()
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
+        btnAB.Visible = True
+        btnBA.Visible = True
     End Sub
 
-    Private Sub btnDay1_Click(sender As Object, e As EventArgs) Handles btnDay1.Click
-        SelectedDay = "monday"
-        btnDay1.Font = New Font(btnDay1.Font, FontStyle.Bold)
-        btnDay2.Font = New Font(btnDay2.Font, FontStyle.Regular)
-        btnDay3.Font = New Font(btnDay3.Font, FontStyle.Regular)
-        GetStopTimes()
-        Dim tripID As Integer = GetCurrentTimeTripID()
-        AppendStopDepartureTimes(tripID)
-        lBoxPeatused.SelectedIndex = stopIndex
-    End Sub
 
-    Private Sub btnDay2_Click(sender As Object, e As EventArgs) Handles btnDay2.Click
-        SelectedDay = "saturday"
-        btnDay1.Font = New Font(btnDay1.Font, FontStyle.Regular)
-        btnDay2.Font = New Font(btnDay2.Font, FontStyle.Bold)
-        btnDay3.Font = New Font(btnDay3.Font, FontStyle.Regular)
-        GetStopTimes()
-        Dim tripID As Integer = GetCurrentTimeTripID()
-        AppendStopDepartureTimes(tripID)
-        lBoxPeatused.SelectedIndex = stopIndex
-    End Sub
-
-    Private Sub btnDay3_Click(sender As Object, e As EventArgs) Handles btnDay3.Click
-        SelectedDay = "sunday"
-        btnDay1.Font = New Font(btnDay1.Font, FontStyle.Regular)
-        btnDay2.Font = New Font(btnDay2.Font, FontStyle.Regular)
-        btnDay3.Font = New Font(btnDay3.Font, FontStyle.Bold)
-        GetStopTimes()
-        Dim tripID As Integer = GetCurrentTimeTripID()
-        AppendStopDepartureTimes(tripID)
-        lBoxPeatused.SelectedIndex = stopIndex
-    End Sub
-
-    Private Sub UTimeTable_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        btnDay1.Font = New Font(btnDay1.Font, FontStyle.Bold)
-    End Sub
-
-    Private Sub btnDisplayLine_Click(sender As Object, e As EventArgs) Handles btnDisplayLine.Click
-        If String.IsNullOrEmpty(Suund) Or String.IsNullOrEmpty(SelectedLine) Then
-            Return
-        Else
-            LoadShapes()
-        End If
-    End Sub
 End Class

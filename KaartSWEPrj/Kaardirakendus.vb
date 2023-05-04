@@ -1,6 +1,8 @@
 ﻿Imports GMap.NET.WindowsForms
-'Imports UTimeTable.UTimeTable
-
+Imports GMap.NET.WindowsForms.Markers
+Imports System.IO
+Imports System.Net
+Imports UTimeTable.UTimeTable
 
 Public Class Kaardirakendus
 

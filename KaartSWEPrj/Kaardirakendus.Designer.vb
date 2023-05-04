@@ -74,6 +74,7 @@ Partial Class Kaardirakendus
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Margin = New System.Windows.Forms.Padding(5)
         Me.Name = "Kaardirakendus"
+
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Ühistranspordi rakendus"
         Me.tblLayoutMain.ResumeLayout(False)

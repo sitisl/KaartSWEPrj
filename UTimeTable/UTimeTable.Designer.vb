@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class UTimeTable
     Inherits System.Windows.Forms.UserControl
 
     'UserControl1 overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,14 +20,14 @@ Partial Class UTimeTable
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Me.lBoxRealTime = New System.Windows.Forms.ListBox()
         Me.btnBA = New System.Windows.Forms.Button()
         Me.btnAB = New System.Windows.Forms.Button()
         Me.lBoxPeatused = New System.Windows.Forms.ListBox()
         Me.lBoxLiinid = New System.Windows.Forms.ListBox()
-        Me.rtbAjad = New System.Windows.Forms.RichTextBox()
         Me.lblLiinid = New System.Windows.Forms.Label()
         Me.lblPeatused = New System.Windows.Forms.Label()
         Me.lblAjad = New System.Windows.Forms.Label()
@@ -35,22 +35,18 @@ Partial Class UTimeTable
         Me.lblAbi = New System.Windows.Forms.Label()
         Me.btnShowLines = New System.Windows.Forms.Button()
         Me.btnShowStops = New System.Windows.Forms.Button()
-        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
-        Me.lblSuund = New System.Windows.Forms.Label()
+        Me.rtbAjad = New System.Windows.Forms.RichTextBox()
         Me.btnDay1 = New System.Windows.Forms.Button()
         Me.btnDay2 = New System.Windows.Forms.Button()
         Me.btnDay3 = New System.Windows.Forms.Button()
-        Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
-        Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
-        Me.btnDisplayLine = New System.Windows.Forms.Button()
-        Me.TableLayoutPanel1.SuspendLayout()
-        Me.TableLayoutPanel2.SuspendLayout()
-        Me.TableLayoutPanel3.SuspendLayout()
+
+        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.btnDisplayLines = New System.Windows.Forms.Button()
+
         Me.SuspendLayout()
         '
         'lBoxRealTime
         '
-        Me.lBoxRealTime.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.lBoxRealTime.FormattingEnabled = True
         Me.lBoxRealTime.ItemHeight = 20
         Me.lBoxRealTime.Location = New System.Drawing.Point(336, 516)
@@ -81,8 +77,6 @@ Partial Class UTimeTable
         '
         'lBoxPeatused
         '
-        Me.lBoxPeatused.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.lBoxPeatused.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lBoxPeatused.FormattingEnabled = True
         Me.lBoxPeatused.HorizontalScrollbar = True
         Me.lBoxPeatused.ItemHeight = 20
@@ -94,8 +88,6 @@ Partial Class UTimeTable
         '
         'lBoxLiinid
         '
-        Me.lBoxLiinid.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.lBoxLiinid.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lBoxLiinid.FormattingEnabled = True
         Me.lBoxLiinid.ItemHeight = 20
         Me.lBoxLiinid.Location = New System.Drawing.Point(4, 35)
@@ -165,10 +157,9 @@ Partial Class UTimeTable
         Me.lblReaalajad.Location = New System.Drawing.Point(432, 494)
         Me.lblReaalajad.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblReaalajad.Name = "lblReaalajad"
-        Me.lblReaalajad.Size = New System.Drawing.Size(75, 20)
+        Me.lblReaalajad.Size = New System.Drawing.Size(55, 13)
         Me.lblReaalajad.TabIndex = 34
         Me.lblReaalajad.Text = "Reaalajad"
-        Me.lblReaalajad.Visible = False
         '
         'lblAbi
         '
@@ -177,7 +168,7 @@ Partial Class UTimeTable
         Me.lblAbi.Location = New System.Drawing.Point(388, 474)
         Me.lblAbi.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblAbi.Name = "lblAbi"
-        Me.lblAbi.Size = New System.Drawing.Size(198, 20)
+        Me.lblAbi.Size = New System.Drawing.Size(142, 13)
         Me.lblAbi.TabIndex = 35
         Me.lblAbi.Text = "Madala sisenemisega sõiduk"
         Me.lblAbi.Visible = False
@@ -190,7 +181,7 @@ Partial Class UTimeTable
         Me.btnShowLines.Name = "btnShowLines"
         Me.btnShowLines.Size = New System.Drawing.Size(149, 27)
         Me.btnShowLines.TabIndex = 21
-        Me.btnShowLines.Text = "Kuva kõik liinid"
+        Me.btnShowLines.Text = "Show all lines"
         Me.btnShowLines.UseVisualStyleBackColor = True
         '
         'btnShowStops
@@ -201,10 +192,47 @@ Partial Class UTimeTable
         Me.btnShowStops.Name = "btnShowStops"
         Me.btnShowStops.Size = New System.Drawing.Size(149, 27)
         Me.btnShowStops.TabIndex = 28
-        Me.btnShowStops.Text = "Kuva kõik peatused"
+        Me.btnShowStops.Text = "Show all stops"
         Me.btnShowStops.UseVisualStyleBackColor = True
         '
-        'TableLayoutPanel1
+        'rtbAjad
+        '
+        Me.rtbAjad.Location = New System.Drawing.Point(287, 105)
+        Me.rtbAjad.Name = "rtbAjad"
+        Me.rtbAjad.ReadOnly = True
+        Me.rtbAjad.Size = New System.Drawing.Size(192, 235)
+        Me.rtbAjad.TabIndex = 37
+        Me.rtbAjad.Text = ""
+        '
+        'btnDay1
+        '
+        Me.btnDay1.Location = New System.Drawing.Point(287, 76)
+        Me.btnDay1.Name = "btnDay1"
+        Me.btnDay1.Size = New System.Drawing.Size(64, 23)
+        Me.btnDay1.TabIndex = 38
+        Me.btnDay1.Text = "Tööpäev"
+        Me.btnDay1.UseVisualStyleBackColor = True
+        '
+        'btnDay2
+        '
+        Me.btnDay2.Location = New System.Drawing.Point(351, 76)
+        Me.btnDay2.Name = "btnDay2"
+        Me.btnDay2.Size = New System.Drawing.Size(64, 23)
+        Me.btnDay2.TabIndex = 39
+        Me.btnDay2.Text = "Laupäev"
+        Me.btnDay2.UseVisualStyleBackColor = True
+        '
+        'btnDay3
+        '
+        Me.btnDay3.Location = New System.Drawing.Point(415, 76)
+        Me.btnDay3.Name = "btnDay3"
+        Me.btnDay3.Size = New System.Drawing.Size(64, 23)
+        Me.btnDay3.TabIndex = 40
+        Me.btnDay3.Text = "Pühapäev"
+        Me.btnDay3.UseVisualStyleBackColor = True
+        '
+
+        'Timer1
         '
         Me.TableLayoutPanel1.ColumnCount = 3
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.04502!))
@@ -224,7 +252,7 @@ Partial Class UTimeTable
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(604, 69)
         Me.TableLayoutPanel1.TabIndex = 36
         '
-        'lblSuund
+        'btnDisplayLines
         '
         Me.lblSuund.AutoSize = True
         Me.lblSuund.Dock = System.Windows.Forms.DockStyle.Fill
@@ -354,7 +382,6 @@ Partial Class UTimeTable
     Friend WithEvents btnAB As Button
     Friend WithEvents lBoxPeatused As ListBox
     Friend WithEvents lBoxLiinid As ListBox
-    Friend WithEvents rtbAjad As RichTextBox
     Friend WithEvents lblLiinid As Label
     Friend WithEvents lblPeatused As Label
     Friend WithEvents lblAjad As Label
