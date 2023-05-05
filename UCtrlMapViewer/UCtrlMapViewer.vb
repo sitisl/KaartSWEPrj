@@ -28,7 +28,6 @@ Imports System.Security.Authentication.ExtendedProtection
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar
 
 
-
 ' This class realizes the functionality of the map viewer graphic component
 Public Class UCtrlMapViewer
     ' Flag for checking if the layerPanel is resized
@@ -51,7 +50,9 @@ Public Class UCtrlMapViewer
 
 
     Public Sub DisplayShapes(ByVal routePoints As List(Of StopStruct), ByVal routeStops As List(Of StopStruct))
-        Dim route As New WindowsForms.GMapRoute(New List(Of PointLatLng), "My Route")
+        routesOverlay.Clear()
+        cbStops.Enabled = False
+        Dim Route As New WindowsForms.GMapRoute(New List(Of PointLatLng), "My Route")
         For Each point As StopStruct In routePoints
             route.Points.Add(New PointLatLng(point.Latitude, point.Longitude))
         Next
@@ -69,13 +70,16 @@ Public Class UCtrlMapViewer
             toolTip.Offset = New Point(5, -drawMarker("Orange").Height / 2)
             marker.ToolTip = toolTip
             marker.ToolTipText = stop_el.Name
+            marker.Tag = stop_el.ID
             gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
             routesOverlay.Markers.Add(marker)
         Next
         routesOverlay.Routes.Add(route)
         gMap1.Overlays.Insert(0, routesOverlay)
         gMap1.UpdateRouteLocalPosition(route)
+        gMap1.ZoomAndCenterRoute(Route)
         gMap1.Refresh()
+        btnClear.Enabled = True
     End Sub
 
     Public Sub ClearShapes()
@@ -98,7 +102,6 @@ Public Class UCtrlMapViewer
         btnZoomOut.Parent = gMap1
         btnRoute.Parent = gMap1
         btnClear.Parent = gMap1
-        gMap1.Refresh()
     End Sub
 
     Private Sub panelLayers_Init()
@@ -150,7 +153,7 @@ Public Class UCtrlMapViewer
     End Sub
     Public Function drawMarker(colorDot As String)
         ' Create a custom marker with 80% fill opacity, orange fill, black stroke, and circle shape
-        Dim markerSize As Integer = 10
+        Dim markerSize As Integer = 9
         Dim markerBitmap As New Bitmap(markerSize, markerSize)
         Using g As Graphics = Graphics.FromImage(markerBitmap)
             g.SmoothingMode = SmoothingMode.AntiAlias
@@ -178,7 +181,6 @@ Public Class UCtrlMapViewer
             Dim textColor = Color.Snow
             e.Graphics.DrawString(" " + lblStart.Text, textFont, New SolidBrush(textColor), textRect, textFormat)
         End If
-
     End Sub
 
     Private Sub lblDest_Paint(sender As Object, e As PaintEventArgs) Handles lblDest.Paint
@@ -197,6 +199,7 @@ Public Class UCtrlMapViewer
             e.Graphics.DrawString(" " + lblDest.Text, textFont, New SolidBrush(textColor), textRect, textFormat)
         End If
     End Sub
+
 
     Private Sub btnZoomIn_Paint(sender As Object, e As PaintEventArgs) Handles btnZoomIn.Paint
         ' Draw background gradient
@@ -404,7 +407,7 @@ Public Class UCtrlMapViewer
             Dim clientPoint As Point = Me.PointToClient(e.Location)
             Dim screenPoint As Point = Me.PointToScreen(clientPoint)
             panelPopup.Location = New Point(screenPoint.X, screenPoint.Y - panelPopup.Height)
-            lBoxRealTime.Items.Add(stopMarker.ToolTipText)
+            lblStopPopup.Text = stopMarker.ToolTipText
             Dim url As String = "https://transport.tallinn.ee/siri-stop-departures.php?stopid="
             url &= stopMarker.Tag.ToString()
             Dim time As Double
@@ -439,7 +442,7 @@ Public Class UCtrlMapViewer
                 End While
             End Using
             response.Close()
-            If lBoxRealTime.Items.Count = 1 Then
+            If lBoxRealTime.Items.Count < 1 Then
                 lBoxRealTime.Items.Add("Reaalaja")
                 lBoxRealTime.Items.Add("väljumised")
                 lBoxRealTime.Items.Add("puuduvad")
@@ -453,6 +456,7 @@ Public Class UCtrlMapViewer
         Handles gMap1.OnMarkerLeave
         lBoxRealTime.Items.Clear()
         panelPopup.Visible = False
+        item.ToolTipMode = MarkerTooltipMode.OnMouseOver
     End Sub
     Private Sub panelPopup_OnMouseLeave(sender As Object, e As EventArgs) _
         Handles panelPopup.MouseLeave
@@ -593,6 +597,7 @@ Public Class UCtrlMapViewer
                                     Dim toolTipStop As New CustomToolTip(stopMarker)
                                     stopMarker.ToolTip = toolTipStop
                                     stopMarker.ToolTipText = point("stopName")
+                                    stopMarker.Tag = point("stopId")
                                     mapOverlay.Markers.Add(stopMarker)
                                 End If
                             Next
@@ -806,10 +811,12 @@ Public Class UCtrlMapViewer
         Return trolleysOverlay
     End Function
 
-    'Private Sub btnLayers_MouseClick(sender As Object, e As MouseEventArgs) Handles btnLayers.MouseClick
-
+    'Private Sub lblStopPopup_TextChanged(sender As Object, e As EventArgs) Handles lblPopupStop.TextChanged
+    '    Dim textWidth As Integer = TextRenderer.MeasureText(lblPopupStop.Text, Label1.Font).Width
+    '    Dim textBoxWidth As Integer = TextBox1.Width
+    '    Dim newPanelWidth As Integer = Math.Max(textWidth, textBoxWidth) + Label1.Margin.Left + Label1.Margin.Right + TextBox1.Margin.Left + TextBox1.Margin.Right
+    '    Panel1.Width = newPanelWidth
     'End Sub
-
     Private Sub btnZoomIn_Click(sender As Object, e As EventArgs) Handles btnZoomIn.Click
         gMap1.Zoom = gMap1.Zoom + 1
     End Sub

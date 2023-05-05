@@ -48,7 +48,7 @@ Partial Class UTimeTable
         Me.lBoxRealTime.FormattingEnabled = True
         Me.lBoxRealTime.ItemHeight = 16
         Me.lBoxRealTime.Location = New System.Drawing.Point(383, 478)
-        Me.lBoxRealTime.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.lBoxRealTime.Margin = New System.Windows.Forms.Padding(4)
         Me.lBoxRealTime.Name = "lBoxRealTime"
         Me.lBoxRealTime.Size = New System.Drawing.Size(271, 68)
         Me.lBoxRealTime.TabIndex = 29
@@ -56,7 +56,7 @@ Partial Class UTimeTable
         'btnBA
         '
         Me.btnBA.Location = New System.Drawing.Point(192, 38)
-        Me.btnBA.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.btnBA.Margin = New System.Windows.Forms.Padding(4)
         Me.btnBA.Name = "btnBA"
         Me.btnBA.Size = New System.Drawing.Size(447, 28)
         Me.btnBA.TabIndex = 25
@@ -65,7 +65,7 @@ Partial Class UTimeTable
         'btnAB
         '
         Me.btnAB.Location = New System.Drawing.Point(192, 2)
-        Me.btnAB.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.btnAB.Margin = New System.Windows.Forms.Padding(4)
         Me.btnAB.Name = "btnAB"
         Me.btnAB.Size = New System.Drawing.Size(447, 28)
         Me.btnAB.TabIndex = 24
@@ -76,7 +76,7 @@ Partial Class UTimeTable
         Me.lBoxPeatused.FormattingEnabled = True
         Me.lBoxPeatused.ItemHeight = 16
         Me.lBoxPeatused.Location = New System.Drawing.Point(145, 94)
-        Me.lBoxPeatused.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.lBoxPeatused.Margin = New System.Windows.Forms.Padding(4)
         Me.lBoxPeatused.Name = "lBoxPeatused"
         Me.lBoxPeatused.Size = New System.Drawing.Size(228, 452)
         Me.lBoxPeatused.TabIndex = 23
@@ -86,7 +86,7 @@ Partial Class UTimeTable
         Me.lBoxLiinid.FormattingEnabled = True
         Me.lBoxLiinid.ItemHeight = 16
         Me.lBoxLiinid.Location = New System.Drawing.Point(4, 94)
-        Me.lBoxLiinid.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.lBoxLiinid.Margin = New System.Windows.Forms.Padding(4)
         Me.lBoxLiinid.Name = "lBoxLiinid"
         Me.lBoxLiinid.Size = New System.Drawing.Size(132, 452)
         Me.lBoxLiinid.TabIndex = 22
@@ -145,7 +145,7 @@ Partial Class UTimeTable
         'btnShowLines
         '
         Me.btnShowLines.Location = New System.Drawing.Point(4, 2)
-        Me.btnShowLines.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.btnShowLines.Margin = New System.Windows.Forms.Padding(4)
         Me.btnShowLines.Name = "btnShowLines"
         Me.btnShowLines.Size = New System.Drawing.Size(167, 28)
         Me.btnShowLines.TabIndex = 21
@@ -155,7 +155,7 @@ Partial Class UTimeTable
         'btnShowStops
         '
         Me.btnShowStops.Location = New System.Drawing.Point(4, 38)
-        Me.btnShowStops.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.btnShowStops.Margin = New System.Windows.Forms.Padding(4)
         Me.btnShowStops.Name = "btnShowStops"
         Me.btnShowStops.Size = New System.Drawing.Size(167, 28)
         Me.btnShowStops.TabIndex = 28
@@ -164,10 +164,12 @@ Partial Class UTimeTable
         '
         'rtbAjad
         '
+        Me.rtbAjad.BackColor = System.Drawing.SystemColors.Window
+        Me.rtbAjad.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.rtbAjad.CausesValidation = False
         Me.rtbAjad.Cursor = System.Windows.Forms.Cursors.Arrow
-        Me.rtbAjad.Enabled = False
         Me.rtbAjad.Location = New System.Drawing.Point(383, 129)
-        Me.rtbAjad.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.rtbAjad.Margin = New System.Windows.Forms.Padding(4)
         Me.rtbAjad.Name = "rtbAjad"
         Me.rtbAjad.ReadOnly = True
         Me.rtbAjad.Size = New System.Drawing.Size(271, 288)
@@ -177,7 +179,7 @@ Partial Class UTimeTable
         'btnDay1
         '
         Me.btnDay1.Location = New System.Drawing.Point(383, 94)
-        Me.btnDay1.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.btnDay1.Margin = New System.Windows.Forms.Padding(4)
         Me.btnDay1.Name = "btnDay1"
         Me.btnDay1.Size = New System.Drawing.Size(90, 28)
         Me.btnDay1.TabIndex = 38
@@ -187,7 +189,7 @@ Partial Class UTimeTable
         'btnDay2
         '
         Me.btnDay2.Location = New System.Drawing.Point(474, 94)
-        Me.btnDay2.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.btnDay2.Margin = New System.Windows.Forms.Padding(4)
         Me.btnDay2.Name = "btnDay2"
         Me.btnDay2.Size = New System.Drawing.Size(90, 28)
         Me.btnDay2.TabIndex = 39
@@ -197,7 +199,7 @@ Partial Class UTimeTable
         'btnDay3
         '
         Me.btnDay3.Location = New System.Drawing.Point(564, 94)
-        Me.btnDay3.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.btnDay3.Margin = New System.Windows.Forms.Padding(4)
         Me.btnDay3.Name = "btnDay3"
         Me.btnDay3.Size = New System.Drawing.Size(90, 28)
         Me.btnDay3.TabIndex = 40
@@ -211,7 +213,7 @@ Partial Class UTimeTable
         'btnDisplayLines
         '
         Me.btnDisplayLines.Location = New System.Drawing.Point(4, 550)
-        Me.btnDisplayLines.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.btnDisplayLines.Margin = New System.Windows.Forms.Padding(4)
         Me.btnDisplayLines.Name = "btnDisplayLines"
         Me.btnDisplayLines.Size = New System.Drawing.Size(133, 28)
         Me.btnDisplayLines.TabIndex = 41
@@ -239,7 +241,7 @@ Partial Class UTimeTable
         Me.Controls.Add(Me.lBoxPeatused)
         Me.Controls.Add(Me.lBoxLiinid)
         Me.Controls.Add(Me.btnShowLines)
-        Me.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.Margin = New System.Windows.Forms.Padding(4)
         Me.Name = "UTimeTable"
         Me.Size = New System.Drawing.Size(658, 590)
         Me.ResumeLayout(False)

@@ -35,6 +35,12 @@ Public Class UTimeTable
         Dim Time As String
     End Structure
 
+    Private Sub UTimeTable_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        btnDay1.Font = New Font(btnDay1.Font, FontStyle.Bold)
+        btnDisplayLines.Enabled = False
+        btnAB.Enabled = False
+        btnBA.Enabled = False
+    End Sub
     Public Function GetStopsCoordinates() As List(Of StopStruct)
         Dim query As String = "SELECT name, stop_id, lat, lon FROM stops;"
         Dim stops As New List(Of StopStruct)
@@ -317,6 +323,7 @@ Public Class UTimeTable
             MsgBox(ex.Message)
             SQLiteCon.Close()
         End Try
+        btnDisplayLines.Enabled = False
     End Sub
 
     Private Sub GetStopTimesRealTime()
@@ -386,6 +393,8 @@ Public Class UTimeTable
         rtbAjad.Clear()
         btnAB.Text = Nothing
         btnBA.Text = Nothing
+        btnAB.Enabled = False
+        btnBA.Enabled = False
         LoadLines()
     End Sub
 
@@ -400,6 +409,8 @@ Public Class UTimeTable
         rtbAjad.Clear()
         btnAB.Text = Nothing
         btnBA.Text = Nothing
+        btnAB.Enabled = False
+        btnBA.Enabled = False
         LoadLineStops()
     End Sub
 
@@ -412,6 +423,7 @@ Public Class UTimeTable
         Suund = "A>B"
         LoadLineStops()
         lBoxPeatused.SelectedIndex = 0
+        btnDisplayLines.Enabled = True
         RaiseEvent ClearShapes()
         'LoadShapes()
     End Sub
@@ -425,6 +437,7 @@ Public Class UTimeTable
         Suund = "B>A"
         LoadLineStops()
         lBoxPeatused.SelectedIndex = 0
+        btnDisplayLines.Enabled = True
         RaiseEvent ClearShapes()
         'LoadShapes()
     End Sub
@@ -437,6 +450,8 @@ Public Class UTimeTable
         rtbAjad.Clear()
         SelectedLine = lBoxLiinid.SelectedItem
         LoadLineSuund()
+        btnAB.Enabled = True
+        btnBA.Enabled = True
     End Sub
 
     Private Sub lBoxPeatused_SelectedValueChanged(sender As Object, e As EventArgs) Handles lBoxPeatused.SelectedValueChanged
@@ -545,9 +560,7 @@ Public Class UTimeTable
         AppendStopDepartureTimes(tripID)
     End Sub
 
-    Private Sub UTimeTable_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        btnDay1.Font = New Font(btnDay1.Font, FontStyle.Bold)
-    End Sub
+
 
     Private Sub btnDisplayLines_Click(sender As Object, e As EventArgs) Handles btnDisplayLines.Click
 
