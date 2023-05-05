@@ -222,7 +222,6 @@ Partial Class UCtrlMapViewer
         '
         'panelPopup
         '
-        Me.panelPopup.AutoSize = True
         Me.panelPopup.BackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
         Me.panelPopup.Controls.Add(Me.tableLayoutPopup)
         Me.panelPopup.Location = New System.Drawing.Point(532, 226)
@@ -236,25 +235,26 @@ Partial Class UCtrlMapViewer
         Me.tableLayoutPopup.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.tableLayoutPopup.Controls.Add(Me.lblStopPopup, 0, 0)
         Me.tableLayoutPopup.Controls.Add(Me.lBoxRealTime, 0, 1)
-        Me.tableLayoutPopup.Location = New System.Drawing.Point(3, 3)
+        Me.tableLayoutPopup.Location = New System.Drawing.Point(0, 0)
+        Me.tableLayoutPopup.Margin = New System.Windows.Forms.Padding(0)
         Me.tableLayoutPopup.Name = "tableLayoutPopup"
         Me.tableLayoutPopup.RowCount = 2
         Me.tableLayoutPopup.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
         Me.tableLayoutPopup.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 80.0!))
-        Me.tableLayoutPopup.Size = New System.Drawing.Size(145, 135)
+        Me.tableLayoutPopup.Size = New System.Drawing.Size(151, 141)
         Me.tableLayoutPopup.TabIndex = 14
         '
         'lblStopPopup
         '
-        Me.lblStopPopup.AutoSize = True
         Me.lblStopPopup.BackColor = System.Drawing.Color.Transparent
         Me.lblStopPopup.Dock = System.Windows.Forms.DockStyle.Fill
         Me.lblStopPopup.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.lblStopPopup.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblStopPopup.ForeColor = System.Drawing.Color.Snow
-        Me.lblStopPopup.Location = New System.Drawing.Point(3, 0)
+        Me.lblStopPopup.Location = New System.Drawing.Point(0, 0)
+        Me.lblStopPopup.Margin = New System.Windows.Forms.Padding(0)
         Me.lblStopPopup.Name = "lblStopPopup"
-        Me.lblStopPopup.Size = New System.Drawing.Size(139, 27)
+        Me.lblStopPopup.Size = New System.Drawing.Size(151, 28)
         Me.lblStopPopup.TabIndex = 1
         Me.lblStopPopup.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
@@ -262,13 +262,14 @@ Partial Class UCtrlMapViewer
         '
         Me.lBoxRealTime.BackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
         Me.lBoxRealTime.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.lBoxRealTime.Dock = System.Windows.Forms.DockStyle.Fill
         Me.lBoxRealTime.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.lBoxRealTime.ForeColor = System.Drawing.Color.Snow
         Me.lBoxRealTime.FormattingEnabled = True
         Me.lBoxRealTime.ItemHeight = 20
-        Me.lBoxRealTime.Location = New System.Drawing.Point(3, 30)
+        Me.lBoxRealTime.Location = New System.Drawing.Point(3, 31)
         Me.lBoxRealTime.Name = "lBoxRealTime"
-        Me.lBoxRealTime.Size = New System.Drawing.Size(139, 100)
+        Me.lBoxRealTime.Size = New System.Drawing.Size(145, 107)
         Me.lBoxRealTime.TabIndex = 0
         '
         'btnZoomIn
@@ -331,7 +332,6 @@ Partial Class UCtrlMapViewer
         Me.panelLayers.PerformLayout()
         Me.panelPopup.ResumeLayout(False)
         Me.tableLayoutPopup.ResumeLayout(False)
-        Me.tableLayoutPopup.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

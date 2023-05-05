@@ -407,7 +407,48 @@ Public Class UCtrlMapViewer
             Dim clientPoint As Point = Me.PointToClient(e.Location)
             Dim screenPoint As Point = Me.PointToScreen(clientPoint)
             panelPopup.Location = New Point(screenPoint.X, screenPoint.Y - panelPopup.Height)
-            lblStopPopup.Text = stopMarker.ToolTipText
+            'Dim text As String = stopMarker.ToolTipText
+            'Dim padText As String = text.PadLeft(text.Length + 3, " ").PadRight(text.Length + 7, " ")
+            'Dim panelWidth As Integer = TextRenderer.MeasureText(padText, gMap1.Font).Width
+
+            '' Center the padded text vertically in the label
+            'lblStopPopup.TextAlign = ContentAlignment.Center
+
+            '' Draw the padded text in the label
+            'lblStopPopup.Text = padText
+            '' Set the width of the label and panel to the width of the padded text
+            'panelPopup.Width = panelWidth
+            'lblStopPopup.Width = panelWidth
+            'tableLayoutPopup.Width = panelWidth
+            Dim text As String = stopMarker.ToolTipText
+            Dim padText As String = text.PadLeft(text.Length + 14, " ").PadRight(text.Length + 28, " ")
+            Dim panelWidth As Integer = TextRenderer.MeasureText(padText, lblStopPopup.Font).Width
+
+            ' Set the padded text as the label's text
+            lblStopPopup.Text = padText
+
+            ' Calculate the height of the label and the center point
+            Dim labelHeight As Integer = lblStopPopup.Height
+            Dim centerY As Integer = labelHeight \ 2
+
+            ' Calculate the width of the label and the center point
+            Dim labelWidth As Integer = lblStopPopup.Width
+            Dim centerX As Integer = labelWidth \ 2
+
+            ' Calculate the position of the text within the label
+            Dim textSize As Size = TextRenderer.MeasureText(padText, lblStopPopup.Font)
+            Dim textX As Integer = centerX - (textSize.Width \ 2)
+            Dim textY As Integer = centerY - (textSize.Height \ 2)
+
+            ' Set the location of the text within the label
+            lblStopPopup.Location = New Point(textX, textY)
+
+            ' Set the width of the label and panel to the width of the padded text
+            panelPopup.Width = panelWidth
+            lblStopPopup.Width = panelWidth
+            tableLayoutPopup.Width = panelWidth
+
+
             Dim url As String = "https://transport.tallinn.ee/siri-stop-departures.php?stopid="
             url &= stopMarker.Tag.ToString()
             Dim time As Double
@@ -466,7 +507,6 @@ Public Class UCtrlMapViewer
             lBoxRealTime.Items.Clear()
             stopMarker.ToolTipMode = MarkerTooltipMode.OnMouseOver
         End If
-
     End Sub
 
     Private Sub btnLayers_MouseClick(sender As Object, e As EventArgs) Handles btnLayers.MouseClick
@@ -811,11 +851,10 @@ Public Class UCtrlMapViewer
         Return trolleysOverlay
     End Function
 
-    'Private Sub lblStopPopup_TextChanged(sender As Object, e As EventArgs) Handles lblPopupStop.TextChanged
-    '    Dim textWidth As Integer = TextRenderer.MeasureText(lblPopupStop.Text, Label1.Font).Width
-    '    Dim textBoxWidth As Integer = TextBox1.Width
-    '    Dim newPanelWidth As Integer = Math.Max(textWidth, textBoxWidth) + Label1.Margin.Left + Label1.Margin.Right + TextBox1.Margin.Left + TextBox1.Margin.Right
-    '    Panel1.Width = newPanelWidth
+    'Private Sub lblStopPopup_TextChanged(sender As Object, e As EventArgs) Handles lblStopPopup.TextChanged
+    '    Dim textWidth As Integer = TextRenderer.MeasureText(lblStopPopup.Text, lblStopPopup.Font).Width
+    '    Dim newPanelWidth As Integer = textWidth * 2
+    '    panelPopup.Width = newPanelWidth
     'End Sub
     Private Sub btnZoomIn_Click(sender As Object, e As EventArgs) Handles btnZoomIn.Click
         gMap1.Zoom = gMap1.Zoom + 1
