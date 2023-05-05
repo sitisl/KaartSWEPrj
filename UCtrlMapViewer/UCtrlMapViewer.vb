@@ -432,7 +432,7 @@ Public Class UCtrlMapViewer
                         If routetype = "tram" Then
                             routetype = "Tramm"
                         End If
-                        Dim routenum As Integer = Integer.Parse(fields(1))
+                        Dim routenum As String = fields(1)
                         Dim timebuf As Integer = Integer.Parse(fields(2))
                         timebuf = (timebuf - time) / 60
                         Dim formatted As String = timebuf.ToString("F0")
