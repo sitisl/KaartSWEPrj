@@ -407,24 +407,9 @@ Public Class UCtrlMapViewer
             Dim clientPoint As Point = Me.PointToClient(e.Location)
             Dim screenPoint As Point = Me.PointToScreen(clientPoint)
             panelPopup.Location = New Point(screenPoint.X, screenPoint.Y - panelPopup.Height)
-            'Dim text As String = stopMarker.ToolTipText
-            'Dim padText As String = text.PadLeft(text.Length + 3, " ").PadRight(text.Length + 7, " ")
-            'Dim panelWidth As Integer = TextRenderer.MeasureText(padText, gMap1.Font).Width
-
-            '' Center the padded text vertically in the label
-            'lblStopPopup.TextAlign = ContentAlignment.Center
-
-            '' Draw the padded text in the label
-            'lblStopPopup.Text = padText
-            '' Set the width of the label and panel to the width of the padded text
-            'panelPopup.Width = panelWidth
-            'lblStopPopup.Width = panelWidth
-            'tableLayoutPopup.Width = panelWidth
             Dim text As String = stopMarker.ToolTipText
             Dim padText As String = text.PadLeft(text.Length + 14, " ").PadRight(text.Length + 28, " ")
             Dim panelWidth As Integer = TextRenderer.MeasureText(padText, lblStopPopup.Font).Width
-
-            ' Set the padded text as the label's text
             lblStopPopup.Text = padText
 
             ' Calculate the height of the label and the center point
@@ -447,7 +432,6 @@ Public Class UCtrlMapViewer
             panelPopup.Width = panelWidth
             lblStopPopup.Width = panelWidth
             tableLayoutPopup.Width = panelWidth
-
 
             Dim url As String = "https://transport.tallinn.ee/siri-stop-departures.php?stopid="
             url &= stopMarker.Tag.ToString()
