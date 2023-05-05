@@ -51,7 +51,7 @@ Public Class UCtrlMapViewer
 
     Public Sub DisplayShapes(ByVal routePoints As List(Of StopStruct), ByVal routeStops As List(Of StopStruct))
         routesOverlay.Clear()
-        cbStops.Enabled = False
+        cbStops.Checked = False
         Dim Route As New WindowsForms.GMapRoute(New List(Of PointLatLng), "My Route")
         For Each point As StopStruct In routePoints
             route.Points.Add(New PointLatLng(point.Latitude, point.Longitude))

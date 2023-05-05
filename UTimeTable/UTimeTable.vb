@@ -418,6 +418,8 @@ Public Class UTimeTable
         If String.IsNullOrEmpty(lBoxLiinid.Text) And String.IsNullOrEmpty(lBoxPeatused.Text) Or Suund = "A>B" Then
             Return
         End If
+        btnAB.Font = New Font(btnAB.Font, FontStyle.Bold)
+        btnBA.Font = New Font(btnBA.Font, FontStyle.Regular)
         rtbAjad.Clear()
         lBoxRealTime.Items.Clear()
         Suund = "A>B"
@@ -432,6 +434,8 @@ Public Class UTimeTable
         If String.IsNullOrEmpty(lBoxLiinid.Text) And String.IsNullOrEmpty(lBoxPeatused.Text) Or Suund = "B>A" Then
             Return
         End If
+        btnAB.Font = New Font(btnAB.Font, FontStyle.Regular)
+        btnBA.Font = New Font(btnBA.Font, FontStyle.Bold)
         rtbAjad.Clear()
         lBoxRealTime.Items.Clear()
         Suund = "B>A"
@@ -443,15 +447,17 @@ Public Class UTimeTable
     End Sub
 
     Private Sub lBoxLiinid_SelectedValueChanged(sender As Object, e As EventArgs) Handles lBoxLiinid.SelectedValueChanged
-        lBoxPeatused.Items.Clear()
-        lBoxRealTime.Items.Clear()
-        SelectedStop = Nothing
-        Suund = Nothing
-        rtbAjad.Clear()
-        SelectedLine = lBoxLiinid.SelectedItem
-        LoadLineSuund()
-        btnAB.Enabled = True
-        btnBA.Enabled = True
+        If lBoxLiinid.SelectedItem IsNot Nothing Then
+            lBoxPeatused.Items.Clear()
+            lBoxRealTime.Items.Clear()
+            SelectedStop = Nothing
+            Suund = Nothing
+            rtbAjad.Clear()
+            SelectedLine = lBoxLiinid.SelectedItem
+            LoadLineSuund()
+            btnAB.Enabled = True
+            btnBA.Enabled = True
+        End If
     End Sub
 
     Private Sub lBoxPeatused_SelectedValueChanged(sender As Object, e As EventArgs) Handles lBoxPeatused.SelectedValueChanged
