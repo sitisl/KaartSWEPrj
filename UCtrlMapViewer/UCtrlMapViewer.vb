@@ -47,6 +47,7 @@ Public Class UCtrlMapViewer
     Dim trolleysOverlay As New GMapOverlay("trolleysOverlay")
     Dim tramsOverlay As New GMapOverlay("tramsOverlay")
     Dim routesOverlay As New WindowsForms.GMapOverlay("RoutesOverlay")
+    Dim closestStopOverlay As New GMapOverlay("closestStopOverlay")
 
 
 
@@ -215,7 +216,7 @@ Public Class UCtrlMapViewer
         e.Graphics.FillRectangle(brush, e.Bounds)
 
         ' Draw the tooltip text in the middle with "Snow" color
-        Dim font As Font = e.Font
+        Dim font As Font = New Font("Segoe UI", 9, FontStyle.Regular)
         Using brushText As New SolidBrush(Color.Snow)
             Dim format As New StringFormat()
             format.Alignment = StringAlignment.Center
@@ -225,8 +226,8 @@ Public Class UCtrlMapViewer
         End Using
         brush.Dispose()
         toolTipNearestStop.AutoPopDelay = 4000
-        toolTipNearestStop.InitialDelay = 50
-        toolTipNearestStop.ReshowDelay = 80
+        toolTipNearestStop.InitialDelay = 0
+        toolTipNearestStop.ReshowDelay = 50
     End Sub
 
 
@@ -418,6 +419,8 @@ Public Class UCtrlMapViewer
         End If
         btnRoute.Enabled = False
         cbStops.Checked = False
+        btnNearestStopDest.Enabled = False
+        btnNearestStopStart.Enabled = False
     End Sub
 
     Private Sub btnClear_Click(sender As Object, e As EventArgs) Handles btnClear.Click
@@ -587,6 +590,72 @@ Public Class UCtrlMapViewer
         End If
     End Sub
 
+    Private Sub btnNearestStopStart_Click(sender As Object, e As EventArgs) Handles btnNearestStopStart.Click
+        If lblStart.Text IsNot "" Then
+            For Each marker As GMapMarker In stopsOverlay.Markers
+                marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
+            Next
+            Dim closestMarker As GMarkerGoogle = Nothing
+            Dim closestDistance As Double = Double.MaxValue
+            For Each marker As GMarkerGoogle In stopsOverlay.Markers
+                Dim position As PointLatLng = marker.Position
+                Dim tooltipText As String = marker.ToolTipText
+                Dim distance As Double = DistanceBetweenPoints(startCoord.Lat, startCoord.Lng, position.Lat, position.Lng)
+                If distance < closestDistance Then
+                    closestMarker = marker
+                    closestDistance = distance
+                End If
+            Next
+            If closestMarker IsNot Nothing Then
+                closestMarker.ToolTipMode = MarkerTooltipMode.Always
+            End If
+            'closestStopOverlay.Markers.Add(closestMarker)
+            'gMap1.Overlays.Insert(0, closestStopOverlay)
+            gMap1.UpdateMarkerLocalPosition(closestMarker)
+            gMap1.Refresh()
+        End If
+        btnNearestStopStart.Enabled = False
+        If lblDest.Text <> "" Then
+            btnNearestStopDest.Enabled = True
+        End If
+    End Sub
+
+    Private Sub btnNearestStopDest_Click(sender As Object, e As EventArgs) Handles btnNearestStopDest.Click
+        If lblDest.Text IsNot "" Then
+            For Each marker As GMapMarker In stopsOverlay.Markers
+                marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
+            Next
+            Dim closestMarker As GMarkerGoogle = Nothing
+            Dim closestDistance As Double = Double.MaxValue
+            For Each marker As GMarkerGoogle In stopsOverlay.Markers
+                Dim position As PointLatLng = marker.Position
+                Dim tooltipText As String = marker.ToolTipText
+                Dim distance As Double = DistanceBetweenPoints(endCoord.Lat, endCoord.Lng, position.Lat, position.Lng)
+                If distance < closestDistance Then
+                    closestMarker = marker
+                    closestDistance = distance
+                End If
+            Next
+            If closestMarker IsNot Nothing Then
+                closestMarker.ToolTipMode = MarkerTooltipMode.Always
+            End If
+            'closestStopOverlay.Markers.Add(closestMarker)
+            'gMap1.Overlays.Insert(0, closestStopOverlay)
+            gMap1.UpdateMarkerLocalPosition(closestMarker)
+            gMap1.Refresh()
+        End If
+        btnNearestStopDest.Enabled = False
+        btnNearestStopStart.Enabled = True
+    End Sub
+
+    Private Function DistanceBetweenPoints(ByVal lat1 As Double, ByVal lon1 As Double, ByVal lat2 As Double, ByVal lon2 As Double) As Double
+        Dim R As Double = 6371 ' Earth's radius in kilometers
+        Dim dLat As Double = Math.PI / 180 * (lat2 - lat1)
+        Dim dLon As Double = Math.PI / 180 * (lon2 - lon1)
+        Dim a As Double = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) + Math.Cos(Math.PI / 180 * lat1) * Math.Cos(Math.PI / 180 * lat2) * Math.Sin(dLon / 2) * Math.Sin(dLon / 2)
+        Dim c As Double = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a))
+        Return R * c
+    End Function
     Private Sub btnLayers_MouseClick(sender As Object, e As EventArgs) Handles btnLayers.MouseClick
         panelLayers.Hide()
         panelLayers.Controls.Clear()
@@ -744,6 +813,7 @@ Public Class UCtrlMapViewer
             startMarker.ToolTip = toolTipStart
             startMarker.ToolTipText = "Algus: " & startAddress
             startMarker.Size = New Size(14, 14)
+            startMarker.ToolTipMode = MarkerTooltipMode.Always
             mapOverlay.Markers.Add(startMarker)
             gMap1.UpdateMarkerLocalPosition(startMarker)
             Dim endMarker As GMarkerGoogle = New GMarkerGoogle(endCoord, CType(drawMarker("red", 13), Bitmap))
@@ -751,6 +821,7 @@ Public Class UCtrlMapViewer
             endMarker.ToolTip = toolTipEnd
             endMarker.ToolTipText = "Sihtkoht: " & destAddress
             endMarker.Size = New Size(14, 14)
+            endMarker.ToolTipMode = MarkerTooltipMode.Always
             mapOverlay.Markers.Add(endMarker)
 
             gMap1.Overlays.Clear()
@@ -928,12 +999,6 @@ Public Class UCtrlMapViewer
         Next
         Return trolleysOverlay
     End Function
-
-    'Private Sub lblStopPopup_TextChanged(sender As Object, e As EventArgs) Handles lblStopPopup.TextChanged
-    '    Dim textWidth As Integer = TextRenderer.MeasureText(lblStopPopup.Text, lblStopPopup.Font).Width
-    '    Dim newPanelWidth As Integer = textWidth * 2
-    '    panelPopup.Width = newPanelWidth
-    'End Sub
     Private Sub btnZoomIn_Click(sender As Object, e As EventArgs) Handles btnZoomIn.Click
         gMap1.Zoom = gMap1.Zoom + 1
     End Sub
