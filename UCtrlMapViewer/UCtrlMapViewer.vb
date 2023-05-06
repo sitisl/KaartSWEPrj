@@ -47,9 +47,6 @@ Public Class UCtrlMapViewer
     Dim trolleysOverlay As New GMapOverlay("trolleysOverlay")
     Dim tramsOverlay As New GMapOverlay("tramsOverlay")
     Dim routesOverlay As New WindowsForms.GMapOverlay("RoutesOverlay")
-    Dim closestStopOverlay As New GMapOverlay("closestStopOverlay")
-
-
 
     Public Sub DisplayShapes(ByVal routePoints As List(Of StopStruct), ByVal routeStops As List(Of StopStruct))
         routesOverlay.Clear()
