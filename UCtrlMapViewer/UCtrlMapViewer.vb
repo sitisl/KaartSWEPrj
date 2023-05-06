@@ -324,8 +324,8 @@ Public Class UCtrlMapViewer
     End Sub
     '------------------------------------------------------------------
 
-    '----------------------------------------Button, panel, checkbox events----------------------------------------------'
-    'Events that are triggered when the user clicks, ticks, hovers or leaves the control element
+    '------------------------------------Button, panel, checkbox, timer events----------------------------------------------'
+    'Events that are triggered when the user clicks, ticks, hovers or leaves the control element, also timer tick
 
     Private Sub btnNearestStopStart_MouseHover(sender As Object, e As EventArgs) Handles btnNearestStopStart.MouseHover
         toolTipNearestStop.Show("Leia lähim peatus", btnNearestStopStart, btnNearestStopStart.Width + 3, 6)
@@ -486,6 +486,11 @@ Public Class UCtrlMapViewer
         showHideTrolleys(cbTroll.Checked, GetTrolleys(drawMarker("Yellow", 10)))
     End Sub
 
+    Private Sub transportTimer_Tick(sender As Object, e As EventArgs) Handles transportTimer.Tick
+        showHideBuses(cbBuses.Checked, GetBuses(drawMarker("Cyan", 10)))
+        showHideTrams(cbTram.Checked, GetTrams(drawMarker("LightGreen", 10)))
+        showHideTrolleys(cbTroll.Checked, GetTrolleys(drawMarker("Yellow", 10)))
+    End Sub
     '--------------------------------------------------
 
     '--------------------------------------------Map events-------------------------------------------
@@ -667,6 +672,10 @@ Public Class UCtrlMapViewer
         item.ToolTipMode = MarkerTooltipMode.OnMouseOver
     End Sub
 
+    '--------------------------------------------------
+
+    '-----------------------------Class functions and methods----------------------------------
+    'All functions and methods that are not events
 
     'Gets stops from database and adds them to the map
     Public Function getStopsSQL(ByRef markerBitmap As Bitmap)
@@ -686,6 +695,7 @@ Public Class UCtrlMapViewer
         Return stopsOverlay
     End Function
 
+    'This method is for displaying the route for a selected line on the map
     Public Sub DisplayShapes(ByVal routePoints As List(Of StopStruct), ByVal routeStops As List(Of StopStruct))
         routesOverlay.Clear()
         cbStops.Checked = False
@@ -724,6 +734,7 @@ Public Class UCtrlMapViewer
         gMap1.Refresh()
     End Sub
 
+    'This method calculates distance between two points on mapand is used to get the closest bus stop to the selected location
     Private Function DistanceBetweenPoints(ByVal lat1 As Double, ByVal lon1 As Double, ByVal lat2 As Double, ByVal lon2 As Double) As Double
         Dim R As Double = 6371 ' Earth's radius in kilometers
         Dim dLat As Double = Math.PI / 180 * (lat2 - lat1)
@@ -733,7 +744,7 @@ Public Class UCtrlMapViewer
         Return R * c
     End Function
 
-
+    'This method is used to show or hide bus stops on the map
     Public Sub showHideStops(ByRef isChecked As Boolean, ByRef stopsOverlay As GMapOverlay)
         If (isChecked = True) Then
             gMap1.Overlays.Add(stopsOverlay)
@@ -744,6 +755,8 @@ Public Class UCtrlMapViewer
         End If
     End Sub
 
+    'This method gets the transit route using Bing Maps API and plots it onto the map
+    'In addition to the route it adds markers on the map for the start, destination and stops on the route
     Public Sub getRoute(startCoord As PointLatLng, endCoord As PointLatLng)
         showHideStops(False, getStopsSQL(drawMarker("Orange", 9)))
         ' Define the route overlay and add it to the map
@@ -801,7 +814,6 @@ Public Class UCtrlMapViewer
                                     walkingPath(walkCount).Add(loc)
                                 Next
                                 walkCount = walkCount + 1
-
                             Else
                                 For i = CType(item("details")(0)("startPathIndices")(0), Integer) To CType(item("details")(0)("endPathIndices")(0), Integer)
                                     Debug.WriteLine("startIndeks: " & item("details")(0)("startPathIndices")(0).ToString & " " & item("details")(0)("endPathIndices")(0).ToString)
@@ -901,6 +913,7 @@ Public Class UCtrlMapViewer
 
     End Sub
 
+    'This method clears the route from the map and adds the stops back on the map
     Public Sub clearRoute()
         gMap1.Overlays.Clear()
         gMap1.Refresh()
@@ -908,16 +921,7 @@ Public Class UCtrlMapViewer
         cbStops.Checked = True
     End Sub
 
-
-
-
-
-    Private Sub transportTimer_Tick(sender As Object, e As EventArgs) Handles transportTimer.Tick
-        showHideBuses(cbBuses.Checked, GetBuses(drawMarker("Cyan", 10)))
-        showHideTrams(cbTram.Checked, GetTrams(drawMarker("LightGreen", 10)))
-        showHideTrolleys(cbTroll.Checked, GetTrolleys(drawMarker("Yellow", 10)))
-    End Sub
-
+    'This method shows or hides the buses on the map
     Public Sub showHideBuses(ByRef isChecked As Boolean, ByRef busesOverlay As GMapOverlay)
         If (isChecked = True) Then
             gMap1.Overlays.Add(busesOverlay)
@@ -928,7 +932,7 @@ Public Class UCtrlMapViewer
         End If
     End Sub
 
-
+    'This method shows or hides the trams on the map
     Public Sub showHideTrams(ByRef isChecked As Boolean, ByRef tramsOverlay As GMapOverlay)
         If (isChecked = True) Then
             gMap1.Overlays.Add(tramsOverlay)
@@ -939,7 +943,7 @@ Public Class UCtrlMapViewer
         End If
     End Sub
 
-
+    'This method shows or hides the trolleys on the map
     Public Sub showHideTrolleys(ByRef isChecked As Boolean, ByRef trolleysOverlay As GMapOverlay)
         If (isChecked = True) Then
             gMap1.Overlays.Add(trolleysOverlay)
@@ -950,8 +954,8 @@ Public Class UCtrlMapViewer
         End If
     End Sub
 
+    'This method gets the bus locations using realtime component and adds them to the map
     Public Function GetBuses(ByRef markerBitmap As Bitmap)
-
         Dim realTime As New CRealTime
         Dim buses As List(Of TransportStruct) = realTime.GetRealTimeTransport("bus")
         Dim marker As GMarkerGoogle
@@ -969,6 +973,7 @@ Public Class UCtrlMapViewer
         Return busesOverlay
     End Function
 
+    'This method gets the trams location and adds them to the map
     Public Function GetTrams(ByRef markerBitmap As Bitmap)
         Dim realTime As New CRealTime
         Dim trams As List(Of TransportStruct) = realTime.GetRealTimeTransport("tram")
@@ -987,8 +992,8 @@ Public Class UCtrlMapViewer
         Return tramsOverlay
     End Function
 
+    'This method gets the trolleys location and adds them to the map
     Public Function GetTrolleys(ByRef markerBitmap As Bitmap)
-
         Dim realTime As New CRealTime
         Dim trolleys As List(Of TransportStruct) = realTime.GetRealTimeTransport("trolley")
         Dim marker As GMarkerGoogle
@@ -1009,7 +1014,7 @@ Public Class UCtrlMapViewer
 End Class
 
 
-'Class for creating a modern tooltip box For the bus Stop markers
+'Class for creating a modern tooltip box For the bus stop markers
 Public Class CustomToolTip
     Inherits GMapToolTip
 
