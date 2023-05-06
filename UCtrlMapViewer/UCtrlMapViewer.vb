@@ -54,7 +54,7 @@ Public Class UCtrlMapViewer
         cbStops.Checked = False
         Dim Route As New WindowsForms.GMapRoute(New List(Of PointLatLng), "My Route")
         For Each point As StopStruct In routePoints
-            route.Points.Add(New PointLatLng(point.Latitude, point.Longitude))
+            Route.Points.Add(New PointLatLng(point.Latitude, point.Longitude))
         Next
         Dim marker As GMarkerGoogle
         Dim markerBitmap As Bitmap = drawMarker("Orange")
@@ -74,9 +74,9 @@ Public Class UCtrlMapViewer
             gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
             routesOverlay.Markers.Add(marker)
         Next
-        routesOverlay.Routes.Add(route)
+        routesOverlay.Routes.Add(Route)
         gMap1.Overlays.Insert(0, routesOverlay)
-        gMap1.UpdateRouteLocalPosition(route)
+        gMap1.UpdateRouteLocalPosition(Route)
         gMap1.ZoomAndCenterRoute(Route)
         gMap1.Refresh()
         btnClear.Enabled = True
