@@ -30,6 +30,8 @@ Imports System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar
 
 ' This class realizes the functionality of the map viewer graphic component
 Public Class UCtrlMapViewer
+
+    '----------Class properties and globals-------------
     ' Flag for checking if the layerPanel is resized
     Private isResized As Boolean = False
     Private startCoord As PointLatLng
@@ -38,61 +40,25 @@ Public Class UCtrlMapViewer
     Private destAddress As String
     Private pointCoord As PointLatLng
     Private stopMarker As GMarkerGoogle
+    'Key to access Bing Map provider routing
     Private apiKey As String = "9uNDiiSRdZbV6ok9Ec5t~H2haoDb04SzxUDigaGoUfg~Ajj9p1O58cpXmy-Y-BbTNAF8M1Ws3HjoFHGWOaSgIYCucioMsIkP3BpBZGI3XtWr"
-
     Public timeT As New UTimeTable.UTimeTable
     Private WithEvents transportTimer As New Timer()
-    Dim busesOverlay As New GMapOverlay("busesOverlay")
-    Dim stopsOverlay As New GMapOverlay("stopsOverlay")
-    Dim trolleysOverlay As New GMapOverlay("trolleysOverlay")
-    Dim tramsOverlay As New GMapOverlay("tramsOverlay")
-    Dim routesOverlay As New WindowsForms.GMapOverlay("RoutesOverlay")
+    Private busesOverlay As New GMapOverlay("busesOverlay")
+    Private stopsOverlay As New GMapOverlay("stopsOverlay")
+    Private trolleysOverlay As New GMapOverlay("trolleysOverlay")
+    Private tramsOverlay As New GMapOverlay("tramsOverlay")
+    Private routesOverlay As New WindowsForms.GMapOverlay("RoutesOverlay")
 
-    Public Sub DisplayShapes(ByVal routePoints As List(Of StopStruct), ByVal routeStops As List(Of StopStruct))
-        routesOverlay.Clear()
-        cbStops.Checked = False
-        Dim Route As New WindowsForms.GMapRoute(New List(Of PointLatLng), "My Route")
-        For Each point As StopStruct In routePoints
-            Route.Points.Add(New PointLatLng(point.Latitude, point.Longitude))
-        Next
-        Dim marker As GMarkerGoogle
-        Dim markerBitmap As Bitmap = drawMarker("Orange", 9)
-        For i As Integer = 0 To routeStops.Count - 1
-            Dim stop_el As StopStruct = routeStops(i)
-            marker = New GMarkerGoogle(New PointLatLng(stop_el.Latitude, stop_el.Longitude), markerBitmap)
-            If i = 0 OrElse i = routeStops.Count - 1 Then
-                marker.ToolTipMode = MarkerTooltipMode.Always
-            Else
-                marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
-            End If
-            Dim toolTip As New CustomToolTip(marker)
-            toolTip.Offset = New Point(5, -drawMarker("Orange", 9).Height / 2)
-            marker.ToolTip = toolTip
-            marker.ToolTipText = stop_el.Name
-            marker.Tag = stop_el.ID
-            gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
-            routesOverlay.Markers.Add(marker)
-        Next
-        routesOverlay.Routes.Add(Route)
-        gMap1.Overlays.Insert(0, routesOverlay)
-        gMap1.UpdateRouteLocalPosition(Route)
-        gMap1.ZoomAndCenterRoute(Route)
-        gMap1.Refresh()
-        btnClear.Enabled = True
-    End Sub
 
-    Public Sub ClearShapes()
-        routesOverlay.Clear()
-        gMap1.Refresh()
-    End Sub
-
+    '---------------Load and init methods-------------------
     Private Sub UCtrlMapViewer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' This code will run when the user control is loaded into a form or another container control
         panelLayers_Init()
         cbStops.Checked = True
         transportTimer.Interval = 5000 ' 1 second
         transportTimer.Enabled = True
-        lblStart.Parent = gMap1
+        lblStart.Parent = gMap1 'Parent set as gMap1 to get transparency effect for controls
         lblDest.Parent = gMap1
         btnClear.Enabled = False
         btnRoute.Enabled = False
@@ -119,29 +85,29 @@ Public Class UCtrlMapViewer
         btnLayers.Location = New Point(panelLayers.Width - btnLayers.Width, 0)
     End Sub
 
-    'Gets stops from database and adds them to the map
-    Public Function getStopsSQL(ByRef markerBitmap As Bitmap)
-        Dim stops As List(Of StopStruct) = timeT.GetStopsCoordinates()
-        Dim marker As GMarkerGoogle
-        For Each stop_el As StopStruct In stops
-            marker = New GMarkerGoogle(New PointLatLng(stop_el.Latitude, stop_el.Longitude), markerBitmap)
-            marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
-            Dim toolTip As New CustomToolTip(marker)
-            'toolTip.Offset = New Point(20, -markerBitmap.Height / 2)
-            marker.ToolTip = toolTip
-            marker.ToolTipText = stop_el.Name
-            marker.Tag = stop_el.ID
-            gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
-            stopsOverlay.Markers.Add(marker)
-        Next
-        Return stopsOverlay
-    End Function
+    Public Sub initMap()
+        initializeMap()
+    End Sub
+    'The map is initialized in this sub
+    Private Sub initializeMap()
+        gMap1.MapProvider = BingMapProvider.Instance 'Bing for map provider
+        'API key
+        BingMapProvider.Instance.ClientKey = apiKey
+        GMaps.Instance.Mode = AccessMode.ServerAndCache
+        gMap1.ShowCenter = False
+        gMap1.Position = New GMap.NET.PointLatLng(59.43, 24.75)
+        gMap1.MinZoom = 11
+        gMap1.MaxZoom = 20
+        gMap1.Zoom = 12
+        gMap1.DragButton = MouseButtons.Left
+        gMap1.Refresh()
+        'GMaps.Instance.UseMemoryCache = True
+        'GMapControl1.BoundsOfMap = New RectLatLng(59.43, 24.75, 0.1, 0.1)
+    End Sub
 
-    ' Events to see coordinates and stops on the form
-    Public Event LocationClicked(ByVal latitude As Double, ByVal longitude As Double)
-    Public Event MarkerClicked(ByVal value As String, ByVal latitude As Double, ByVal longitude As Double)
 
-    '------------------Paint events and personalization of the user controls-------------------
+
+    '------------------Paint events and personalization of the user controls-------------------------
     'These events and functions override the default behaviour and appearance of the controls
     Private Sub btnLayers_Paint(sender As Object, e As PaintEventArgs) Handles btnLayers.Paint
         Dim originalImage As Image = My.Resources.layers_white
@@ -227,23 +193,6 @@ Public Class UCtrlMapViewer
         toolTipNearestStop.ReshowDelay = 50
     End Sub
 
-
-
-    Private Sub btnNearestStopStart_MouseHover(sender As Object, e As EventArgs) Handles btnNearestStopStart.MouseHover
-        toolTipNearestStop.Show("Leia lähim peatus", btnNearestStopStart, btnNearestStopStart.Width + 3, 6)
-    End Sub
-
-    Private Sub btnNearestStopStart_MouseLeave(sender As Object, e As EventArgs) Handles btnNearestStopStart.MouseLeave
-        toolTipNearestStop.Hide(btnNearestStopStart)
-    End Sub
-
-    Private Sub btnNearestStopDest_MouseHover(sender As Object, e As EventArgs) Handles btnNearestStopDest.MouseHover
-        toolTipNearestStop.Show("Leia lähim peatus", btnNearestStopDest, btnNearestStopDest.Width + 3, 6)
-    End Sub
-
-    Private Sub btnNearestStopDest_MouseLeave(sender As Object, e As EventArgs) Handles btnNearestStopDest.MouseLeave
-        toolTipNearestStop.Hide(btnNearestStopDest)
-    End Sub
     Private Sub btnZoomIn_Paint(sender As Object, e As PaintEventArgs) Handles btnZoomIn.Paint
         ' Draw background gradient
         If btnZoomIn.ClientRectangle.Contains(btnZoomIn.PointToClient(Control.MousePosition)) Then
@@ -306,24 +255,10 @@ Public Class UCtrlMapViewer
         End If
         ' Load the marker bitmap using the drawMarker function
         Dim markerBitmap As Bitmap = drawMarker("Red", 15)
-
-        ' Define the desired size of the marker
-        Dim newSize As Integer = 15
-
-        ' Create a new Bitmap with the desired size
-        Dim scaledBitmap As New Bitmap(newSize, newSize)
-
-        ' Draw the marker on the scaled Bitmap using a new Graphics object
-        Using g As Graphics = Graphics.FromImage(scaledBitmap)
-            g.DrawImage(markerBitmap, New Rectangle(0, 0, newSize, newSize))
-        End Using
-
-        ' Calculate the position of the scaled marker on the button
-        Dim x As Integer = (btnNearestStopStart.Width - newSize) \ 2
-        Dim y As Integer = (btnNearestStopStart.Height - newSize) \ 2
-
-        ' Draw the scaled marker on the button using the e.Graphics object
-        e.Graphics.DrawImage(scaledBitmap, x, y)
+        Dim markerSize As Integer = markerBitmap.Width
+        Dim x As Integer = (btnNearestStopStart.Width - markerSize) \ 2
+        Dim y As Integer = (btnNearestStopStart.Height - markerSize) \ 2
+        e.Graphics.DrawImage(markerBitmap, x, y)
     End Sub
 
     Private Sub btnRoute_Paint(sender As Object, e As PaintEventArgs) Handles btnRoute.Paint
@@ -339,7 +274,6 @@ Public Class UCtrlMapViewer
         Dim text As String = "Mine"
         Dim font As New Font("Segoe UI", 10)
         Dim textSize As SizeF = e.Graphics.MeasureString(text, font)
-
         Dim textRect As New RectangleF(0, 0, btnRoute.Width, btnRoute.Height)
         Dim format As New StringFormat()
         format.Alignment = StringAlignment.Center
@@ -388,25 +322,25 @@ Public Class UCtrlMapViewer
         g.FillPath(brush, path)
         g.DrawPath(New Pen(Color.FromArgb(255, 15, 15, 15), 1), path)
     End Sub
+    '------------------------------------------------------------------
 
-    Public Sub initMap()
-        initializeMap()
+    '----------------------------------------Button, panel, checkbox events----------------------------------------------'
+    'Events that are triggered when the user clicks, ticks, hovers or leaves the control element
+
+    Private Sub btnNearestStopStart_MouseHover(sender As Object, e As EventArgs) Handles btnNearestStopStart.MouseHover
+        toolTipNearestStop.Show("Leia lähim peatus", btnNearestStopStart, btnNearestStopStart.Width + 3, 6)
     End Sub
-    'The map is initialized in this sub
-    Private Sub initializeMap()
-        gMap1.MapProvider = BingMapProvider.Instance 'Bing for map provider
-        'API key
-        BingMapProvider.Instance.ClientKey = apiKey
-        GMaps.Instance.Mode = AccessMode.ServerAndCache
-        gMap1.ShowCenter = False
-        gMap1.Position = New GMap.NET.PointLatLng(59.43, 24.75)
-        gMap1.MinZoom = 11
-        gMap1.MaxZoom = 20
-        gMap1.Zoom = 12
-        gMap1.DragButton = MouseButtons.Left
-        gMap1.Refresh()
-        'GMaps.Instance.UseMemoryCache = True
-        'GMapControl1.BoundsOfMap = New RectLatLng(59.43, 24.75, 0.1, 0.1)
+
+    Private Sub btnNearestStopStart_MouseLeave(sender As Object, e As EventArgs) Handles btnNearestStopStart.MouseLeave
+        toolTipNearestStop.Hide(btnNearestStopStart)
+    End Sub
+
+    Private Sub btnNearestStopDest_MouseHover(sender As Object, e As EventArgs) Handles btnNearestStopDest.MouseHover
+        toolTipNearestStop.Show("Leia lähim peatus", btnNearestStopDest, btnNearestStopDest.Width + 3, 6)
+    End Sub
+
+    Private Sub btnNearestStopDest_MouseLeave(sender As Object, e As EventArgs) Handles btnNearestStopDest.MouseLeave
+        toolTipNearestStop.Hide(btnNearestStopDest)
     End Sub
 
     Private Sub btnRoute_Click(sender As Object, e As EventArgs) Handles btnRoute.Click
@@ -432,14 +366,131 @@ Public Class UCtrlMapViewer
         gMap1.Zoom = 12
     End Sub
 
-    Public Sub gMap1_MouseDown(sender As Object, e As MouseEventArgs) _
-        Handles gMap1.MouseDown
-        If e.Button = MouseButtons.Right Then
-            ' Get the latitude and longitude of the clicked point
-            Dim pointLatLng As PointLatLng = gMap1.FromLocalToLatLng(e.X, e.Y)
-            RaiseEvent LocationClicked(pointLatLng.Lat, pointLatLng.Lng)
+    Private Sub panelPopup_OnMouseLeave(sender As Object, e As EventArgs) _
+        Handles panelPopup.MouseLeave
+        Dim panelBounds As Rectangle = panelPopup.RectangleToScreen(panelPopup.ClientRectangle)
+        If Not panelBounds.Contains(Control.MousePosition) Then
+            panelPopup.Visible = False
+            lBoxRealTime.Items.Clear()
+            stopMarker.ToolTipMode = MarkerTooltipMode.OnMouseOver
         End If
     End Sub
+
+    Private Sub btnNearestStopStart_Click(sender As Object, e As EventArgs) Handles btnNearestStopStart.Click
+        If lblStart.Text IsNot "" Then
+            For Each marker As GMapMarker In stopsOverlay.Markers
+                marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
+            Next
+            Dim closestMarker As GMarkerGoogle = Nothing
+            Dim closestDistance As Double = Double.MaxValue
+            For Each marker As GMarkerGoogle In stopsOverlay.Markers
+                Dim position As PointLatLng = marker.Position
+                Dim tooltipText As String = marker.ToolTipText
+                Dim distance As Double = DistanceBetweenPoints(startCoord.Lat, startCoord.Lng, position.Lat, position.Lng)
+                If distance < closestDistance Then
+                    closestMarker = marker
+                    closestDistance = distance
+                End If
+            Next
+            If closestMarker IsNot Nothing Then
+                closestMarker.ToolTipMode = MarkerTooltipMode.Always
+            End If
+            gMap1.UpdateMarkerLocalPosition(closestMarker)
+            gMap1.Refresh()
+        End If
+        btnNearestStopStart.Enabled = False
+        If lblDest.Text <> "" Then
+            btnNearestStopDest.Enabled = True
+        End If
+    End Sub
+    Private Sub btnNearestStopDest_Click(sender As Object, e As EventArgs) Handles btnNearestStopDest.Click
+        If lblDest.Text IsNot "" Then
+            For Each marker As GMapMarker In stopsOverlay.Markers
+                marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
+            Next
+            Dim closestMarker As GMarkerGoogle = Nothing
+            Dim closestDistance As Double = Double.MaxValue
+            For Each marker As GMarkerGoogle In stopsOverlay.Markers
+                Dim position As PointLatLng = marker.Position
+                Dim tooltipText As String = marker.ToolTipText
+                Dim distance As Double = DistanceBetweenPoints(endCoord.Lat, endCoord.Lng, position.Lat, position.Lng)
+                If distance < closestDistance Then
+                    closestMarker = marker
+                    closestDistance = distance
+                End If
+            Next
+            If closestMarker IsNot Nothing Then
+                closestMarker.ToolTipMode = MarkerTooltipMode.Always
+            End If
+            gMap1.UpdateMarkerLocalPosition(closestMarker)
+            gMap1.Refresh()
+        End If
+        btnNearestStopDest.Enabled = False
+        btnNearestStopStart.Enabled = True
+    End Sub
+
+    Private Sub btnZoomIn_Click(sender As Object, e As EventArgs) Handles btnZoomIn.Click
+        gMap1.Zoom = gMap1.Zoom + 1
+    End Sub
+
+    Private Sub btnZoomOut_Click(sender As Object, e As EventArgs) Handles btnZoomOut.Click
+        gMap1.Zoom = gMap1.Zoom - 1
+    End Sub
+    Private Sub btnLayers_MouseClick(sender As Object, e As EventArgs) Handles btnLayers.MouseClick
+        panelLayers.Hide()
+        panelLayers.Controls.Clear()
+        panelLayers.Cursor = Cursors.Arrow
+        panelLayers.Width = cbStops.Width * 1.4
+        panelLayers.Height = cbStops.Height * 6
+        panelLayers.Left = Me.ClientSize.Width - panelLayers.Width - 10
+        panelLayers.Controls.Add(cbStops)
+        panelLayers.Controls.Add(cbBuses)
+        panelLayers.Controls.Add(cbTram)
+        panelLayers.Controls.Add(cbTroll)
+        cbStops.Location = New Point(10, 10)
+        cbBuses.Location = New Point(10, 35)
+        cbTram.Location = New Point(10, 60)
+        cbTroll.Location = New Point(10, 85)
+        panelLayers.Show()
+        isResized = True
+    End Sub
+
+    Private Sub panelLayers_MouseLeave(sender As Object, e As EventArgs) Handles panelLayers.MouseLeave
+        Dim panelBounds As Rectangle = panelLayers.RectangleToScreen(panelLayers.ClientRectangle)
+        If Not panelBounds.Contains(Control.MousePosition) Then
+            panelLayers.Hide()
+            panelLayers.Controls.Clear()
+            panelLayers.Controls.Add(btnLayers)
+            Dim padding As Integer = 10 ' Padding from the right and top edges of the form
+            Dim menuLocation As New Point(Me.ClientSize.Width - btnLayers.Width - padding, padding)
+            panelLayers.Location = menuLocation
+            panelLayers.Size = btnLayers.Size
+            btnLayers.Location = New Point(panelLayers.Width - btnLayers.Width, 0)
+            isResized = False
+            panelLayers.Show()
+        End If
+    End Sub
+
+    Private Sub cbStops_CheckedChanged(sender As Object, e As EventArgs) Handles cbStops.CheckedChanged
+        showHideStops(cbStops.Checked, getStopsSQL(drawMarker("Orange", 9)))
+    End Sub
+
+    Private Sub cbBuses_CheckedChanged(sender As Object, e As EventArgs) Handles cbBuses.CheckedChanged
+        showHideBuses(cbBuses.Checked, GetBuses(drawMarker("Cyan", 10)))
+    End Sub
+    Private Sub cbTram_CheckedChanged(sender As Object, e As EventArgs) Handles cbTram.CheckedChanged
+        showHideTrams(cbTram.Checked, GetTrams(drawMarker("LightGreen", 10)))
+    End Sub
+
+    Private Sub cbTroll_CheckedChanged(sender As Object, e As EventArgs) Handles cbTroll.CheckedChanged
+        showHideTrolleys(cbTroll.Checked, GetTrolleys(drawMarker("Yellow", 10)))
+    End Sub
+
+    '--------------------------------------------------
+
+    '--------------------------------------------Map events-------------------------------------------
+    'All events that are triggered when doing something on the gMap1 control element
+
     Private Sub gMap1_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles gMap1.MouseDoubleClick
         Dim point As PointLatLng = gMap1.FromLocalToLatLng(e.X, e.Y)
         Dim lat As String = point.Lat.ToString.Replace(",", ".")
@@ -489,7 +540,6 @@ Public Class UCtrlMapViewer
         End Try
 
     End Sub
-
 
     Private Sub gMap1_OnMarkerClick(item As WindowsForms.GMapMarker, e As MouseEventArgs) _
         Handles gMap1.OnMarkerClick
@@ -571,78 +621,107 @@ Public Class UCtrlMapViewer
         End If
     End Sub
 
+    Public Sub gMap1_MouseDown(sender As Object, e As MouseEventArgs) _
+        Handles gMap1.MouseDown
+        If e.Button = MouseButtons.Right Then
+            ' Get the latitude and longitude of the clicked point
+            Dim pointLatLng As PointLatLng = gMap1.FromLocalToLatLng(e.X, e.Y)
+            RaiseEvent LocationClicked(pointLatLng.Lat, pointLatLng.Lng)
+        End If
+    End Sub
+
+    ' Events to see coordinates and stops on the form
+    Public Event LocationClicked(ByVal latitude As Double, ByVal longitude As Double)
+    Public Event MarkerClicked(ByVal value As String, ByVal latitude As Double, ByVal longitude As Double)
+
+    Private Sub GMap1_OnMapZoomChanged() Handles gMap1.OnMapZoomChanged
+        Dim zoomLevel As Double = gMap1.Zoom
+        Dim markerSize As Integer
+        ' Adjust the marker size based on the zoom level
+        Select Case zoomLevel
+            Case Is <= 11
+                markerSize = 8
+            Case Is <= 14
+                markerSize = 9
+            Case Is <= 16
+                markerSize = 11
+            Case Is <= 17
+                markerSize = 13
+            Case Is <= 20
+                markerSize = 15
+            Case Else
+                markerSize = 10
+        End Select
+
+        ' Set the new marker size for each marker
+        For Each marker As GMarkerGoogle In gMap1.Overlays.SelectMany(Function(o) o.Markers).OfType(Of GMarkerGoogle)()
+            If Regex.IsMatch(marker.ToolTipText, "^[a-zA-ZäöüõšžÄÖÜÕŠŽ][a-zA-ZäöüõšžÄÖÜÕŠŽ\s\-0-9.]*$") Then
+                marker.Size = New Size(markerSize, markerSize)
+            End If
+        Next
+    End Sub
     Private Sub gMap1_OnMarkerLeave(item As GMapMarker) _
         Handles gMap1.OnMarkerLeave
         lBoxRealTime.Items.Clear()
         panelPopup.Visible = False
         item.ToolTipMode = MarkerTooltipMode.OnMouseOver
     End Sub
-    Private Sub panelPopup_OnMouseLeave(sender As Object, e As EventArgs) _
-        Handles panelPopup.MouseLeave
-        Dim panelBounds As Rectangle = panelPopup.RectangleToScreen(panelPopup.ClientRectangle)
-        If Not panelBounds.Contains(Control.MousePosition) Then
-            panelPopup.Visible = False
-            lBoxRealTime.Items.Clear()
-            stopMarker.ToolTipMode = MarkerTooltipMode.OnMouseOver
-        End If
+
+
+    'Gets stops from database and adds them to the map
+    Public Function getStopsSQL(ByRef markerBitmap As Bitmap)
+        Dim stops As List(Of StopStruct) = timeT.GetStopsCoordinates()
+        Dim marker As GMarkerGoogle
+        For Each stop_el As StopStruct In stops
+            marker = New GMarkerGoogle(New PointLatLng(stop_el.Latitude, stop_el.Longitude), markerBitmap)
+            marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
+            Dim toolTip As New CustomToolTip(marker)
+            'toolTip.Offset = New Point(20, -markerBitmap.Height / 2)
+            marker.ToolTip = toolTip
+            marker.ToolTipText = stop_el.Name
+            marker.Tag = stop_el.ID
+            gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
+            stopsOverlay.Markers.Add(marker)
+        Next
+        Return stopsOverlay
+    End Function
+
+    Public Sub DisplayShapes(ByVal routePoints As List(Of StopStruct), ByVal routeStops As List(Of StopStruct))
+        routesOverlay.Clear()
+        cbStops.Checked = False
+        Dim Route As New WindowsForms.GMapRoute(New List(Of PointLatLng), "My Route")
+        For Each point As StopStruct In routePoints
+            Route.Points.Add(New PointLatLng(point.Latitude, point.Longitude))
+        Next
+        Dim marker As GMarkerGoogle
+        Dim markerBitmap As Bitmap = drawMarker("Orange", 9)
+        For i As Integer = 0 To routeStops.Count - 1
+            Dim stop_el As StopStruct = routeStops(i)
+            marker = New GMarkerGoogle(New PointLatLng(stop_el.Latitude, stop_el.Longitude), markerBitmap)
+            If i = 0 OrElse i = routeStops.Count - 1 Then
+                marker.ToolTipMode = MarkerTooltipMode.Always
+            Else
+                marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
+            End If
+            Dim toolTip As New CustomToolTip(marker)
+            toolTip.Offset = New Point(5, -drawMarker("Orange", 9).Height / 2)
+            marker.ToolTip = toolTip
+            marker.ToolTipText = stop_el.Name
+            marker.Tag = stop_el.ID
+            gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
+            routesOverlay.Markers.Add(marker)
+        Next
+        routesOverlay.Routes.Add(Route)
+        gMap1.Overlays.Insert(0, routesOverlay)
+        gMap1.UpdateRouteLocalPosition(Route)
+        gMap1.ZoomAndCenterRoute(Route)
+        gMap1.Refresh()
+        btnClear.Enabled = True
     End Sub
 
-    Private Sub btnNearestStopStart_Click(sender As Object, e As EventArgs) Handles btnNearestStopStart.Click
-        If lblStart.Text IsNot "" Then
-            For Each marker As GMapMarker In stopsOverlay.Markers
-                marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
-            Next
-            Dim closestMarker As GMarkerGoogle = Nothing
-            Dim closestDistance As Double = Double.MaxValue
-            For Each marker As GMarkerGoogle In stopsOverlay.Markers
-                Dim position As PointLatLng = marker.Position
-                Dim tooltipText As String = marker.ToolTipText
-                Dim distance As Double = DistanceBetweenPoints(startCoord.Lat, startCoord.Lng, position.Lat, position.Lng)
-                If distance < closestDistance Then
-                    closestMarker = marker
-                    closestDistance = distance
-                End If
-            Next
-            If closestMarker IsNot Nothing Then
-                closestMarker.ToolTipMode = MarkerTooltipMode.Always
-            End If
-            'closestStopOverlay.Markers.Add(closestMarker)
-            'gMap1.Overlays.Insert(0, closestStopOverlay)
-            gMap1.UpdateMarkerLocalPosition(closestMarker)
-            gMap1.Refresh()
-        End If
-        btnNearestStopStart.Enabled = False
-        If lblDest.Text <> "" Then
-            btnNearestStopDest.Enabled = True
-        End If
-    End Sub
-
-    Private Sub btnNearestStopDest_Click(sender As Object, e As EventArgs) Handles btnNearestStopDest.Click
-        If lblDest.Text IsNot "" Then
-            For Each marker As GMapMarker In stopsOverlay.Markers
-                marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
-            Next
-            Dim closestMarker As GMarkerGoogle = Nothing
-            Dim closestDistance As Double = Double.MaxValue
-            For Each marker As GMarkerGoogle In stopsOverlay.Markers
-                Dim position As PointLatLng = marker.Position
-                Dim tooltipText As String = marker.ToolTipText
-                Dim distance As Double = DistanceBetweenPoints(endCoord.Lat, endCoord.Lng, position.Lat, position.Lng)
-                If distance < closestDistance Then
-                    closestMarker = marker
-                    closestDistance = distance
-                End If
-            Next
-            If closestMarker IsNot Nothing Then
-                closestMarker.ToolTipMode = MarkerTooltipMode.Always
-            End If
-            'closestStopOverlay.Markers.Add(closestMarker)
-            'gMap1.Overlays.Insert(0, closestStopOverlay)
-            gMap1.UpdateMarkerLocalPosition(closestMarker)
-            gMap1.Refresh()
-        End If
-        btnNearestStopDest.Enabled = False
-        btnNearestStopStart.Enabled = True
+    Public Sub ClearShapes()
+        routesOverlay.Clear()
+        gMap1.Refresh()
     End Sub
 
     Private Function DistanceBetweenPoints(ByVal lat1 As Double, ByVal lon1 As Double, ByVal lat2 As Double, ByVal lon2 As Double) As Double
@@ -653,44 +732,7 @@ Public Class UCtrlMapViewer
         Dim c As Double = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a))
         Return R * c
     End Function
-    Private Sub btnLayers_MouseClick(sender As Object, e As EventArgs) Handles btnLayers.MouseClick
-        panelLayers.Hide()
-        panelLayers.Controls.Clear()
-        panelLayers.Cursor = Cursors.Arrow
-        panelLayers.Width = cbStops.Width * 1.4
-        panelLayers.Height = cbStops.Height * 6
-        panelLayers.Left = Me.ClientSize.Width - panelLayers.Width - 10
-        panelLayers.Controls.Add(cbStops)
-        panelLayers.Controls.Add(cbBuses)
-        panelLayers.Controls.Add(cbTram)
-        panelLayers.Controls.Add(cbTroll)
-        cbStops.Location = New Point(10, 10)
-        cbBuses.Location = New Point(10, 35)
-        cbTram.Location = New Point(10, 60)
-        cbTroll.Location = New Point(10, 85)
-        panelLayers.Show()
-        isResized = True
-    End Sub
 
-    Private Sub panelLayers_MouseLeave(sender As Object, e As EventArgs) Handles panelLayers.MouseLeave
-        Dim panelBounds As Rectangle = panelLayers.RectangleToScreen(panelLayers.ClientRectangle)
-        If Not panelBounds.Contains(Control.MousePosition) Then
-            panelLayers.Hide()
-            panelLayers.Controls.Clear()
-            panelLayers.Controls.Add(btnLayers)
-            Dim padding As Integer = 10 ' Padding from the right and top edges of the form
-            Dim menuLocation As New Point(Me.ClientSize.Width - btnLayers.Width - padding, padding)
-            panelLayers.Location = menuLocation
-            panelLayers.Size = btnLayers.Size
-            btnLayers.Location = New Point(panelLayers.Width - btnLayers.Width, 0)
-            isResized = False
-            panelLayers.Show()
-        End If
-    End Sub
-
-    Private Sub cbStops_CheckedChanged(sender As Object, e As EventArgs) Handles cbStops.CheckedChanged
-        showHideStops(cbStops.Checked, getStopsSQL(drawMarker("Orange", 9)))
-    End Sub
 
     Public Sub showHideStops(ByRef isChecked As Boolean, ByRef stopsOverlay As GMapOverlay)
         If (isChecked = True) Then
@@ -866,36 +908,9 @@ Public Class UCtrlMapViewer
         cbStops.Checked = True
     End Sub
 
-    Private Sub GMap1_OnMapZoomChanged() Handles gMap1.OnMapZoomChanged
-        Dim zoomLevel As Double = gMap1.Zoom
-        Dim markerSize As Integer
-        ' Adjust the marker size based on the zoom level
-        Select Case zoomLevel
-            Case Is <= 11
-                markerSize = 8
-            Case Is <= 14
-                markerSize = 9
-            Case Is <= 16
-                markerSize = 11
-            Case Is <= 17
-                markerSize = 13
-            Case Is <= 20
-                markerSize = 15
-            Case Else
-                markerSize = 10
-        End Select
 
-        ' Set the new marker size for each marker
-        For Each marker As GMarkerGoogle In gMap1.Overlays.SelectMany(Function(o) o.Markers).OfType(Of GMarkerGoogle)()
-            If Regex.IsMatch(marker.ToolTipText, "^[a-zA-ZäöüõšžÄÖÜÕŠŽ][a-zA-ZäöüõšžÄÖÜÕŠŽ\s\-0-9.]*$") Then
-                marker.Size = New Size(markerSize, markerSize)
-            End If
-        Next
-    End Sub
 
-    Private Sub cbBuses_CheckedChanged(sender As Object, e As EventArgs) Handles cbBuses.CheckedChanged
-        showHideBuses(cbBuses.Checked, GetBuses(drawMarker("Cyan", 10)))
-    End Sub
+
 
     Private Sub transportTimer_Tick(sender As Object, e As EventArgs) Handles transportTimer.Tick
         showHideBuses(cbBuses.Checked, GetBuses(drawMarker("Cyan", 10)))
@@ -913,9 +928,6 @@ Public Class UCtrlMapViewer
         End If
     End Sub
 
-    Private Sub cbTram_CheckedChanged(sender As Object, e As EventArgs) Handles cbTram.CheckedChanged
-        showHideTrams(cbTram.Checked, GetTrams(drawMarker("LightGreen", 10)))
-    End Sub
 
     Public Sub showHideTrams(ByRef isChecked As Boolean, ByRef tramsOverlay As GMapOverlay)
         If (isChecked = True) Then
@@ -927,9 +939,6 @@ Public Class UCtrlMapViewer
         End If
     End Sub
 
-    Private Sub cbTroll_CheckedChanged(sender As Object, e As EventArgs) Handles cbTroll.CheckedChanged
-        showHideTrolleys(cbTroll.Checked, GetTrolleys(drawMarker("Yellow", 10)))
-    End Sub
 
     Public Sub showHideTrolleys(ByRef isChecked As Boolean, ByRef trolleysOverlay As GMapOverlay)
         If (isChecked = True) Then
@@ -996,13 +1005,7 @@ Public Class UCtrlMapViewer
         Next
         Return trolleysOverlay
     End Function
-    Private Sub btnZoomIn_Click(sender As Object, e As EventArgs) Handles btnZoomIn.Click
-        gMap1.Zoom = gMap1.Zoom + 1
-    End Sub
 
-    Private Sub btnZoomOut_Click(sender As Object, e As EventArgs) Handles btnZoomOut.Click
-        gMap1.Zoom = gMap1.Zoom - 1
-    End Sub
 End Class
 
 
