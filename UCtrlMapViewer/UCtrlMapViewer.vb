@@ -36,6 +36,7 @@ Public Class UCtrlMapViewer
     Private endCoord As PointLatLng
     Private startAddress As String
     Private destAddress As String
+    Private pointCoord As PointLatLng
     Private stopMarker As GMarkerGoogle
     Private apiKey As String = "9uNDiiSRdZbV6ok9Ec5t~H2haoDb04SzxUDigaGoUfg~Ajj9p1O58cpXmy-Y-BbTNAF8M1Ws3HjoFHGWOaSgIYCucioMsIkP3BpBZGI3XtWr"
 
@@ -57,7 +58,7 @@ Public Class UCtrlMapViewer
             Route.Points.Add(New PointLatLng(point.Latitude, point.Longitude))
         Next
         Dim marker As GMarkerGoogle
-        Dim markerBitmap As Bitmap = drawMarker("Orange")
+        Dim markerBitmap As Bitmap = drawMarker("Orange", 9)
         For i As Integer = 0 To routeStops.Count - 1
             Dim stop_el As StopStruct = routeStops(i)
             marker = New GMarkerGoogle(New PointLatLng(stop_el.Latitude, stop_el.Longitude), markerBitmap)
@@ -67,7 +68,7 @@ Public Class UCtrlMapViewer
                 marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
             End If
             Dim toolTip As New CustomToolTip(marker)
-            toolTip.Offset = New Point(5, -drawMarker("Orange").Height / 2)
+            toolTip.Offset = New Point(5, -drawMarker("Orange", 9).Height / 2)
             marker.ToolTip = toolTip
             marker.ToolTipText = stop_el.Name
             marker.Tag = stop_el.ID
@@ -102,6 +103,10 @@ Public Class UCtrlMapViewer
         btnZoomOut.Parent = gMap1
         btnRoute.Parent = gMap1
         btnClear.Parent = gMap1
+        btnNearestStopDest.Parent = gMap1
+        btnNearestStopStart.Parent = gMap1
+        btnNearestStopDest.Enabled = False
+        btnNearestStopStart.Enabled = False
     End Sub
 
     Private Sub panelLayers_Init()
@@ -151,9 +156,8 @@ Public Class UCtrlMapViewer
         e.Graphics.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
         e.Graphics.DrawImage(resizedImage, targetLocation)
     End Sub
-    Public Function drawMarker(colorDot As String)
+    Public Function drawMarker(colorDot As String, markerSize As Integer)
         ' Create a custom marker with 80% fill opacity, orange fill, black stroke, and circle shape
-        Dim markerSize As Integer = 9
         Dim markerBitmap As New Bitmap(markerSize, markerSize)
         Using g As Graphics = Graphics.FromImage(markerBitmap)
             g.SmoothingMode = SmoothingMode.AntiAlias
@@ -200,7 +204,48 @@ Public Class UCtrlMapViewer
         End If
     End Sub
 
+    Private Sub toolTipNearestStop_Draw(sender As Object, e As DrawToolTipEventArgs) Handles toolTipNearestStop.Draw
+        ' Set tooltip color scheme
+        Dim tooltipColor As Color() = {Color.FromArgb(204, 25, 25, 25), Color.FromArgb(204, 10, 10, 10)}
 
+        ' Create a LinearGradientBrush with the tooltip color scheme
+        Dim brush As New LinearGradientBrush(e.Bounds, tooltipColor(0), tooltipColor(1), LinearGradientMode.Vertical)
+
+        ' Fill the tooltip background with the LinearGradientBrush
+        e.Graphics.FillRectangle(brush, e.Bounds)
+
+        ' Draw the tooltip text in the middle with "Snow" color
+        Dim font As Font = e.Font
+        Using brushText As New SolidBrush(Color.Snow)
+            Dim format As New StringFormat()
+            format.Alignment = StringAlignment.Center
+            format.LineAlignment = StringAlignment.Center
+            e.Graphics.DrawString(e.ToolTipText, font, brushText, e.Bounds, format)
+            format.Dispose()
+        End Using
+        brush.Dispose()
+        toolTipNearestStop.AutoPopDelay = 4000
+        toolTipNearestStop.InitialDelay = 50
+        toolTipNearestStop.ReshowDelay = 80
+    End Sub
+
+
+
+    Private Sub btnNearestStopStart_MouseHover(sender As Object, e As EventArgs) Handles btnNearestStopStart.MouseHover
+        toolTipNearestStop.Show("Leia lähim peatus", btnNearestStopStart, btnNearestStopStart.Width + 3, 6)
+    End Sub
+
+    Private Sub btnNearestStopStart_MouseLeave(sender As Object, e As EventArgs) Handles btnNearestStopStart.MouseLeave
+        toolTipNearestStop.Hide(btnNearestStopStart)
+    End Sub
+
+    Private Sub btnNearestStopDest_MouseHover(sender As Object, e As EventArgs) Handles btnNearestStopDest.MouseHover
+        toolTipNearestStop.Show("Leia lähim peatus", btnNearestStopDest, btnNearestStopDest.Width + 3, 6)
+    End Sub
+
+    Private Sub btnNearestStopDest_MouseLeave(sender As Object, e As EventArgs) Handles btnNearestStopDest.MouseLeave
+        toolTipNearestStop.Hide(btnNearestStopDest)
+    End Sub
     Private Sub btnZoomIn_Paint(sender As Object, e As PaintEventArgs) Handles btnZoomIn.Paint
         ' Draw background gradient
         If btnZoomIn.ClientRectangle.Contains(btnZoomIn.PointToClient(Control.MousePosition)) Then
@@ -236,6 +281,51 @@ Public Class UCtrlMapViewer
         Dim textX As Single = (btnZoomIn.Width - textSize.Width) / 2
         Dim textY As Single = (btnZoomIn.Height - textSize.Height / 1.05)
         e.Graphics.DrawString(text, font, Brushes.Snow, textX, textY)
+    End Sub
+
+    Private Sub btnNearestStopStart_Paint(sender As Object, e As PaintEventArgs) Handles btnNearestStopStart.Paint
+        If btnNearestStopStart.ClientRectangle.Contains(btnNearestStopStart.PointToClient(Control.MousePosition)) AndAlso btnNearestStopStart.Enabled = True Then
+            e.Graphics.FillRectangle(SystemBrushes.Control, btnNearestStopStart.ClientRectangle)
+        Else
+            Dim rect As Rectangle = New Rectangle(0, 0, btnNearestStopStart.Width, btnNearestStopStart.Height)
+            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, rect)
+        End If
+        Dim markerBitmap As Bitmap = drawMarker("LightGreen", 15) ' Replace "Red" with the desired color for the marker
+        Dim markerSize As Integer = markerBitmap.Width
+        Dim x As Integer = (btnNearestStopStart.Width - markerSize) \ 2
+        Dim y As Integer = (btnNearestStopStart.Height - markerSize) \ 2
+        e.Graphics.DrawImage(markerBitmap, x, y)
+    End Sub
+
+    Private Sub btnNearestStopDest_Paint(sender As Object, e As PaintEventArgs) Handles btnNearestStopDest.Paint
+        If btnNearestStopDest.ClientRectangle.Contains(btnNearestStopDest.PointToClient(Control.MousePosition)) AndAlso btnNearestStopDest.Enabled = True Then
+            e.Graphics.FillRectangle(SystemBrushes.Control, btnNearestStopDest.ClientRectangle)
+        Else
+            Dim rect As Rectangle = New Rectangle(0, 0, btnNearestStopDest.Width, btnNearestStopDest.Height)
+            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, rect)
+        End If
+        ' Load the marker bitmap using the drawMarker function
+        Dim markerBitmap As Bitmap = drawMarker("Red", 15)
+
+        ' Define the desired size of the marker
+        Dim newSize As Integer = 15
+
+        ' Create a new Bitmap with the desired size
+        Dim scaledBitmap As New Bitmap(newSize, newSize)
+
+        ' Draw the marker on the scaled Bitmap using a new Graphics object
+        Using g As Graphics = Graphics.FromImage(scaledBitmap)
+            g.DrawImage(markerBitmap, New Rectangle(0, 0, newSize, newSize))
+        End Using
+
+        ' Calculate the position of the scaled marker on the button
+        Dim x As Integer = (btnNearestStopStart.Width - newSize) \ 2
+        Dim y As Integer = (btnNearestStopStart.Height - newSize) \ 2
+
+        ' Draw the scaled marker on the button using the e.Graphics object
+        e.Graphics.DrawImage(scaledBitmap, x, y)
     End Sub
 
     Private Sub btnRoute_Paint(sender As Object, e As PaintEventArgs) Handles btnRoute.Paint
@@ -335,6 +425,8 @@ Public Class UCtrlMapViewer
         lblDest.Text = ""
         btnClear.Enabled = False
         btnRoute.Enabled = False
+        btnNearestStopStart.Enabled = False
+        btnNearestStopDest.Enabled = False
         clearRoute()
         gMap1.Position = New GMap.NET.PointLatLng(59.43, 24.75)
         gMap1.Zoom = 12
@@ -378,11 +470,13 @@ Public Class UCtrlMapViewer
                         lblStart.Text = address
                         btnClear.Enabled = True
                         startAddress = address
+                        btnNearestStopStart.Enabled = True
                     Else
                         endCoord = point
                         lblDest.Text = address
                         btnRoute.Enabled = True
                         destAddress = address
+                        btnNearestStopDest.Enabled = True
                     End If
                 Else
                     MessageBox.Show("Aadressi ei leitud!")
@@ -529,7 +623,7 @@ Public Class UCtrlMapViewer
     End Sub
 
     Private Sub cbStops_CheckedChanged(sender As Object, e As EventArgs) Handles cbStops.CheckedChanged
-        showHideStops(cbStops.Checked, getStopsSQL(drawMarker("Orange")))
+        showHideStops(cbStops.Checked, getStopsSQL(drawMarker("Orange", 9)))
     End Sub
 
     Public Sub showHideStops(ByRef isChecked As Boolean, ByRef stopsOverlay As GMapOverlay)
@@ -543,7 +637,7 @@ Public Class UCtrlMapViewer
     End Sub
 
     Public Sub getRoute(startCoord As PointLatLng, endCoord As PointLatLng)
-        showHideStops(False, getStopsSQL(drawMarker("Orange")))
+        showHideStops(False, getStopsSQL(drawMarker("Orange", 9)))
         ' Define the route overlay and add it to the map
         Dim mapOverlay As GMapOverlay = New GMapOverlay("routes")
 
@@ -617,7 +711,7 @@ Public Class UCtrlMapViewer
                             For Each point In item("transitStops")
                                 If point IsNot Nothing AndAlso point("position") IsNot Nothing AndAlso point("position")("coordinates") IsNot Nothing Then
                                     Dim loc As New PointLatLng(point("position")("coordinates")(0), point("position")("coordinates")(1))
-                                    Dim stopMarker As GMarkerGoogle = New GMarkerGoogle(loc, CType(drawMarker("orange"), Bitmap))
+                                    Dim stopMarker As GMarkerGoogle = New GMarkerGoogle(loc, CType(drawMarker("Orange", 9), Bitmap))
                                     Dim toolTipStop As New CustomToolTip(stopMarker)
                                     stopMarker.ToolTip = toolTipStop
                                     stopMarker.ToolTipText = point("stopName")
@@ -645,14 +739,14 @@ Public Class UCtrlMapViewer
                 mapOverlay.Routes.Add(walkingPathOverlay)
             Next
 
-            Dim startMarker As GMarkerGoogle = New GMarkerGoogle(startCoord, CType(drawMarker("lightgreen"), Bitmap))
+            Dim startMarker As GMarkerGoogle = New GMarkerGoogle(startCoord, CType(drawMarker("lightgreen", 13), Bitmap))
             Dim toolTipStart As New CustomToolTip(startMarker)
             startMarker.ToolTip = toolTipStart
             startMarker.ToolTipText = "Algus: " & startAddress
             startMarker.Size = New Size(14, 14)
             mapOverlay.Markers.Add(startMarker)
             gMap1.UpdateMarkerLocalPosition(startMarker)
-            Dim endMarker As GMarkerGoogle = New GMarkerGoogle(endCoord, CType(drawMarker("red"), Bitmap))
+            Dim endMarker As GMarkerGoogle = New GMarkerGoogle(endCoord, CType(drawMarker("red", 13), Bitmap))
             Dim toolTipEnd As New CustomToolTip(endMarker)
             endMarker.ToolTip = toolTipEnd
             endMarker.ToolTipText = "Sihtkoht: " & destAddress
@@ -732,13 +826,13 @@ Public Class UCtrlMapViewer
     End Sub
 
     Private Sub cbBuses_CheckedChanged(sender As Object, e As EventArgs) Handles cbBuses.CheckedChanged
-        showHideBuses(cbBuses.Checked, GetBuses(drawMarker("Cyan")))
+        showHideBuses(cbBuses.Checked, GetBuses(drawMarker("Cyan", 10)))
     End Sub
 
     Private Sub transportTimer_Tick(sender As Object, e As EventArgs) Handles transportTimer.Tick
-        showHideBuses(cbBuses.Checked, GetBuses(drawMarker("Cyan")))
-        showHideTrams(cbTram.Checked, GetTrams(drawMarker("LightGreen")))
-        showHideTrolleys(cbTroll.Checked, GetTrolleys(drawMarker("Yellow")))
+        showHideBuses(cbBuses.Checked, GetBuses(drawMarker("Cyan", 10)))
+        showHideTrams(cbTram.Checked, GetTrams(drawMarker("LightGreen", 10)))
+        showHideTrolleys(cbTroll.Checked, GetTrolleys(drawMarker("Yellow", 10)))
     End Sub
 
     Public Sub showHideBuses(ByRef isChecked As Boolean, ByRef busesOverlay As GMapOverlay)
@@ -752,7 +846,7 @@ Public Class UCtrlMapViewer
     End Sub
 
     Private Sub cbTram_CheckedChanged(sender As Object, e As EventArgs) Handles cbTram.CheckedChanged
-        showHideTrams(cbTram.Checked, GetTrams(drawMarker("LightGreen")))
+        showHideTrams(cbTram.Checked, GetTrams(drawMarker("LightGreen", 10)))
     End Sub
 
     Public Sub showHideTrams(ByRef isChecked As Boolean, ByRef tramsOverlay As GMapOverlay)
@@ -766,7 +860,7 @@ Public Class UCtrlMapViewer
     End Sub
 
     Private Sub cbTroll_CheckedChanged(sender As Object, e As EventArgs) Handles cbTroll.CheckedChanged
-        showHideTrolleys(cbTroll.Checked, GetTrolleys(drawMarker("Yellow")))
+        showHideTrolleys(cbTroll.Checked, GetTrolleys(drawMarker("Yellow", 10)))
     End Sub
 
     Public Sub showHideTrolleys(ByRef isChecked As Boolean, ByRef trolleysOverlay As GMapOverlay)

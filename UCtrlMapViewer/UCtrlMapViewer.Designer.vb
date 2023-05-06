@@ -39,6 +39,9 @@ Partial Class UCtrlMapViewer
         Me.lBoxRealTime = New System.Windows.Forms.ListBox()
         Me.btnZoomIn = New System.Windows.Forms.Button()
         Me.btnZoomOut = New System.Windows.Forms.Button()
+        Me.btnNearestStopStart = New System.Windows.Forms.Button()
+        Me.btnNearestStopDest = New System.Windows.Forms.Button()
+        Me.toolTipNearestStop = New System.Windows.Forms.ToolTip()
         Me.panelLayers.SuspendLayout()
         Me.panelPopup.SuspendLayout()
         Me.tableLayoutPopup.SuspendLayout()
@@ -311,11 +314,62 @@ Partial Class UCtrlMapViewer
         Me.btnZoomOut.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
         Me.btnZoomOut.UseVisualStyleBackColor = False
         '
+        'btnNearestStopStart
+        '
+        Me.btnNearestStopStart.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnNearestStopStart.BackColor = System.Drawing.Color.Transparent
+        Me.btnNearestStopStart.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.btnNearestStopStart.FlatAppearance.BorderSize = 0
+        Me.btnNearestStopStart.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.Control
+        Me.btnNearestStopStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnNearestStopStart.Font = New System.Drawing.Font("Shapiro 65 Light Heavy Extd", 32.0!, System.Drawing.FontStyle.Bold)
+        Me.btnNearestStopStart.ForeColor = System.Drawing.Color.Transparent
+        Me.btnNearestStopStart.Location = New System.Drawing.Point(220, 10)
+        Me.btnNearestStopStart.Margin = New System.Windows.Forms.Padding(50, 0, 50, 0)
+        Me.btnNearestStopStart.MaximumSize = New System.Drawing.Size(30, 30)
+        Me.btnNearestStopStart.MinimumSize = New System.Drawing.Size(30, 30)
+        Me.btnNearestStopStart.Name = "btnNearestStopStart"
+        Me.btnNearestStopStart.Size = New System.Drawing.Size(30, 30)
+        Me.btnNearestStopStart.TabIndex = 14
+        Me.btnNearestStopStart.UseVisualStyleBackColor = False
+        '
+        'btnNearestStopDest
+        '
+        Me.btnNearestStopDest.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnNearestStopDest.BackColor = System.Drawing.Color.Transparent
+        Me.btnNearestStopDest.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.btnNearestStopDest.FlatAppearance.BorderSize = 0
+        Me.btnNearestStopDest.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.Control
+        Me.btnNearestStopDest.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnNearestStopDest.Font = New System.Drawing.Font("Shapiro 65 Light Heavy Extd", 32.0!, System.Drawing.FontStyle.Bold)
+        Me.btnNearestStopDest.ForeColor = System.Drawing.Color.Transparent
+        Me.btnNearestStopDest.ImageAlign = System.Drawing.ContentAlignment.BottomCenter
+        Me.btnNearestStopDest.Location = New System.Drawing.Point(220, 40)
+        Me.btnNearestStopDest.Margin = New System.Windows.Forms.Padding(50, 0, 50, 0)
+        Me.btnNearestStopDest.MaximumSize = New System.Drawing.Size(30, 30)
+        Me.btnNearestStopDest.MinimumSize = New System.Drawing.Size(30, 30)
+        Me.btnNearestStopDest.Name = "btnNearestStopDest"
+        Me.btnNearestStopDest.Size = New System.Drawing.Size(30, 30)
+        Me.btnNearestStopDest.TabIndex = 15
+        Me.btnNearestStopDest.UseVisualStyleBackColor = False
+        '
+        'toolTipNearestStop
+        '
+        Me.toolTipNearestStop.AutomaticDelay = 400
+        Me.toolTipNearestStop.AutoPopDelay = 5000
+        Me.toolTipNearestStop.BackColor = System.Drawing.Color.Transparent
+        Me.toolTipNearestStop.ForeColor = System.Drawing.Color.Transparent
+        Me.toolTipNearestStop.InitialDelay = 100
+        Me.toolTipNearestStop.OwnerDraw = True
+        Me.toolTipNearestStop.ReshowDelay = 80
+        '
         'UCtrlMapViewer
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.Transparent
+        Me.Controls.Add(Me.btnNearestStopDest)
+        Me.Controls.Add(Me.btnNearestStopStart)
         Me.Controls.Add(Me.btnZoomOut)
         Me.Controls.Add(Me.btnZoomIn)
         Me.Controls.Add(Me.panelPopup)
@@ -354,4 +408,7 @@ Partial Class UCtrlMapViewer
     Friend WithEvents lBoxRealTime As ListBox
     Friend WithEvents tableLayoutPopup As TableLayoutPanel
     Friend WithEvents lblStopPopup As Label
+    Friend WithEvents btnNearestStopStart As Button
+    Friend WithEvents btnNearestStopDest As Button
+    Friend WithEvents toolTipNearestStop As ToolTip
 End Class
