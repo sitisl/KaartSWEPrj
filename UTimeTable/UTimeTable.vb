@@ -73,7 +73,7 @@ Public Class UTimeTable
             SQLiteCon = New SQLiteConnection($"Data Source={dbFilePath};Version=3;")
             SQLiteCon.Open()
         Catch ex As Exception
-            MsgBox(ex)
+            MsgBox(ex.Message)
         End Try
     End Sub
 
