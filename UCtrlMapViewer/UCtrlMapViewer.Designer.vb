@@ -179,24 +179,22 @@ Partial Class UCtrlMapViewer
         '
         'lblStart
         '
-        Me.lblStart.AutoSize = True
         Me.lblStart.Font = New System.Drawing.Font("Segoe UI", 10.0!)
         Me.lblStart.ForeColor = System.Drawing.Color.Transparent
         Me.lblStart.Location = New System.Drawing.Point(10, 10)
-        Me.lblStart.MinimumSize = New System.Drawing.Size(210, 30)
+        Me.lblStart.MinimumSize = New System.Drawing.Size(220, 30)
         Me.lblStart.Name = "lblStart"
-        Me.lblStart.Size = New System.Drawing.Size(210, 30)
+        Me.lblStart.Size = New System.Drawing.Size(220, 30)
         Me.lblStart.TabIndex = 8
         '
         'lblDest
         '
-        Me.lblDest.AutoSize = True
         Me.lblDest.Font = New System.Drawing.Font("Segoe UI", 10.0!)
         Me.lblDest.ForeColor = System.Drawing.Color.Transparent
         Me.lblDest.Location = New System.Drawing.Point(10, 40)
-        Me.lblDest.MinimumSize = New System.Drawing.Size(210, 30)
+        Me.lblDest.MinimumSize = New System.Drawing.Size(220, 30)
         Me.lblDest.Name = "lblDest"
-        Me.lblDest.Size = New System.Drawing.Size(210, 30)
+        Me.lblDest.Size = New System.Drawing.Size(220, 30)
         Me.lblDest.TabIndex = 9
         '
         'btnRoute
@@ -206,9 +204,9 @@ Partial Class UCtrlMapViewer
         Me.btnRoute.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnRoute.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.btnRoute.ForeColor = System.Drawing.Color.White
-        Me.btnRoute.Location = New System.Drawing.Point(116, 73)
+        Me.btnRoute.Location = New System.Drawing.Point(121, 73)
         Me.btnRoute.Name = "btnRoute"
-        Me.btnRoute.Size = New System.Drawing.Size(100, 35)
+        Me.btnRoute.Size = New System.Drawing.Size(105, 35)
         Me.btnRoute.TabIndex = 10
         Me.btnRoute.UseVisualStyleBackColor = False
         '
@@ -220,7 +218,7 @@ Partial Class UCtrlMapViewer
         Me.btnClear.ForeColor = System.Drawing.Color.White
         Me.btnClear.Location = New System.Drawing.Point(11, 73)
         Me.btnClear.Name = "btnClear"
-        Me.btnClear.Size = New System.Drawing.Size(100, 35)
+        Me.btnClear.Size = New System.Drawing.Size(105, 35)
         Me.btnClear.TabIndex = 11
         Me.btnClear.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
         Me.btnClear.UseVisualStyleBackColor = False
@@ -326,7 +324,7 @@ Partial Class UCtrlMapViewer
         Me.btnNearestStopStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnNearestStopStart.Font = New System.Drawing.Font("Shapiro 65 Light Heavy Extd", 32.0!, System.Drawing.FontStyle.Bold)
         Me.btnNearestStopStart.ForeColor = System.Drawing.Color.Transparent
-        Me.btnNearestStopStart.Location = New System.Drawing.Point(220, 10)
+        Me.btnNearestStopStart.Location = New System.Drawing.Point(230, 10)
         Me.btnNearestStopStart.Margin = New System.Windows.Forms.Padding(50, 0, 50, 0)
         Me.btnNearestStopStart.MaximumSize = New System.Drawing.Size(30, 30)
         Me.btnNearestStopStart.MinimumSize = New System.Drawing.Size(30, 30)
@@ -346,7 +344,7 @@ Partial Class UCtrlMapViewer
         Me.btnNearestStopDest.Font = New System.Drawing.Font("Shapiro 65 Light Heavy Extd", 32.0!, System.Drawing.FontStyle.Bold)
         Me.btnNearestStopDest.ForeColor = System.Drawing.Color.Transparent
         Me.btnNearestStopDest.ImageAlign = System.Drawing.ContentAlignment.BottomCenter
-        Me.btnNearestStopDest.Location = New System.Drawing.Point(220, 40)
+        Me.btnNearestStopDest.Location = New System.Drawing.Point(230, 40)
         Me.btnNearestStopDest.Margin = New System.Windows.Forms.Padding(50, 0, 50, 0)
         Me.btnNearestStopDest.MaximumSize = New System.Drawing.Size(30, 30)
         Me.btnNearestStopDest.MinimumSize = New System.Drawing.Size(30, 30)
@@ -376,7 +374,7 @@ Partial Class UCtrlMapViewer
         Me.btnOptimize.Font = New System.Drawing.Font("Shapiro 65 Light Heavy Extd", 32.0!, System.Drawing.FontStyle.Bold)
         Me.btnOptimize.ForeColor = System.Drawing.Color.Transparent
         Me.btnOptimize.ImageAlign = System.Drawing.ContentAlignment.BottomCenter
-        Me.btnOptimize.Location = New System.Drawing.Point(215, 73)
+        Me.btnOptimize.Location = New System.Drawing.Point(225, 73)
         Me.btnOptimize.Margin = New System.Windows.Forms.Padding(50, 0, 50, 0)
         Me.btnOptimize.MaximumSize = New System.Drawing.Size(35, 35)
         Me.btnOptimize.MinimumSize = New System.Drawing.Size(35, 35)
