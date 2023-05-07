@@ -54,7 +54,56 @@ Public Class UCtrlMapViewer
     Private routesOverlay As New WindowsForms.GMapOverlay("RoutesOverlay")
 
 
+
     '---------------Load and init methods-------------------
+
+    Public Function getStopsSQL(ByRef markerBitmap As Bitmap)
+        Dim stops As List(Of StopStruct) = timeT.GetStopsCoordinates()
+        Dim marker As GMarkerGoogle
+        For Each stop_el As StopStruct In stops
+            marker = New GMarkerGoogle(New PointLatLng(stop_el.Latitude, stop_el.Longitude), markerBitmap)
+            marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
+            Dim toolTip As New CustomToolTip(marker)
+            toolTip.Offset = New Point(5, -markerBitmap.Height / 2)
+            marker.ToolTip = toolTip
+            marker.ToolTipText = stop_el.Name
+            gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
+            stopsOverlay.Markers.Add(marker)
+        Next
+        Return stopsOverlay
+    End Function
+    Public Sub DisplayShapes(ByVal routePoints As List(Of StopStruct), ByVal routeStops As List(Of StopStruct))
+        Dim route As New WindowsForms.GMapRoute(New List(Of PointLatLng), "My Route")
+        For Each point As StopStruct In routePoints
+            route.Points.Add(New PointLatLng(point.Latitude, point.Longitude))
+        Next
+        Dim marker As GMarkerGoogle
+        Dim markerBitmap As Bitmap = drawMarker("Orange")
+        For i As Integer = 0 To routeStops.Count - 1
+            Dim stop_el As StopStruct = routeStops(i)
+            marker = New GMarkerGoogle(New PointLatLng(stop_el.Latitude, stop_el.Longitude), markerBitmap)
+            If i = 0 OrElse i = routeStops.Count - 1 Then
+                marker.ToolTipMode = MarkerTooltipMode.Always
+            Else
+                marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
+            End If
+            Dim toolTip As New CustomToolTip(marker)
+            toolTip.Offset = New Point(5, -drawMarker("Orange").Height / 2)
+            marker.ToolTip = toolTip
+            marker.ToolTipText = stop_el.Name
+            gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
+            routesOverlay.Markers.Add(marker)
+        Next
+        routesOverlay.Routes.Add(route)
+        gMap1.Overlays.Insert(0, routesOverlay)
+        gMap1.UpdateRouteLocalPosition(route)
+        gMap1.Refresh()
+    End Sub
+    Public Sub ClearShapes()
+        routesOverlay.Clear()
+        gMap1.Refresh()
+    End Sub
+
     Private Sub UCtrlMapViewer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' This code will run when the user control is loaded into a form or another container control
         panelLayers_Init()
@@ -108,6 +157,7 @@ Public Class UCtrlMapViewer
         'GMaps.Instance.UseMemoryCache = True
         'GMapControl1.BoundsOfMap = New RectLatLng(59.43, 24.75, 0.1, 0.1)
     End Sub
+
 
 
 
