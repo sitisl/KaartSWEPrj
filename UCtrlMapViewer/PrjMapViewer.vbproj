@@ -185,6 +185,12 @@
   <ItemGroup>
     <None Include="img\bus_marker.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="img\dist_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="img\hourglass_icon.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

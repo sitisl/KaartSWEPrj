@@ -22,6 +22,7 @@ Partial Class UCtrlMapViewer
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Me.gMap1 = New GMap.NET.WindowsForms.GMapControl()
         Me.panelLayers = New System.Windows.Forms.Panel()
         Me.cbTroll = New System.Windows.Forms.CheckBox()
@@ -34,11 +35,18 @@ Partial Class UCtrlMapViewer
         Me.btnRoute = New System.Windows.Forms.Button()
         Me.btnClear = New System.Windows.Forms.Button()
         Me.panelPopup = New System.Windows.Forms.Panel()
+        Me.tableLayoutPopup = New System.Windows.Forms.TableLayoutPanel()
+        Me.lblStopPopup = New System.Windows.Forms.Label()
         Me.lBoxRealTime = New System.Windows.Forms.ListBox()
         Me.btnZoomIn = New System.Windows.Forms.Button()
         Me.btnZoomOut = New System.Windows.Forms.Button()
+        Me.btnNearestStopStart = New System.Windows.Forms.Button()
+        Me.btnNearestStopDest = New System.Windows.Forms.Button()
+        Me.toolTipNearestStop = New System.Windows.Forms.ToolTip(Me.components)
+        Me.btnOptimize = New System.Windows.Forms.Button()
         Me.panelLayers.SuspendLayout()
         Me.panelPopup.SuspendLayout()
+        Me.tableLayoutPopup.SuspendLayout()
         Me.SuspendLayout()
         '
         'gMap1
@@ -53,6 +61,7 @@ Partial Class UCtrlMapViewer
         Me.gMap1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.gMap1.EmptyTileColor = System.Drawing.SystemColors.ControlDarkDark
         Me.gMap1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.gMap1.ForeColor = System.Drawing.SystemColors.ControlDarkDark
         Me.gMap1.GrayScaleMode = False
         Me.gMap1.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow
         Me.gMap1.LevelsKeepInMemory = 5
@@ -161,33 +170,31 @@ Partial Class UCtrlMapViewer
         Me.btnLayers.FlatAppearance.BorderSize = 0
         Me.btnLayers.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnLayers.ForeColor = System.Drawing.Color.Transparent
-        Me.btnLayers.Location = New System.Drawing.Point(49, 1)
+        Me.btnLayers.Location = New System.Drawing.Point(61, 1)
         Me.btnLayers.Margin = New System.Windows.Forms.Padding(1)
         Me.btnLayers.Name = "btnLayers"
-        Me.btnLayers.Size = New System.Drawing.Size(63, 57)
+        Me.btnLayers.Size = New System.Drawing.Size(50, 50)
         Me.btnLayers.TabIndex = 0
         Me.btnLayers.UseVisualStyleBackColor = False
         '
         'lblStart
         '
-        Me.lblStart.AutoSize = True
         Me.lblStart.Font = New System.Drawing.Font("Segoe UI", 10.0!)
         Me.lblStart.ForeColor = System.Drawing.Color.Transparent
         Me.lblStart.Location = New System.Drawing.Point(10, 10)
-        Me.lblStart.MinimumSize = New System.Drawing.Size(210, 30)
+        Me.lblStart.MinimumSize = New System.Drawing.Size(220, 30)
         Me.lblStart.Name = "lblStart"
-        Me.lblStart.Size = New System.Drawing.Size(210, 30)
+        Me.lblStart.Size = New System.Drawing.Size(220, 30)
         Me.lblStart.TabIndex = 8
         '
         'lblDest
         '
-        Me.lblDest.AutoSize = True
         Me.lblDest.Font = New System.Drawing.Font("Segoe UI", 10.0!)
         Me.lblDest.ForeColor = System.Drawing.Color.Transparent
         Me.lblDest.Location = New System.Drawing.Point(10, 40)
-        Me.lblDest.MinimumSize = New System.Drawing.Size(210, 30)
+        Me.lblDest.MinimumSize = New System.Drawing.Size(220, 30)
         Me.lblDest.Name = "lblDest"
-        Me.lblDest.Size = New System.Drawing.Size(210, 30)
+        Me.lblDest.Size = New System.Drawing.Size(220, 30)
         Me.lblDest.TabIndex = 9
         '
         'btnRoute
@@ -197,9 +204,9 @@ Partial Class UCtrlMapViewer
         Me.btnRoute.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnRoute.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.btnRoute.ForeColor = System.Drawing.Color.White
-        Me.btnRoute.Location = New System.Drawing.Point(120, 73)
+        Me.btnRoute.Location = New System.Drawing.Point(121, 73)
         Me.btnRoute.Name = "btnRoute"
-        Me.btnRoute.Size = New System.Drawing.Size(100, 35)
+        Me.btnRoute.Size = New System.Drawing.Size(105, 35)
         Me.btnRoute.TabIndex = 10
         Me.btnRoute.UseVisualStyleBackColor = False
         '
@@ -211,32 +218,61 @@ Partial Class UCtrlMapViewer
         Me.btnClear.ForeColor = System.Drawing.Color.White
         Me.btnClear.Location = New System.Drawing.Point(11, 73)
         Me.btnClear.Name = "btnClear"
-        Me.btnClear.Size = New System.Drawing.Size(100, 35)
+        Me.btnClear.Size = New System.Drawing.Size(105, 35)
         Me.btnClear.TabIndex = 11
         Me.btnClear.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
         Me.btnClear.UseVisualStyleBackColor = False
         '
         'panelPopup
         '
-        Me.panelPopup.AutoSize = True
-        Me.panelPopup.BackColor = System.Drawing.Color.FromArgb(CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer))
-        Me.panelPopup.Controls.Add(Me.lBoxRealTime)
-        Me.panelPopup.Location = New System.Drawing.Point(676, 285)
+        Me.panelPopup.BackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
+        Me.panelPopup.Controls.Add(Me.tableLayoutPopup)
+        Me.panelPopup.Location = New System.Drawing.Point(532, 226)
         Me.panelPopup.Name = "panelPopup"
-        Me.panelPopup.Size = New System.Drawing.Size(144, 127)
+        Me.panelPopup.Size = New System.Drawing.Size(151, 141)
         Me.panelPopup.TabIndex = 12
+        '
+        'tableLayoutPopup
+        '
+        Me.tableLayoutPopup.ColumnCount = 1
+        Me.tableLayoutPopup.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.tableLayoutPopup.Controls.Add(Me.lblStopPopup, 0, 0)
+        Me.tableLayoutPopup.Controls.Add(Me.lBoxRealTime, 0, 1)
+        Me.tableLayoutPopup.Location = New System.Drawing.Point(0, 0)
+        Me.tableLayoutPopup.Margin = New System.Windows.Forms.Padding(0)
+        Me.tableLayoutPopup.Name = "tableLayoutPopup"
+        Me.tableLayoutPopup.RowCount = 2
+        Me.tableLayoutPopup.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.tableLayoutPopup.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 80.0!))
+        Me.tableLayoutPopup.Size = New System.Drawing.Size(151, 141)
+        Me.tableLayoutPopup.TabIndex = 14
+        '
+        'lblStopPopup
+        '
+        Me.lblStopPopup.BackColor = System.Drawing.Color.Transparent
+        Me.lblStopPopup.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.lblStopPopup.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.lblStopPopup.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStopPopup.ForeColor = System.Drawing.Color.Snow
+        Me.lblStopPopup.Location = New System.Drawing.Point(0, 0)
+        Me.lblStopPopup.Margin = New System.Windows.Forms.Padding(0)
+        Me.lblStopPopup.Name = "lblStopPopup"
+        Me.lblStopPopup.Size = New System.Drawing.Size(151, 28)
+        Me.lblStopPopup.TabIndex = 1
+        Me.lblStopPopup.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'lBoxRealTime
         '
-        Me.lBoxRealTime.BackColor = System.Drawing.Color.FromArgb(CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(25, Byte), Integer))
+        Me.lBoxRealTime.BackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(50, Byte), Integer))
         Me.lBoxRealTime.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.lBoxRealTime.Dock = System.Windows.Forms.DockStyle.Fill
         Me.lBoxRealTime.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.lBoxRealTime.ForeColor = System.Drawing.Color.Snow
         Me.lBoxRealTime.FormattingEnabled = True
         Me.lBoxRealTime.ItemHeight = 20
-        Me.lBoxRealTime.Location = New System.Drawing.Point(9, 19)
+        Me.lBoxRealTime.Location = New System.Drawing.Point(3, 31)
         Me.lBoxRealTime.Name = "lBoxRealTime"
-        Me.lBoxRealTime.Size = New System.Drawing.Size(120, 80)
+        Me.lBoxRealTime.Size = New System.Drawing.Size(145, 107)
         Me.lBoxRealTime.TabIndex = 0
         '
         'btnZoomIn
@@ -268,7 +304,7 @@ Partial Class UCtrlMapViewer
         Me.btnZoomOut.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnZoomOut.Font = New System.Drawing.Font("Shapiro 65 Light Heavy Extd", 32.0!, System.Drawing.FontStyle.Bold)
         Me.btnZoomOut.ForeColor = System.Drawing.Color.Transparent
-        Me.btnZoomOut.Location = New System.Drawing.Point(12, 179)
+        Me.btnZoomOut.Location = New System.Drawing.Point(12, 178)
         Me.btnZoomOut.Margin = New System.Windows.Forms.Padding(50, 0, 50, 0)
         Me.btnZoomOut.MaximumSize = New System.Drawing.Size(50, 50)
         Me.btnZoomOut.MinimumSize = New System.Drawing.Size(50, 50)
@@ -278,11 +314,83 @@ Partial Class UCtrlMapViewer
         Me.btnZoomOut.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
         Me.btnZoomOut.UseVisualStyleBackColor = False
         '
+        'btnNearestStopStart
+        '
+        Me.btnNearestStopStart.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnNearestStopStart.BackColor = System.Drawing.Color.Transparent
+        Me.btnNearestStopStart.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.btnNearestStopStart.FlatAppearance.BorderSize = 0
+        Me.btnNearestStopStart.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.Control
+        Me.btnNearestStopStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnNearestStopStart.Font = New System.Drawing.Font("Shapiro 65 Light Heavy Extd", 32.0!, System.Drawing.FontStyle.Bold)
+        Me.btnNearestStopStart.ForeColor = System.Drawing.Color.Transparent
+        Me.btnNearestStopStart.Location = New System.Drawing.Point(230, 10)
+        Me.btnNearestStopStart.Margin = New System.Windows.Forms.Padding(50, 0, 50, 0)
+        Me.btnNearestStopStart.MaximumSize = New System.Drawing.Size(30, 30)
+        Me.btnNearestStopStart.MinimumSize = New System.Drawing.Size(30, 30)
+        Me.btnNearestStopStart.Name = "btnNearestStopStart"
+        Me.btnNearestStopStart.Size = New System.Drawing.Size(30, 30)
+        Me.btnNearestStopStart.TabIndex = 14
+        Me.btnNearestStopStart.UseVisualStyleBackColor = False
+        '
+        'btnNearestStopDest
+        '
+        Me.btnNearestStopDest.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnNearestStopDest.BackColor = System.Drawing.Color.Transparent
+        Me.btnNearestStopDest.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.btnNearestStopDest.FlatAppearance.BorderSize = 0
+        Me.btnNearestStopDest.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.Control
+        Me.btnNearestStopDest.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnNearestStopDest.Font = New System.Drawing.Font("Shapiro 65 Light Heavy Extd", 32.0!, System.Drawing.FontStyle.Bold)
+        Me.btnNearestStopDest.ForeColor = System.Drawing.Color.Transparent
+        Me.btnNearestStopDest.ImageAlign = System.Drawing.ContentAlignment.BottomCenter
+        Me.btnNearestStopDest.Location = New System.Drawing.Point(230, 40)
+        Me.btnNearestStopDest.Margin = New System.Windows.Forms.Padding(50, 0, 50, 0)
+        Me.btnNearestStopDest.MaximumSize = New System.Drawing.Size(30, 30)
+        Me.btnNearestStopDest.MinimumSize = New System.Drawing.Size(30, 30)
+        Me.btnNearestStopDest.Name = "btnNearestStopDest"
+        Me.btnNearestStopDest.Size = New System.Drawing.Size(30, 30)
+        Me.btnNearestStopDest.TabIndex = 15
+        Me.btnNearestStopDest.UseVisualStyleBackColor = False
+        '
+        'toolTipNearestStop
+        '
+        Me.toolTipNearestStop.AutomaticDelay = 400
+        Me.toolTipNearestStop.AutoPopDelay = 5000
+        Me.toolTipNearestStop.BackColor = System.Drawing.Color.Transparent
+        Me.toolTipNearestStop.ForeColor = System.Drawing.Color.Transparent
+        Me.toolTipNearestStop.InitialDelay = 100
+        Me.toolTipNearestStop.OwnerDraw = True
+        Me.toolTipNearestStop.ReshowDelay = 80
+        '
+        'btnOptimize
+        '
+        Me.btnOptimize.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnOptimize.BackColor = System.Drawing.Color.Transparent
+        Me.btnOptimize.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.btnOptimize.FlatAppearance.BorderSize = 0
+        Me.btnOptimize.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.Control
+        Me.btnOptimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnOptimize.Font = New System.Drawing.Font("Shapiro 65 Light Heavy Extd", 32.0!, System.Drawing.FontStyle.Bold)
+        Me.btnOptimize.ForeColor = System.Drawing.Color.Transparent
+        Me.btnOptimize.ImageAlign = System.Drawing.ContentAlignment.BottomCenter
+        Me.btnOptimize.Location = New System.Drawing.Point(225, 73)
+        Me.btnOptimize.Margin = New System.Windows.Forms.Padding(50, 0, 50, 0)
+        Me.btnOptimize.MaximumSize = New System.Drawing.Size(35, 35)
+        Me.btnOptimize.MinimumSize = New System.Drawing.Size(35, 35)
+        Me.btnOptimize.Name = "btnOptimize"
+        Me.btnOptimize.Size = New System.Drawing.Size(35, 35)
+        Me.btnOptimize.TabIndex = 16
+        Me.btnOptimize.UseVisualStyleBackColor = False
+        '
         'UCtrlMapViewer
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.Transparent
+        Me.Controls.Add(Me.btnOptimize)
+        Me.Controls.Add(Me.btnNearestStopDest)
+        Me.Controls.Add(Me.btnNearestStopStart)
         Me.Controls.Add(Me.btnZoomOut)
         Me.Controls.Add(Me.btnZoomIn)
         Me.Controls.Add(Me.panelPopup)
@@ -298,6 +406,7 @@ Partial Class UCtrlMapViewer
         Me.panelLayers.ResumeLayout(False)
         Me.panelLayers.PerformLayout()
         Me.panelPopup.ResumeLayout(False)
+        Me.tableLayoutPopup.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -318,4 +427,10 @@ Partial Class UCtrlMapViewer
     Friend WithEvents btnZoomIn As Button
     Friend WithEvents btnZoomOut As Button
     Friend WithEvents lBoxRealTime As ListBox
+    Friend WithEvents tableLayoutPopup As TableLayoutPanel
+    Friend WithEvents lblStopPopup As Label
+    Friend WithEvents btnNearestStopStart As Button
+    Friend WithEvents btnNearestStopDest As Button
+    Friend WithEvents toolTipNearestStop As ToolTip
+    Friend WithEvents btnOptimize As Button
 End Class

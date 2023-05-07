@@ -23,83 +23,72 @@ Partial Class Kaardirakendus
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Kaardirakendus))
-        Me.UTimeTable = New UTimeTable.UTimeTable()
-        Me.UCtrlMapViewer = New UCtrlMapViewer.UCtrlMapViewer()
-        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
-        Me.UCtrlMapViewer = New UCtrlMapViewer.UCtrlMapViewer()
-        Me.TableLayoutPanel1.SuspendLayout()
+        Me.tblLayoutMain = New System.Windows.Forms.TableLayoutPanel()
+        Me.UTimeTable1 = New UTimeTable.UTimeTable()
+        Me.UCtrlMapViewer1 = New UCtrlMapViewer.UCtrlMapViewer()
+        Me.tblLayoutMain.SuspendLayout()
         Me.SuspendLayout()
         '
-        'UTimeTable
+        'tblLayoutMain
         '
-        Me.UTimeTable.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.UTimeTable.Font = New System.Drawing.Font("Consolas", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(186, Byte))
-        Me.UTimeTable.Location = New System.Drawing.Point(619, 6)
-        Me.UTimeTable.Margin = New System.Windows.Forms.Padding(5, 6, 5, 6)
-        Me.UTimeTable.Name = "UTimeTable"
-        Me.UTimeTable.Size = New System.Drawing.Size(638, 661)
-        Me.UTimeTable.TabIndex = 21
+        Me.tblLayoutMain.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.tblLayoutMain.ColumnCount = 2
+        Me.tblLayoutMain.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.tblLayoutMain.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 585.0!))
+        Me.tblLayoutMain.Controls.Add(Me.UTimeTable1, 1, 0)
+        Me.tblLayoutMain.Controls.Add(Me.UCtrlMapViewer1, 0, 0)
+        Me.tblLayoutMain.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.tblLayoutMain.Location = New System.Drawing.Point(0, 0)
+        Me.tblLayoutMain.Name = "tblLayoutMain"
+        Me.tblLayoutMain.RowCount = 1
+        Me.tblLayoutMain.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.tblLayoutMain.Size = New System.Drawing.Size(1382, 753)
+        Me.tblLayoutMain.TabIndex = 25
         '
-        'UCtrlMapViewer
+        'UTimeTable1
         '
-        Me.UCtrlMapViewer.BackColor = System.Drawing.Color.Transparent
-        Me.UCtrlMapViewer.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.UCtrlMapViewer.Location = New System.Drawing.Point(3, 3)
-        Me.UCtrlMapViewer.Name = "UCtrlMapViewer"
-        Me.UCtrlMapViewer.Size = New System.Drawing.Size(990, 654)
-        Me.UCtrlMapViewer.TabIndex = 24
+        Me.UTimeTable1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UTimeTable1.AutoSize = True
+        Me.UTimeTable1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UTimeTable1.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.UTimeTable1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.UTimeTable1.Location = New System.Drawing.Point(801, 3)
+        Me.UTimeTable1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.UTimeTable1.Name = "UTimeTable1"
+        Me.UTimeTable1.Size = New System.Drawing.Size(577, 728)
+        Me.UTimeTable1.TabIndex = 27
         '
-        'TableLayoutPanel1
+        'UCtrlMapViewer1
         '
-        Me.TableLayoutPanel1.ColumnCount = 2
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 648.0!))
-        Me.TableLayoutPanel1.Controls.Add(Me.UTimeTable, 1, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.UCtrlMapViewer, 0, 0)
-        Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 0)
-        Me.TableLayoutPanel1.Margin = New System.Windows.Forms.Padding(5)
-        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
-        Me.TableLayoutPanel1.RowCount = 1
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1262, 673)
-
-        Me.TableLayoutPanel1.TabIndex = 25
-        '
-        'UCtrlMapViewer
-        '
-        Me.UCtrlMapViewer.BackColor = System.Drawing.Color.Transparent
-        Me.UCtrlMapViewer.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.UCtrlMapViewer.Location = New System.Drawing.Point(5, 6)
-        Me.UCtrlMapViewer.Margin = New System.Windows.Forms.Padding(5, 6, 5, 6)
-        Me.UCtrlMapViewer.Name = "UCtrlMapViewer"
-        Me.UCtrlMapViewer.Size = New System.Drawing.Size(604, 661)
-        Me.UCtrlMapViewer.TabIndex = 24
+        Me.UCtrlMapViewer1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UCtrlMapViewer1.BackColor = System.Drawing.Color.Transparent
+        Me.UCtrlMapViewer1.Location = New System.Drawing.Point(4, 5)
+        Me.UCtrlMapViewer1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.UCtrlMapViewer1.Name = "UCtrlMapViewer1"
+        Me.UCtrlMapViewer1.Size = New System.Drawing.Size(789, 743)
+        Me.UCtrlMapViewer1.TabIndex = 28
         '
         'Kaardirakendus
         '
-
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(120.0!, 120.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
-        Me.ClientSize = New System.Drawing.Size(1262, 673)
-
-        Me.Controls.Add(Me.TableLayoutPanel1)
-        Me.DoubleBuffered = True
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer))
+        Me.ClientSize = New System.Drawing.Size(1382, 753)
+        Me.Controls.Add(Me.tblLayoutMain)
         Me.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Margin = New System.Windows.Forms.Padding(5)
         Me.Name = "Kaardirakendus"
-
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Ühistranspordi rakendus"
-
-        Me.TableLayoutPanel1.ResumeLayout(False)
+        Me.tblLayoutMain.ResumeLayout(False)
+        Me.tblLayoutMain.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
-    Friend WithEvents UTimeTable As UTimeTable.UTimeTable
+    Friend WithEvents tblLayoutMain As TableLayoutPanel
+    Friend WithEvents UTimeTable1 As UTimeTable.UTimeTable
     Friend WithEvents UCtrlMapViewer1 As UCtrlMapViewer.UCtrlMapViewer
-    Friend WithEvents UCtrlMapViewer As UCtrlMapViewer.UCtrlMapViewer
-    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
 End Class

@@ -1,4 +1,5 @@
-﻿Imports System.Reflection
+﻿Imports System
+Imports System.Reflection
 Imports System.Runtime.InteropServices
 
 ' General Information about an assembly is controlled through the following
@@ -7,17 +8,17 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("UCtrlMapViewer")>
+<Assembly: AssemblyTitle("FormTest")>
 <Assembly: AssemblyDescription("")>
 <Assembly: AssemblyCompany("")>
-<Assembly: AssemblyProduct("UCtrlMapViewer")>
+<Assembly: AssemblyProduct("FormTest")>
 <Assembly: AssemblyCopyright("Copyright ©  2023")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("db79a5ed-77e7-476f-a093-3f7b349f9718")>
+<Assembly: Guid("3d4ee5f5-ff2f-4eb0-8680-b46032691244")>
 
 ' Version information for an assembly consists of the following four values:
 '

@@ -1,6 +1,7 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.Data.Entity.Core
 Imports System.Data.SQLite
+Imports System.Drawing.Drawing2D
 Imports System.Globalization
 Imports System.IO
 Imports System.Net
@@ -25,6 +26,7 @@ Public Class UTimeTable
 
     Public Structure StopStruct
         Public Name As String
+        Public ID As Integer
         Public Latitude As Double
         Public Longitude As Double
     End Structure
@@ -34,8 +36,14 @@ Public Class UTimeTable
         Dim Time As String
     End Structure
 
+    Private Sub UTimeTable_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        btnDay1.Font = New Font(btnDay1.Font, FontStyle.Bold)
+        btnDisplayLines.Enabled = False
+        btnAB.Enabled = False
+        btnBA.Enabled = False
+    End Sub
     Public Function GetStopsCoordinates() As List(Of StopStruct)
-        Dim query As String = "SELECT name, lat, lon FROM stops;"
+        Dim query As String = "SELECT name, stop_id, lat, lon FROM stops;"
         Dim stops As New List(Of StopStruct)
 
         Try
@@ -46,8 +54,9 @@ Public Class UTimeTable
             While SQLiteReader.Read()
                 Dim s As New StopStruct
                 s.Name = SQLiteReader.GetString(0)
-                s.Latitude = SQLiteReader.GetDouble(1)
-                s.Longitude = SQLiteReader.GetDouble(2)
+                s.ID = SQLiteReader.GetInt32(1)
+                s.Latitude = SQLiteReader.GetDouble(2)
+                s.Longitude = SQLiteReader.GetDouble(3)
                 stops.Add(s)
             End While
 
@@ -137,7 +146,7 @@ Public Class UTimeTable
             Exit Sub
         End If
         Dim routeTimeList As New List(Of TimeStruct)
-        Dim Query As String = "Select arrival_time, name, route_short_name
+        Dim Query As String = "Select stoptimes.arrival_time, stops.name, routes.route_short_name
              From stoptimes
              Join stops On stoptimes.stop_id = stops.stop_id
              Join trips On stoptimes.trip_id = trips.trip_id
@@ -166,8 +175,12 @@ Public Class UTimeTable
                     End If
                 Next
             Next
+            RemoveHandler lBoxPeatused.SelectedValueChanged, AddressOf lBoxPeatused_SelectedValueChanged
+            Dim index As Integer = lBoxPeatused.SelectedIndex
             lBoxPeatused.Items.Clear()
             lBoxPeatused.Items.AddRange(updatedItems.ToArray())
+            lBoxPeatused.SelectedIndex = index
+            AddHandler lBoxPeatused.SelectedValueChanged, AddressOf lBoxPeatused_SelectedValueChanged
             SQLiteReader.Close()
         Catch ex As Exception
             MsgBox(ex.Message)
@@ -311,6 +324,7 @@ Public Class UTimeTable
             MsgBox(ex.Message)
             SQLiteCon.Close()
         End Try
+        btnDisplayLines.Enabled = False
     End Sub
 
     Private Sub GetStopTimesRealTime()
@@ -380,6 +394,8 @@ Public Class UTimeTable
         rtbAjad.Clear()
         btnAB.Text = Nothing
         btnBA.Text = Nothing
+        btnAB.Enabled = False
+        btnBA.Enabled = False
         LoadLines()
     End Sub
 
@@ -394,6 +410,8 @@ Public Class UTimeTable
         rtbAjad.Clear()
         btnAB.Text = Nothing
         btnBA.Text = Nothing
+        btnAB.Enabled = False
+        btnBA.Enabled = False
         LoadLineStops()
     End Sub
 
@@ -401,11 +419,14 @@ Public Class UTimeTable
         If String.IsNullOrEmpty(lBoxLiinid.Text) And String.IsNullOrEmpty(lBoxPeatused.Text) Or Suund = "A>B" Then
             Return
         End If
+        btnAB.Font = New Font(btnAB.Font, FontStyle.Bold)
+        btnBA.Font = New Font(btnBA.Font, FontStyle.Regular)
         rtbAjad.Clear()
         lBoxRealTime.Items.Clear()
         Suund = "A>B"
         LoadLineStops()
         lBoxPeatused.SelectedIndex = 0
+        btnDisplayLines.Enabled = True
         RaiseEvent ClearShapes()
         'LoadShapes()
     End Sub
@@ -414,26 +435,33 @@ Public Class UTimeTable
         If String.IsNullOrEmpty(lBoxLiinid.Text) And String.IsNullOrEmpty(lBoxPeatused.Text) Or Suund = "B>A" Then
             Return
         End If
+        btnAB.Font = New Font(btnAB.Font, FontStyle.Regular)
+        btnBA.Font = New Font(btnBA.Font, FontStyle.Bold)
         rtbAjad.Clear()
         lBoxRealTime.Items.Clear()
         Suund = "B>A"
         LoadLineStops()
         lBoxPeatused.SelectedIndex = 0
+        btnDisplayLines.Enabled = True
         RaiseEvent ClearShapes()
         'LoadShapes()
     End Sub
 
     Private Sub lBoxLiinid_SelectedValueChanged(sender As Object, e As EventArgs) Handles lBoxLiinid.SelectedValueChanged
-        lBoxPeatused.Items.Clear()
-        lBoxRealTime.Items.Clear()
-        SelectedStop = Nothing
-        Suund = Nothing
-        rtbAjad.Clear()
-        SelectedLine = lBoxLiinid.SelectedItem
-        LoadLineSuund()
+        If lBoxLiinid.SelectedItem IsNot Nothing Then
+            lBoxPeatused.Items.Clear()
+            lBoxRealTime.Items.Clear()
+            SelectedStop = Nothing
+            Suund = Nothing
+            rtbAjad.Clear()
+            SelectedLine = lBoxLiinid.SelectedItem
+            LoadLineSuund()
+            btnAB.Enabled = True
+            btnBA.Enabled = True
+        End If
     End Sub
 
-    Private Sub lBoxPeatused_SelectedValueChanged(sender As Object, e As EventArgs) Handles lBoxPeatused.SelectedIndexChanged
+    Private Sub lBoxPeatused_SelectedValueChanged(sender As Object, e As EventArgs) Handles lBoxPeatused.SelectedValueChanged
         If lBoxPeatused.SelectedItem.ToString().Contains(":") Then
             SelectedStop = lBoxPeatused.SelectedItem.Substring(6)
         Else
@@ -539,16 +567,287 @@ Public Class UTimeTable
         AppendStopDepartureTimes(tripID)
     End Sub
 
-    Private Sub UTimeTable_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        btnDay1.Font = New Font(btnDay1.Font, FontStyle.Bold)
-    End Sub
-
     Private Sub btnDisplayLines_Click(sender As Object, e As EventArgs) Handles btnDisplayLines.Click
-    
+
         If String.IsNullOrEmpty(Suund) Or String.IsNullOrEmpty(SelectedLine) Then
             Return
         Else
             LoadShapes()
         End If
     End Sub
+
+    Private Sub btnShowLines_Paint(sender As Object, e As PaintEventArgs) Handles btnShowLines.Paint
+        Dim textSize As SizeF = e.Graphics.MeasureString(btnShowLines.Text, btnShowLines.Font)
+
+        Dim textRect As New RectangleF(0, 0, btnShowLines.Width, btnShowLines.Height)
+        Dim format As New StringFormat()
+        format.Alignment = StringAlignment.Center
+        format.LineAlignment = StringAlignment.Center
+        If btnShowLines.ClientRectangle.Contains(btnShowLines.PointToClient(Control.MousePosition)) AndAlso btnShowLines.Enabled = True Then
+            e.Graphics.FillRectangle(SystemBrushes.Control, btnShowLines.ClientRectangle)
+            If btnShowLines.Enabled = True Then
+                e.Graphics.DrawString(btnShowLines.Text, btnShowLines.Font, Brushes.Black, textRect, format)
+            Else
+                e.Graphics.DrawString(btnShowLines.Text, btnShowLines.Font, Brushes.Gray, textRect, format)
+            End If
+        Else
+            Dim rect As Rectangle = New Rectangle(0, 0, btnShowLines.Width, btnShowLines.Height)
+            ' Draw button outline
+            Dim outlinePen As Pen = New Pen(Color.Black, 2)
+            e.Graphics.DrawRectangle(outlinePen, rect)
+            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, rect)
+            If btnShowLines.Enabled = True Then
+                e.Graphics.DrawString(btnShowLines.Text, btnShowLines.Font, Brushes.White, textRect, format)
+            Else
+                e.Graphics.DrawString(btnShowLines.Text, btnShowLines.Font, Brushes.Gray, textRect, format)
+            End If
+        End If
+
+    End Sub
+
+    Private Sub btnShowStops_Paint(sender As Object, e As PaintEventArgs) Handles btnShowStops.Paint
+        Dim textSize As SizeF = e.Graphics.MeasureString(btnShowStops.Text, btnShowStops.Font)
+
+        Dim textRect As New RectangleF(0, 0, btnShowStops.Width, btnShowStops.Height)
+        Dim format As New StringFormat()
+        format.Alignment = StringAlignment.Center
+        format.LineAlignment = StringAlignment.Center
+        If btnShowStops.ClientRectangle.Contains(btnShowStops.PointToClient(Control.MousePosition)) AndAlso btnShowStops.Enabled = True Then
+            e.Graphics.FillRectangle(SystemBrushes.Control, btnShowStops.ClientRectangle)
+            If btnShowLines.Enabled = True Then
+                e.Graphics.DrawString(btnShowStops.Text, btnShowStops.Font, Brushes.Black, textRect, format)
+            Else
+                e.Graphics.DrawString(btnShowStops.Text, btnShowStops.Font, Brushes.Gray, textRect, format)
+            End If
+        Else
+            Dim rect As Rectangle = New Rectangle(0, 0, btnShowStops.Width, btnShowStops.Height)
+            ' Draw button outline
+            Dim outlinePen As Pen = New Pen(Color.Black, 2)
+            e.Graphics.DrawRectangle(outlinePen, rect)
+            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, rect)
+            If btnShowLines.Enabled = True Then
+                e.Graphics.DrawString(btnShowStops.Text, btnShowStops.Font, Brushes.White, textRect, format)
+            Else
+                e.Graphics.DrawString(btnShowStops.Text, btnShowStops.Font, Brushes.Gray, textRect, format)
+            End If
+        End If
+
+    End Sub
+
+    Private Sub btnDisplayLines_Paint(sender As Object, e As PaintEventArgs) Handles btnDisplayLines.Paint
+        Dim textSize As SizeF = e.Graphics.MeasureString(btnDisplayLines.Text, btnDisplayLines.Font)
+
+        Dim textRect As New RectangleF(0, 0, btnDisplayLines.Width, btnDisplayLines.Height)
+        Dim format As New StringFormat()
+        format.Alignment = StringAlignment.Center
+        format.LineAlignment = StringAlignment.Center
+        If btnDisplayLines.ClientRectangle.Contains(btnDisplayLines.PointToClient(Control.MousePosition)) AndAlso btnDisplayLines.Enabled = True Then
+            e.Graphics.FillRectangle(SystemBrushes.Control, btnDisplayLines.ClientRectangle)
+            If btnDisplayLines.Enabled = True Then
+                e.Graphics.DrawString(btnDisplayLines.Text, btnDisplayLines.Font, Brushes.Black, textRect, format)
+            Else
+                e.Graphics.DrawString(btnDisplayLines.Text, btnDisplayLines.Font, Brushes.Gray, textRect, format)
+            End If
+        Else
+            Dim rect As Rectangle = New Rectangle(0, 0, btnDisplayLines.Width, btnDisplayLines.Height)
+            ' Draw button outline
+            Dim outlinePen As Pen = New Pen(Color.Black, 2)
+            e.Graphics.DrawRectangle(outlinePen, rect)
+            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, rect)
+            If btnDisplayLines.Enabled = True Then
+                e.Graphics.DrawString(btnDisplayLines.Text, btnDisplayLines.Font, Brushes.White, textRect, format)
+            Else
+                e.Graphics.DrawString(btnDisplayLines.Text, btnDisplayLines.Font, Brushes.Gray, textRect, format)
+            End If
+        End If
+
+    End Sub
+
+    Private Sub btnAB_Paint(sender As Object, e As PaintEventArgs) Handles btnAB.Paint
+        Dim textSize As SizeF = e.Graphics.MeasureString(btnAB.Text, btnAB.Font)
+
+        Dim textRect As New RectangleF(0, 0, btnAB.Width, btnAB.Height)
+        Dim format As New StringFormat()
+        format.Alignment = StringAlignment.Center
+        format.LineAlignment = StringAlignment.Center
+        If btnAB.ClientRectangle.Contains(btnAB.PointToClient(Control.MousePosition)) AndAlso btnAB.Enabled = True Then
+            e.Graphics.FillRectangle(SystemBrushes.Control, btnAB.ClientRectangle)
+            If btnAB.Enabled = True Then
+                e.Graphics.DrawString(btnAB.Text, btnAB.Font, Brushes.Black, textRect, format)
+            Else
+                e.Graphics.DrawString(btnAB.Text, btnAB.Font, Brushes.Gray, textRect, format)
+            End If
+        Else
+            Dim rect As Rectangle = New Rectangle(0, 0, btnAB.Width, btnAB.Height)
+            ' Draw button outline
+            Dim outlinePen As Pen = New Pen(Color.Black, 2)
+            e.Graphics.DrawRectangle(outlinePen, rect)
+            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, rect)
+            If btnAB.Enabled = True Then
+                e.Graphics.DrawString(btnAB.Text, btnAB.Font, Brushes.White, textRect, format)
+            Else
+                e.Graphics.DrawString(btnAB.Text, btnAB.Font, Brushes.Gray, textRect, format)
+            End If
+        End If
+
+    End Sub
+
+    Private Sub btnBA_Paint(sender As Object, e As PaintEventArgs) Handles btnBA.Paint
+        Dim textSize As SizeF = e.Graphics.MeasureString(btnBA.Text, btnBA.Font)
+
+        Dim textRect As New RectangleF(0, 0, btnBA.Width, btnBA.Height)
+        Dim format As New StringFormat()
+        format.Alignment = StringAlignment.Center
+        format.LineAlignment = StringAlignment.Center
+        If btnBA.ClientRectangle.Contains(btnBA.PointToClient(Control.MousePosition)) AndAlso btnBA.Enabled = True Then
+            e.Graphics.FillRectangle(SystemBrushes.Control, btnBA.ClientRectangle)
+            If btnBA.Enabled = True Then
+                e.Graphics.DrawString(btnBA.Text, btnBA.Font, Brushes.Black, textRect, format)
+            Else
+                e.Graphics.DrawString(btnBA.Text, btnBA.Font, Brushes.Gray, textRect, format)
+            End If
+        Else
+            Dim rect As Rectangle = New Rectangle(0, 0, btnBA.Width, btnBA.Height)
+            ' Draw button outline
+            Dim outlinePen As Pen = New Pen(Color.Black, 2)
+            e.Graphics.DrawRectangle(outlinePen, rect)
+            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, rect)
+            If btnBA.Enabled = True Then
+                e.Graphics.DrawString(btnBA.Text, btnBA.Font, Brushes.White, textRect, format)
+            Else
+                e.Graphics.DrawString(btnBA.Text, btnBA.Font, Brushes.Gray, textRect, format)
+            End If
+        End If
+
+    End Sub
+
+    Private Sub btnDay1_Paint(sender As Object, e As PaintEventArgs) Handles btnDay1.Paint
+        Dim textSize As SizeF = e.Graphics.MeasureString(btnDay1.Text, btnDay1.Font)
+
+        Dim textRect As New RectangleF(0, 0, btnDay1.Width, btnDay1.Height)
+        Dim format As New StringFormat()
+        format.Alignment = StringAlignment.Center
+        format.LineAlignment = StringAlignment.Center
+        If btnDay1.ClientRectangle.Contains(btnDay1.PointToClient(Control.MousePosition)) AndAlso btnDay1.Enabled = True Then
+            e.Graphics.FillRectangle(SystemBrushes.Control, btnDay1.ClientRectangle)
+            If btnDay1.Enabled = True Then
+                e.Graphics.DrawString(btnDay1.Text, btnDay1.Font, Brushes.Black, textRect, format)
+            Else
+                e.Graphics.DrawString(btnDay1.Text, btnDay1.Font, Brushes.Gray, textRect, format)
+            End If
+        Else
+            Dim rect As Rectangle = New Rectangle(0, 0, btnDay1.Width, btnDay1.Height)
+            ' Draw button outline
+            Dim outlinePen As Pen = New Pen(Color.Black, 2)
+            e.Graphics.DrawRectangle(outlinePen, rect)
+            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, rect)
+            If btnDay1.Enabled = True Then
+                e.Graphics.DrawString(btnDay1.Text, btnDay1.Font, Brushes.White, textRect, format)
+            Else
+                e.Graphics.DrawString(btnDay1.Text, btnDay1.Font, Brushes.Gray, textRect, format)
+            End If
+        End If
+
+    End Sub
+
+    Private Sub btnDay2_Paint(sender As Object, e As PaintEventArgs) Handles btnDay2.Paint
+        Dim textSize As SizeF = e.Graphics.MeasureString(btnDay2.Text, btnDay2.Font)
+
+        Dim textRect As New RectangleF(0, 0, btnDay2.Width, btnDay2.Height)
+        Dim format As New StringFormat()
+        format.Alignment = StringAlignment.Center
+        format.LineAlignment = StringAlignment.Center
+        If btnDay2.ClientRectangle.Contains(btnDay2.PointToClient(Control.MousePosition)) AndAlso btnDay2.Enabled = True Then
+            e.Graphics.FillRectangle(SystemBrushes.Control, btnDay2.ClientRectangle)
+            If btnDay2.Enabled = True Then
+                e.Graphics.DrawString(btnDay2.Text, btnDay2.Font, Brushes.Black, textRect, format)
+            Else
+                e.Graphics.DrawString(btnDay2.Text, btnDay2.Font, Brushes.Gray, textRect, format)
+            End If
+        Else
+            Dim rect As Rectangle = New Rectangle(0, 0, btnDay2.Width, btnDay2.Height)
+            ' Draw button outline
+            Dim outlinePen As Pen = New Pen(Color.Black, 2)
+            e.Graphics.DrawRectangle(outlinePen, rect)
+            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, rect)
+            If btnDay2.Enabled = True Then
+                e.Graphics.DrawString(btnDay2.Text, btnDay2.Font, Brushes.White, textRect, format)
+            Else
+                e.Graphics.DrawString(btnDay2.Text, btnDay2.Font, Brushes.Gray, textRect, format)
+            End If
+        End If
+
+    End Sub
+
+    Private Sub btnDay3_Paint(sender As Object, e As PaintEventArgs) Handles btnDay3.Paint
+        Dim textSize As SizeF = e.Graphics.MeasureString(btnDay3.Text, btnDay3.Font)
+
+        Dim textRect As New RectangleF(0, 0, btnDay3.Width, btnDay3.Height)
+        Dim format As New StringFormat()
+        format.Alignment = StringAlignment.Center
+        format.LineAlignment = StringAlignment.Center
+        If btnDay3.ClientRectangle.Contains(btnDay3.PointToClient(Control.MousePosition)) AndAlso btnDay3.Enabled = True Then
+            e.Graphics.FillRectangle(SystemBrushes.Control, btnDay3.ClientRectangle)
+            If btnDay3.Enabled = True Then
+                e.Graphics.DrawString(btnDay3.Text, btnDay3.Font, Brushes.Black, textRect, format)
+            Else
+                e.Graphics.DrawString(btnDay3.Text, btnDay3.Font, Brushes.Gray, textRect, format)
+            End If
+        Else
+            Dim rect As Rectangle = New Rectangle(0, 0, btnDay3.Width, btnDay3.Height)
+            ' Draw button outline
+            Dim outlinePen As Pen = New Pen(Color.Black, 2)
+            e.Graphics.DrawRectangle(outlinePen, rect)
+            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, rect)
+            If btnDay3.Enabled = True Then
+                e.Graphics.DrawString(btnDay3.Text, btnDay3.Font, Brushes.White, textRect, format)
+            Else
+                e.Graphics.DrawString(btnDay3.Text, btnDay3.Font, Brushes.Gray, textRect, format)
+            End If
+        End If
+
+    End Sub
+    Private Sub lBoxLiinid_Paint(sender As Object, e As PaintEventArgs) Handles lBoxLiinid.Paint
+        ' Draw custom border
+        Using pen As New Pen(Color.Black, 2)
+            e.Graphics.DrawRectangle(pen, 0, 0, lBoxLiinid.Width - 1, lBoxLiinid.Height - 1)
+        End Using
+    End Sub
+
+    Private Sub panelRtbAjad_Paint(sender As Object, e As PaintEventArgs) Handles panelRtbAjad.Paint
+        ' Draw custom border
+        Using pen As New Pen(Color.Black, 1)
+            e.Graphics.DrawRectangle(pen, 0, 0, panelRtbAjad.Width - 1, panelRtbAjad.Height - 1)
+        End Using
+    End Sub
+
+    Private Sub panelLboxRealtime_Paint(sender As Object, e As PaintEventArgs) Handles panelLboxRealtime.Paint
+        ' Draw custom border
+        Using pen As New Pen(Color.Black, 1)
+            e.Graphics.DrawRectangle(pen, 0, 0, panelLboxRealtime.Width - 1, panelLboxRealtime.Height - 1)
+        End Using
+    End Sub
+
+    Private Sub panelLBoxPeatused_Paint(sender As Object, e As PaintEventArgs) Handles panelLBoxPeatused.Paint
+        ' Draw custom border
+        Using pen As New Pen(Color.Black, 1)
+            e.Graphics.DrawRectangle(pen, 0, 0, panelLBoxPeatused.Width - 1, panelLBoxPeatused.Height - 1)
+        End Using
+    End Sub
+
+    Private Sub panelLBoxLiinid_Paint(sender As Object, e As PaintEventArgs) Handles panelLBoxLiinid.Paint
+        ' Draw custom border
+        Using pen As New Pen(Color.Black, 1)
+            e.Graphics.DrawRectangle(pen, 0, 0, panelLBoxLiinid.Width - 1, panelLBoxLiinid.Height - 1)
+        End Using
+    End Sub
+
 End Class
