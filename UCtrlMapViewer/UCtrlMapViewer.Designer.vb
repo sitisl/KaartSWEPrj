@@ -22,6 +22,7 @@ Partial Class UCtrlMapViewer
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Me.gMap1 = New GMap.NET.WindowsForms.GMapControl()
         Me.panelLayers = New System.Windows.Forms.Panel()
         Me.cbTroll = New System.Windows.Forms.CheckBox()
@@ -41,7 +42,8 @@ Partial Class UCtrlMapViewer
         Me.btnZoomOut = New System.Windows.Forms.Button()
         Me.btnNearestStopStart = New System.Windows.Forms.Button()
         Me.btnNearestStopDest = New System.Windows.Forms.Button()
-        Me.toolTipNearestStop = New System.Windows.Forms.ToolTip()
+        Me.toolTipNearestStop = New System.Windows.Forms.ToolTip(Me.components)
+        Me.btnOptimize = New System.Windows.Forms.Button()
         Me.panelLayers.SuspendLayout()
         Me.panelPopup.SuspendLayout()
         Me.tableLayoutPopup.SuspendLayout()
@@ -204,7 +206,7 @@ Partial Class UCtrlMapViewer
         Me.btnRoute.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnRoute.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.btnRoute.ForeColor = System.Drawing.Color.White
-        Me.btnRoute.Location = New System.Drawing.Point(120, 73)
+        Me.btnRoute.Location = New System.Drawing.Point(116, 73)
         Me.btnRoute.Name = "btnRoute"
         Me.btnRoute.Size = New System.Drawing.Size(100, 35)
         Me.btnRoute.TabIndex = 10
@@ -363,11 +365,32 @@ Partial Class UCtrlMapViewer
         Me.toolTipNearestStop.OwnerDraw = True
         Me.toolTipNearestStop.ReshowDelay = 80
         '
+        'btnOptimize
+        '
+        Me.btnOptimize.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.btnOptimize.BackColor = System.Drawing.Color.Transparent
+        Me.btnOptimize.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.btnOptimize.FlatAppearance.BorderSize = 0
+        Me.btnOptimize.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.Control
+        Me.btnOptimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnOptimize.Font = New System.Drawing.Font("Shapiro 65 Light Heavy Extd", 32.0!, System.Drawing.FontStyle.Bold)
+        Me.btnOptimize.ForeColor = System.Drawing.Color.Transparent
+        Me.btnOptimize.ImageAlign = System.Drawing.ContentAlignment.BottomCenter
+        Me.btnOptimize.Location = New System.Drawing.Point(215, 73)
+        Me.btnOptimize.Margin = New System.Windows.Forms.Padding(50, 0, 50, 0)
+        Me.btnOptimize.MaximumSize = New System.Drawing.Size(35, 35)
+        Me.btnOptimize.MinimumSize = New System.Drawing.Size(35, 35)
+        Me.btnOptimize.Name = "btnOptimize"
+        Me.btnOptimize.Size = New System.Drawing.Size(35, 35)
+        Me.btnOptimize.TabIndex = 16
+        Me.btnOptimize.UseVisualStyleBackColor = False
+        '
         'UCtrlMapViewer
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.Transparent
+        Me.Controls.Add(Me.btnOptimize)
         Me.Controls.Add(Me.btnNearestStopDest)
         Me.Controls.Add(Me.btnNearestStopStart)
         Me.Controls.Add(Me.btnZoomOut)
@@ -411,4 +434,5 @@ Partial Class UCtrlMapViewer
     Friend WithEvents btnNearestStopStart As Button
     Friend WithEvents btnNearestStopDest As Button
     Friend WithEvents toolTipNearestStop As ToolTip
+    Friend WithEvents btnOptimize As Button
 End Class

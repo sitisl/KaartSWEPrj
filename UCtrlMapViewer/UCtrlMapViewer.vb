@@ -32,6 +32,9 @@ Imports System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar
 Public Class UCtrlMapViewer
 
     '----------Class properties and globals-------------
+
+    'Flag for checking the btnOptimize state
+    Private optimizeByDist As Boolean = False
     ' Flag for checking if the layerPanel is resized
     Private isResized As Boolean = False
     Private startCoord As PointLatLng
@@ -71,6 +74,7 @@ Public Class UCtrlMapViewer
         btnNearestStopStart.Parent = gMap1
         btnNearestStopDest.Enabled = False
         btnNearestStopStart.Enabled = False
+        btnOptimize.Parent = gMap1
     End Sub
 
     Private Sub panelLayers_Init()
@@ -193,6 +197,10 @@ Public Class UCtrlMapViewer
         toolTipNearestStop.ReshowDelay = 50
     End Sub
 
+    Private Sub lblStopPopup_Paint(sender As Object, e As PaintEventArgs) Handles lblStopPopup.Paint
+        Dim pen As New Pen(Color.Snow)
+        e.Graphics.DrawLine(pen, New Point(0, lblStopPopup.Height - 2), New Point(lblStopPopup.Width, lblStopPopup.Height - 2))
+    End Sub
     Private Sub btnZoomIn_Paint(sender As Object, e As PaintEventArgs) Handles btnZoomIn.Paint
         ' Draw background gradient
         If btnZoomIn.ClientRectangle.Contains(btnZoomIn.PointToClient(Control.MousePosition)) Then
@@ -261,6 +269,21 @@ Public Class UCtrlMapViewer
         e.Graphics.DrawImage(markerBitmap, x, y)
     End Sub
 
+    Private Sub btnOptimize_Paint(sender As Object, e As PaintEventArgs) Handles btnOptimize.Paint
+        Dim rect As Rectangle = New Rectangle(0, 0, btnOptimize.Width, btnOptimize.Height)
+        Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+        e.Graphics.FillRectangle(brush, rect)
+        If optimizeByDist Then
+            Dim resizedImage As New Bitmap(My.Resources.dist_icon, New Size(btnOptimize.Width - 9, btnOptimize.Height - 9))
+            e.Graphics.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
+            e.Graphics.DrawImage(resizedImage, (btnOptimize.Width - resizedImage.Width) \ 2, (btnOptimize.Height - resizedImage.Height) \ 2)
+        Else
+            Dim resizedImage As New Bitmap(My.Resources.hourglass_icon, New Size(btnOptimize.Width - 9, btnOptimize.Height - 9))
+            e.Graphics.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
+            e.Graphics.DrawImage(resizedImage, (btnOptimize.Width - resizedImage.Width) \ 2, (btnOptimize.Height - resizedImage.Height) \ 2)
+        End If
+    End Sub
+
     Private Sub btnRoute_Paint(sender As Object, e As PaintEventArgs) Handles btnRoute.Paint
         ' Draw background gradient
         If btnRoute.ClientRectangle.Contains(btnRoute.PointToClient(Control.MousePosition)) AndAlso btnRoute.Enabled = True Then
@@ -322,6 +345,14 @@ Public Class UCtrlMapViewer
         g.FillPath(brush, path)
         g.DrawPath(New Pen(Color.FromArgb(255, 15, 15, 15), 1), path)
     End Sub
+
+    Private Sub UpdateOptimizeTooltipText()
+        If optimizeByDist Then
+            toolTipNearestStop.Show("Optimeeri: lühem distants", btnOptimize, btnOptimize.Width + 3, 6)
+        Else
+            toolTipNearestStop.Show("Optimeeri: lühem aeg", btnOptimize, btnOptimize.Width + 3, 6)
+        End If
+    End Sub
     '------------------------------------------------------------------
 
     '------------------------------------Button, panel, checkbox, timer events----------------------------------------------'
@@ -343,10 +374,22 @@ Public Class UCtrlMapViewer
         toolTipNearestStop.Hide(btnNearestStopDest)
     End Sub
 
+    Private Sub btnOptimize_MouseHover(sender As Object, e As EventArgs) Handles btnOptimize.MouseHover
+        UpdateOptimizeTooltipText()
+    End Sub
+
+    Private Sub btnOptimize_MouseLeave(sender As Object, e As EventArgs) Handles btnOptimize.MouseLeave
+        toolTipNearestStop.Hide(btnOptimize)
+    End Sub
+
     Private Sub btnRoute_Click(sender As Object, e As EventArgs) Handles btnRoute.Click
         If lblStart.Text IsNot "" And lblDest.Text IsNot "" _
             And lblStart.Text IsNot lblDest.Text Then
-            getRoute(startCoord, endCoord)
+            If optimizeByDist Then
+                getRoute(startCoord, endCoord, "distance")
+            Else
+                getRoute(startCoord, endCoord, "time")
+            End If
         End If
         btnRoute.Enabled = False
         cbStops.Checked = False
@@ -376,6 +419,14 @@ Public Class UCtrlMapViewer
         End If
     End Sub
 
+    Private Sub btnOptimize_Click(sender As Object, e As EventArgs) Handles btnOptimize.Click
+        optimizeByDist = Not optimizeByDist
+        UpdateOptimizeTooltipText()
+        btnOptimize.Invalidate()
+        If btnClear.Enabled = True AndAlso btnRoute.Enabled = False AndAlso lblStart.Text <> "" AndAlso lblDest.Text <> "" Then
+            btnRoute.Enabled = True
+        End If
+    End Sub
     Private Sub btnNearestStopStart_Click(sender As Object, e As EventArgs) Handles btnNearestStopStart.Click
         If lblStart.Text IsNot "" Then
             For Each marker As GMapMarker In stopsOverlay.Markers
@@ -757,7 +808,7 @@ Public Class UCtrlMapViewer
 
     'This method gets the transit route using Bing Maps API and plots it onto the map
     'In addition to the route it adds markers on the map for the start, destination and stops on the route
-    Public Sub getRoute(startCoord As PointLatLng, endCoord As PointLatLng)
+    Public Sub getRoute(startCoord As PointLatLng, endCoord As PointLatLng, optimize As String)
         showHideStops(False, getStopsSQL(drawMarker("Orange", 9)))
         ' Define the route overlay and add it to the map
         Dim mapOverlay As GMapOverlay = New GMapOverlay("routes")
@@ -767,7 +818,7 @@ Public Class UCtrlMapViewer
         Dim formattedTime As String = currentTime.ToString("yyyy-MM-ddTHH:mm:ssZ")
 
         ' Construct the Bing Maps API URL with necessary parameters
-        Dim apiUrl As String = "https://dev.virtualearth.net/REST/v1/Routes/Transit?wayPoint.1={latitude1},{longitude1}&wayPoint.2={latitude2},{longitude2}&key={BingMapsAPIKey}&routeAttributes=routePath,transitStops&dateTime={dateTime}&timeType=Departure"
+        Dim apiUrl As String = "https://dev.virtualearth.net/REST/v1/Routes/Transit?wayPoint.1={latitude1},{longitude1}&wayPoint.2={latitude2},{longitude2}&key={BingMapsAPIKey}&optimize={optimize}&routeAttributes=routePath,transitStops&dateTime={dateTime}&timeType=Departure"
 
         ' Replace the placeholders with actual values
         apiUrl = apiUrl.Replace("{latitude1}", startCoord.Lat)
@@ -776,6 +827,7 @@ Public Class UCtrlMapViewer
         apiUrl = apiUrl.Replace("{longitude2}", endCoord.Lng)
         apiUrl = apiUrl.Replace("{BingMapsAPIKey}", apiKey)
         apiUrl = apiUrl.Replace("{dateTime}", formattedTime)
+        apiUrl = apiUrl.Replace("{optimize}", optimize)
 
         ' Create a request to the API
         Dim request As WebRequest = WebRequest.Create(apiUrl)
