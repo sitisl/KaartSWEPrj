@@ -1,8 +1,5 @@
 ﻿Imports GMap.NET.WindowsForms
-Imports GMap.NET.WindowsForms.Markers
-Imports System.IO
-Imports System.Net
-Imports UTimeTable.UTimeTable
+Imports StopStruct = UTimeTable.ITimeTable.StopStruct
 
 Public Class Kaardirakendus
 
