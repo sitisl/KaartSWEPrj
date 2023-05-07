@@ -22,7 +22,6 @@ Partial Class UTimeTable
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container()
         Me.lBoxRealTime = New System.Windows.Forms.ListBox()
         Me.btnBA = New System.Windows.Forms.Button()
         Me.btnAB = New System.Windows.Forms.Button()
@@ -39,62 +38,79 @@ Partial Class UTimeTable
         Me.btnDay1 = New System.Windows.Forms.Button()
         Me.btnDay2 = New System.Windows.Forms.Button()
         Me.btnDay3 = New System.Windows.Forms.Button()
-        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.Timer1 = New System.Windows.Forms.Timer()
         Me.btnDisplayLines = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'lBoxRealTime
         '
+        Me.lBoxRealTime.BackColor = System.Drawing.Color.FromArgb(CType(CType(24, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(24, Byte), Integer))
+        Me.lBoxRealTime.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.lBoxRealTime.CausesValidation = False
+        Me.lBoxRealTime.ForeColor = System.Drawing.Color.White
         Me.lBoxRealTime.FormattingEnabled = True
         Me.lBoxRealTime.ItemHeight = 16
-        Me.lBoxRealTime.Location = New System.Drawing.Point(383, 478)
+        Me.lBoxRealTime.Location = New System.Drawing.Point(381, 462)
         Me.lBoxRealTime.Margin = New System.Windows.Forms.Padding(4)
         Me.lBoxRealTime.Name = "lBoxRealTime"
-        Me.lBoxRealTime.Size = New System.Drawing.Size(271, 68)
+        Me.lBoxRealTime.Size = New System.Drawing.Size(271, 82)
         Me.lBoxRealTime.TabIndex = 29
         '
         'btnBA
         '
+        Me.btnBA.BackColor = System.Drawing.Color.Transparent
+        Me.btnBA.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnBA.Location = New System.Drawing.Point(192, 38)
         Me.btnBA.Margin = New System.Windows.Forms.Padding(4)
         Me.btnBA.Name = "btnBA"
         Me.btnBA.Size = New System.Drawing.Size(447, 28)
         Me.btnBA.TabIndex = 25
-        Me.btnBA.UseVisualStyleBackColor = True
+        Me.btnBA.UseVisualStyleBackColor = False
         '
         'btnAB
         '
+        Me.btnAB.BackColor = System.Drawing.Color.Transparent
+        Me.btnAB.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnAB.Location = New System.Drawing.Point(192, 2)
         Me.btnAB.Margin = New System.Windows.Forms.Padding(4)
         Me.btnAB.Name = "btnAB"
         Me.btnAB.Size = New System.Drawing.Size(447, 28)
         Me.btnAB.TabIndex = 24
-        Me.btnAB.UseVisualStyleBackColor = True
+        Me.btnAB.UseVisualStyleBackColor = False
         '
         'lBoxPeatused
         '
+        Me.lBoxPeatused.BackColor = System.Drawing.Color.FromArgb(CType(CType(24, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(24, Byte), Integer))
+        Me.lBoxPeatused.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.lBoxPeatused.CausesValidation = False
+        Me.lBoxPeatused.ForeColor = System.Drawing.Color.White
         Me.lBoxPeatused.FormattingEnabled = True
         Me.lBoxPeatused.ItemHeight = 16
         Me.lBoxPeatused.Location = New System.Drawing.Point(145, 94)
         Me.lBoxPeatused.Margin = New System.Windows.Forms.Padding(4)
         Me.lBoxPeatused.Name = "lBoxPeatused"
-        Me.lBoxPeatused.Size = New System.Drawing.Size(228, 452)
+        Me.lBoxPeatused.Size = New System.Drawing.Size(228, 450)
         Me.lBoxPeatused.TabIndex = 23
         '
         'lBoxLiinid
         '
+        Me.lBoxLiinid.BackColor = System.Drawing.Color.FromArgb(CType(CType(24, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(24, Byte), Integer))
+        Me.lBoxLiinid.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.lBoxLiinid.CausesValidation = False
+        Me.lBoxLiinid.ForeColor = System.Drawing.Color.White
         Me.lBoxLiinid.FormattingEnabled = True
         Me.lBoxLiinid.ItemHeight = 16
         Me.lBoxLiinid.Location = New System.Drawing.Point(4, 94)
         Me.lBoxLiinid.Margin = New System.Windows.Forms.Padding(4)
         Me.lBoxLiinid.Name = "lBoxLiinid"
-        Me.lBoxLiinid.Size = New System.Drawing.Size(132, 452)
+        Me.lBoxLiinid.Size = New System.Drawing.Size(132, 450)
         Me.lBoxLiinid.TabIndex = 22
         '
         'lblLiinid
         '
         Me.lblLiinid.AutoSize = True
-        Me.lblLiinid.Location = New System.Drawing.Point(36, 74)
+        Me.lblLiinid.ForeColor = System.Drawing.Color.White
+        Me.lblLiinid.Location = New System.Drawing.Point(46, 74)
         Me.lblLiinid.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblLiinid.Name = "lblLiinid"
         Me.lblLiinid.Size = New System.Drawing.Size(38, 16)
@@ -104,6 +120,7 @@ Partial Class UTimeTable
         'lblPeatused
         '
         Me.lblPeatused.AutoSize = True
+        Me.lblPeatused.ForeColor = System.Drawing.Color.White
         Me.lblPeatused.Location = New System.Drawing.Point(216, 74)
         Me.lblPeatused.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblPeatused.Name = "lblPeatused"
@@ -114,6 +131,7 @@ Partial Class UTimeTable
         'lblAjad
         '
         Me.lblAjad.AutoSize = True
+        Me.lblAjad.ForeColor = System.Drawing.Color.White
         Me.lblAjad.Location = New System.Drawing.Point(493, 74)
         Me.lblAjad.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblAjad.Name = "lblAjad"
@@ -124,7 +142,9 @@ Partial Class UTimeTable
         'lblReaalajad
         '
         Me.lblReaalajad.AutoSize = True
-        Me.lblReaalajad.Location = New System.Drawing.Point(482, 458)
+        Me.lblReaalajad.BackColor = System.Drawing.Color.Transparent
+        Me.lblReaalajad.ForeColor = System.Drawing.Color.White
+        Me.lblReaalajad.Location = New System.Drawing.Point(480, 444)
         Me.lblReaalajad.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblReaalajad.Name = "lblReaalajad"
         Me.lblReaalajad.Size = New System.Drawing.Size(71, 16)
@@ -134,6 +154,7 @@ Partial Class UTimeTable
         'lblAbi
         '
         Me.lblAbi.AutoSize = True
+        Me.lblAbi.ForeColor = System.Drawing.Color.White
         Me.lblAbi.Location = New System.Drawing.Point(431, 421)
         Me.lblAbi.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblAbi.Name = "lblAbi"
@@ -144,30 +165,39 @@ Partial Class UTimeTable
         '
         'btnShowLines
         '
+        Me.btnShowLines.BackColor = System.Drawing.Color.Transparent
+        Me.btnShowLines.FlatAppearance.BorderSize = 0
+        Me.btnShowLines.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnShowLines.ForeColor = System.Drawing.Color.White
         Me.btnShowLines.Location = New System.Drawing.Point(4, 2)
         Me.btnShowLines.Margin = New System.Windows.Forms.Padding(4)
         Me.btnShowLines.Name = "btnShowLines"
         Me.btnShowLines.Size = New System.Drawing.Size(167, 28)
         Me.btnShowLines.TabIndex = 21
         Me.btnShowLines.Text = "Kuva kõik liinid"
-        Me.btnShowLines.UseVisualStyleBackColor = True
+        Me.btnShowLines.UseVisualStyleBackColor = False
         '
         'btnShowStops
         '
+        Me.btnShowStops.BackColor = System.Drawing.Color.Transparent
+        Me.btnShowStops.FlatAppearance.BorderSize = 0
+        Me.btnShowStops.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnShowStops.ForeColor = System.Drawing.Color.White
         Me.btnShowStops.Location = New System.Drawing.Point(4, 38)
         Me.btnShowStops.Margin = New System.Windows.Forms.Padding(4)
         Me.btnShowStops.Name = "btnShowStops"
         Me.btnShowStops.Size = New System.Drawing.Size(167, 28)
         Me.btnShowStops.TabIndex = 28
         Me.btnShowStops.Text = "Kuva kõik peatused"
-        Me.btnShowStops.UseVisualStyleBackColor = True
+        Me.btnShowStops.UseVisualStyleBackColor = False
         '
         'rtbAjad
         '
-        Me.rtbAjad.BackColor = System.Drawing.SystemColors.Window
+        Me.rtbAjad.BackColor = System.Drawing.Color.FromArgb(CType(CType(24, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(24, Byte), Integer))
         Me.rtbAjad.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.rtbAjad.CausesValidation = False
         Me.rtbAjad.Cursor = System.Windows.Forms.Cursors.Arrow
+        Me.rtbAjad.ForeColor = System.Drawing.Color.White
         Me.rtbAjad.Location = New System.Drawing.Point(383, 129)
         Me.rtbAjad.Margin = New System.Windows.Forms.Padding(4)
         Me.rtbAjad.Name = "rtbAjad"
@@ -178,33 +208,45 @@ Partial Class UTimeTable
         '
         'btnDay1
         '
+        Me.btnDay1.BackColor = System.Drawing.Color.Transparent
+        Me.btnDay1.FlatAppearance.BorderSize = 0
+        Me.btnDay1.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnDay1.ForeColor = System.Drawing.Color.White
         Me.btnDay1.Location = New System.Drawing.Point(383, 94)
         Me.btnDay1.Margin = New System.Windows.Forms.Padding(4)
         Me.btnDay1.Name = "btnDay1"
         Me.btnDay1.Size = New System.Drawing.Size(90, 28)
         Me.btnDay1.TabIndex = 38
         Me.btnDay1.Text = "Tööpäev"
-        Me.btnDay1.UseVisualStyleBackColor = True
+        Me.btnDay1.UseVisualStyleBackColor = False
         '
         'btnDay2
         '
+        Me.btnDay2.BackColor = System.Drawing.Color.Transparent
+        Me.btnDay2.FlatAppearance.BorderSize = 0
+        Me.btnDay2.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnDay2.ForeColor = System.Drawing.Color.White
         Me.btnDay2.Location = New System.Drawing.Point(474, 94)
         Me.btnDay2.Margin = New System.Windows.Forms.Padding(4)
         Me.btnDay2.Name = "btnDay2"
         Me.btnDay2.Size = New System.Drawing.Size(90, 28)
         Me.btnDay2.TabIndex = 39
         Me.btnDay2.Text = "Laupäev"
-        Me.btnDay2.UseVisualStyleBackColor = True
+        Me.btnDay2.UseVisualStyleBackColor = False
         '
         'btnDay3
         '
+        Me.btnDay3.BackColor = System.Drawing.Color.Transparent
+        Me.btnDay3.FlatAppearance.BorderSize = 0
+        Me.btnDay3.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnDay3.ForeColor = System.Drawing.Color.White
         Me.btnDay3.Location = New System.Drawing.Point(564, 94)
         Me.btnDay3.Margin = New System.Windows.Forms.Padding(4)
         Me.btnDay3.Name = "btnDay3"
         Me.btnDay3.Size = New System.Drawing.Size(90, 28)
         Me.btnDay3.TabIndex = 40
         Me.btnDay3.Text = "Pühapäev"
-        Me.btnDay3.UseVisualStyleBackColor = True
+        Me.btnDay3.UseVisualStyleBackColor = False
         '
         'Timer1
         '
@@ -212,18 +254,23 @@ Partial Class UTimeTable
         '
         'btnDisplayLines
         '
+        Me.btnDisplayLines.BackColor = System.Drawing.Color.Transparent
+        Me.btnDisplayLines.FlatAppearance.BorderSize = 0
+        Me.btnDisplayLines.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnDisplayLines.ForeColor = System.Drawing.Color.White
         Me.btnDisplayLines.Location = New System.Drawing.Point(4, 550)
         Me.btnDisplayLines.Margin = New System.Windows.Forms.Padding(4)
         Me.btnDisplayLines.Name = "btnDisplayLines"
         Me.btnDisplayLines.Size = New System.Drawing.Size(133, 28)
         Me.btnDisplayLines.TabIndex = 41
         Me.btnDisplayLines.Text = "Kuva liin kaardil"
-        Me.btnDisplayLines.UseVisualStyleBackColor = True
+        Me.btnDisplayLines.UseVisualStyleBackColor = False
         '
         'UTimeTable
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer))
         Me.Controls.Add(Me.btnDisplayLines)
         Me.Controls.Add(Me.btnDay3)
         Me.Controls.Add(Me.btnDay2)

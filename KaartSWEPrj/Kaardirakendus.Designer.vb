@@ -31,9 +31,10 @@ Partial Class Kaardirakendus
         '
         'tblLayoutMain
         '
+        Me.tblLayoutMain.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
         Me.tblLayoutMain.ColumnCount = 2
         Me.tblLayoutMain.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.tblLayoutMain.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 505.0!))
+        Me.tblLayoutMain.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 590.0!))
         Me.tblLayoutMain.Controls.Add(Me.UTimeTable1, 1, 0)
         Me.tblLayoutMain.Controls.Add(Me.UCtrlMapViewer1, 0, 0)
         Me.tblLayoutMain.Dock = System.Windows.Forms.DockStyle.Fill
@@ -41,7 +42,7 @@ Partial Class Kaardirakendus
         Me.tblLayoutMain.Name = "tblLayoutMain"
         Me.tblLayoutMain.RowCount = 1
         Me.tblLayoutMain.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.tblLayoutMain.Size = New System.Drawing.Size(1282, 753)
+        Me.tblLayoutMain.Size = New System.Drawing.Size(1382, 753)
         Me.tblLayoutMain.TabIndex = 25
         '
         'UTimeTable1
@@ -49,11 +50,12 @@ Partial Class Kaardirakendus
         Me.UTimeTable1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.UTimeTable1.AutoSize = True
         Me.UTimeTable1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.UTimeTable1.Font = New System.Drawing.Font("Segoe UI", 8.0!)
+        Me.UTimeTable1.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.UTimeTable1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.UTimeTable1.Location = New System.Drawing.Point(796, 3)
         Me.UTimeTable1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.UTimeTable1.Name = "UTimeTable1"
-        Me.UTimeTable1.Size = New System.Drawing.Size(482, 473)
+        Me.UTimeTable1.Size = New System.Drawing.Size(582, 728)
         Me.UTimeTable1.TabIndex = 27
         '
         'UCtrlMapViewer1
@@ -70,9 +72,10 @@ Partial Class Kaardirakendus
         '
         'Kaardirakendus
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1282, 753)
+        Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer))
+        Me.ClientSize = New System.Drawing.Size(1382, 753)
         Me.Controls.Add(Me.tblLayoutMain)
         Me.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)

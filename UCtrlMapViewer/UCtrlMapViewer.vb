@@ -198,44 +198,43 @@ Public Class UCtrlMapViewer
     End Sub
 
     Private Sub lblStopPopup_Paint(sender As Object, e As PaintEventArgs) Handles lblStopPopup.Paint
-        Dim pen As New Pen(Color.Snow)
-        e.Graphics.DrawLine(pen, New Point(0, lblStopPopup.Height - 2), New Point(lblStopPopup.Width, lblStopPopup.Height - 2))
+        Dim pen As New Pen(Color.Gray)
+        e.Graphics.DrawLine(pen, New Point(0, lblStopPopup.Height - 1), New Point(lblStopPopup.Width, lblStopPopup.Height - 1))
     End Sub
     Private Sub btnZoomIn_Paint(sender As Object, e As PaintEventArgs) Handles btnZoomIn.Paint
-        ' Draw background gradient
-        If btnZoomIn.ClientRectangle.Contains(btnZoomIn.PointToClient(Control.MousePosition)) Then
-            e.Graphics.FillRectangle(SystemBrushes.Control, btnZoomIn.ClientRectangle)
-        Else
-            Dim rect As Rectangle = New Rectangle(0, 0, btnZoomIn.Width, btnZoomIn.Height)
-            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
-            e.Graphics.FillRectangle(brush, rect)
-        End If
-
         Dim text As String = "+"
         Dim font As New Font("Segoe UI", 32, FontStyle.Bold)
         Dim textSize As SizeF = e.Graphics.MeasureString(text, font)
         Dim textX As Single = (btnZoomIn.Width - textSize.Width) / 2
         Dim textY As Single = (btnZoomIn.Height - textSize.Height / 1.05)
-        e.Graphics.DrawString(text, font, Brushes.Snow, textX, textY)
+        If btnZoomIn.ClientRectangle.Contains(btnZoomIn.PointToClient(Control.MousePosition)) Then
+            e.Graphics.FillRectangle(SystemBrushes.Control, btnZoomIn.ClientRectangle)
+            e.Graphics.DrawString(text, font, Brushes.Black, textX, textY)
+        Else
+            Dim rect As Rectangle = New Rectangle(0, 0, btnZoomIn.Width, btnZoomIn.Height)
+            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, rect)
+            e.Graphics.DrawString(text, font, Brushes.Snow, textX, textY)
+        End If
     End Sub
 
     Private Sub btnZoomOut_Paint(sender As Object, e As PaintEventArgs) Handles btnZoomOut.Paint
-        ' Draw background gradient
-        If btnZoomOut.ClientRectangle.Contains(btnZoomOut.PointToClient(Control.MousePosition)) Then
-            e.Graphics.FillRectangle(SystemBrushes.Control, btnZoomOut.ClientRectangle)
-        Else
-            Dim rect As Rectangle = New Rectangle(0, 0, btnZoomOut.Width, btnZoomOut.Height)
-            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
-            e.Graphics.FillRectangle(brush, rect)
-        End If
-
         ' Draw centered text
         Dim text As String = ChrW(&H2212)
         Dim font As New Font("Segoe UI", 32, FontStyle.Bold)
         Dim textSize As SizeF = e.Graphics.MeasureString(text, font)
         Dim textX As Single = (btnZoomIn.Width - textSize.Width) / 2
         Dim textY As Single = (btnZoomIn.Height - textSize.Height / 1.05)
-        e.Graphics.DrawString(text, font, Brushes.Snow, textX, textY)
+        If btnZoomOut.ClientRectangle.Contains(btnZoomOut.PointToClient(Control.MousePosition)) Then
+            e.Graphics.FillRectangle(SystemBrushes.Control, btnZoomOut.ClientRectangle)
+            e.Graphics.DrawString(text, font, Brushes.Black, textX, textY)
+        Else
+            Dim rect As Rectangle = New Rectangle(0, 0, btnZoomOut.Width, btnZoomOut.Height)
+            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, rect)
+            e.Graphics.DrawString(text, font, Brushes.Snow, textX, textY)
+        End If
+
     End Sub
 
     Private Sub btnNearestStopStart_Paint(sender As Object, e As PaintEventArgs) Handles btnNearestStopStart.Paint
@@ -285,14 +284,6 @@ Public Class UCtrlMapViewer
     End Sub
 
     Private Sub btnRoute_Paint(sender As Object, e As PaintEventArgs) Handles btnRoute.Paint
-        ' Draw background gradient
-        If btnRoute.ClientRectangle.Contains(btnRoute.PointToClient(Control.MousePosition)) AndAlso btnRoute.Enabled = True Then
-            e.Graphics.FillRectangle(SystemBrushes.Control, btnRoute.ClientRectangle)
-        Else
-            Dim rect As Rectangle = New Rectangle(0, 0, btnRoute.Width, btnRoute.Height)
-            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
-            e.Graphics.FillRectangle(brush, rect)
-        End If
         ' Draw centered text
         Dim text As String = "Mine"
         Dim font As New Font("Segoe UI", 10)
@@ -301,24 +292,28 @@ Public Class UCtrlMapViewer
         Dim format As New StringFormat()
         format.Alignment = StringAlignment.Center
         format.LineAlignment = StringAlignment.Center
+        ' Draw background gradient
 
-        If btnRoute.Enabled = True Then
-            e.Graphics.DrawString(text, font, Brushes.Snow, textRect, format)
+        If btnRoute.ClientRectangle.Contains(btnRoute.PointToClient(Control.MousePosition)) AndAlso btnRoute.Enabled = True Then
+            e.Graphics.FillRectangle(SystemBrushes.Control, btnRoute.ClientRectangle)
+            If btnRoute.Enabled = True Then
+                e.Graphics.DrawString(text, font, Brushes.Black, textRect, format)
+            Else
+                e.Graphics.DrawString(text, font, Brushes.Gray, textRect, format)
+            End If
         Else
-            e.Graphics.DrawString(text, font, Brushes.Gray, textRect, format)
+            Dim rect As Rectangle = New Rectangle(0, 0, btnRoute.Width, btnRoute.Height)
+            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, rect)
+            If btnRoute.Enabled = True Then
+                e.Graphics.DrawString(text, font, Brushes.Snow, textRect, format)
+            Else
+                e.Graphics.DrawString(text, font, Brushes.Gray, textRect, format)
+            End If
         End If
     End Sub
 
     Private Sub btnClear_Paint(sender As Object, e As PaintEventArgs) Handles btnClear.Paint
-        ' Draw background gradient
-        If btnClear.ClientRectangle.Contains(btnClear.PointToClient(Control.MousePosition)) AndAlso btnClear.Enabled = True Then
-            e.Graphics.FillRectangle(SystemBrushes.Control, btnClear.ClientRectangle)
-        Else
-            Dim rect As Rectangle = New Rectangle(0, 0, btnClear.Width, btnClear.Height)
-            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
-            e.Graphics.FillRectangle(brush, rect)
-        End If
-        ' Draw centered text
         Dim text As String = "Tühjenda"
         Dim font As New Font("Segoe UI", 10)
         Dim textSize As SizeF = e.Graphics.MeasureString(text, font)
@@ -327,12 +322,23 @@ Public Class UCtrlMapViewer
         Dim format As New StringFormat()
         format.Alignment = StringAlignment.Center
         format.LineAlignment = StringAlignment.Center
-        If btnClear.Enabled = True Then
-            e.Graphics.DrawString(text, font, Brushes.Snow, textRect, format)
+        If btnClear.ClientRectangle.Contains(btnClear.PointToClient(Control.MousePosition)) AndAlso btnClear.Enabled = True Then
+            e.Graphics.FillRectangle(SystemBrushes.Control, btnClear.ClientRectangle)
+            If btnClear.Enabled = True Then
+                e.Graphics.DrawString(text, font, Brushes.Black, textRect, format)
+            Else
+                e.Graphics.DrawString(text, font, Brushes.Gray, textRect, format)
+            End If
         Else
-            e.Graphics.DrawString(text, font, Brushes.Gray, textRect, format)
+            Dim rect As Rectangle = New Rectangle(0, 0, btnClear.Width, btnClear.Height)
+            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, rect)
+            If btnClear.Enabled = True Then
+                e.Graphics.DrawString(text, font, Brushes.Snow, textRect, format)
+            Else
+                e.Graphics.DrawString(text, font, Brushes.Gray, textRect, format)
+            End If
         End If
-
     End Sub
     Private Sub panelLayers_Paint(sender As Object, e As PaintEventArgs) Handles panelLayers.Paint
         Dim g As Graphics = e.Graphics
@@ -372,6 +378,23 @@ Public Class UCtrlMapViewer
 
     Private Sub btnNearestStopDest_MouseLeave(sender As Object, e As EventArgs) Handles btnNearestStopDest.MouseLeave
         toolTipNearestStop.Hide(btnNearestStopDest)
+    End Sub
+    Private Sub btnZoomIn_MouseHover(sender As Object, e As EventArgs) Handles btnZoomIn.MouseHover
+        toolTipNearestStop.Show("Suumi sisse", btnZoomIn, btnZoomIn.Width + 3, 6)
+        btnZoomIn.Invalidate()
+    End Sub
+
+    Private Sub btnZoomOut_MouseLeave(sender As Object, e As EventArgs) Handles btnZoomOut.MouseLeave
+        toolTipNearestStop.Hide(btnZoomIn)
+    End Sub
+
+    Private Sub btnZoomOut_MouseHover(sender As Object, e As EventArgs) Handles btnZoomOut.MouseHover
+        toolTipNearestStop.Show("Suumi välja", btnZoomOut, btnZoomOut.Width + 3, 6)
+        btnZoomOut.Invalidate()
+    End Sub
+
+    Private Sub btnZoomIn_MouseLeave(sender As Object, e As EventArgs) Handles btnZoomIn.MouseLeave
+        toolTipNearestStop.Hide(btnZoomIn)
     End Sub
 
     Private Sub btnOptimize_MouseHover(sender As Object, e As EventArgs) Handles btnOptimize.MouseHover
@@ -434,6 +457,7 @@ Public Class UCtrlMapViewer
             Next
             Dim closestMarker As GMarkerGoogle = Nothing
             Dim closestDistance As Double = Double.MaxValue
+            stopsOverlay = getStopsSQL(drawMarker("Orange", 9))
             For Each marker As GMarkerGoogle In stopsOverlay.Markers
                 Dim position As PointLatLng = marker.Position
                 Dim tooltipText As String = marker.ToolTipText
@@ -446,8 +470,15 @@ Public Class UCtrlMapViewer
             If closestMarker IsNot Nothing Then
                 closestMarker.ToolTipMode = MarkerTooltipMode.Always
             End If
-            gMap1.UpdateMarkerLocalPosition(closestMarker)
-            gMap1.Refresh()
+            If cbStops.Checked Then
+                gMap1.UpdateMarkerLocalPosition(closestMarker)
+                gMap1.Refresh()
+            Else
+                stopsOverlay.Clear()
+                stopsOverlay.Markers.Add(closestMarker)
+                gMap1.UpdateMarkerLocalPosition(closestMarker)
+                gMap1.Refresh()
+            End If
         End If
         btnNearestStopStart.Enabled = False
         If lblDest.Text <> "" Then
@@ -461,6 +492,7 @@ Public Class UCtrlMapViewer
             Next
             Dim closestMarker As GMarkerGoogle = Nothing
             Dim closestDistance As Double = Double.MaxValue
+            stopsOverlay = getStopsSQL(drawMarker("Orange", 9))
             For Each marker As GMarkerGoogle In stopsOverlay.Markers
                 Dim position As PointLatLng = marker.Position
                 Dim tooltipText As String = marker.ToolTipText
@@ -748,7 +780,9 @@ Public Class UCtrlMapViewer
 
     'This method is for displaying the route for a selected line on the map
     Public Sub DisplayShapes(ByVal routePoints As List(Of StopStruct), ByVal routeStops As List(Of StopStruct))
-        routesOverlay.Clear()
+        gMap1.Overlays.Clear()
+        lblStart.Text = ""
+        lblDest.Text = ""
         cbStops.Checked = False
         Dim Route As New WindowsForms.GMapRoute(New List(Of PointLatLng), "My Route")
         For Each point As StopStruct In routePoints

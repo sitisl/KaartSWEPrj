@@ -189,22 +189,7 @@
     <None Include="img\dist_icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="img\time_icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="img\time2_icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="img\time0_icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="img\time3_icon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="img\hourglass_icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="img\hourglass2_icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
