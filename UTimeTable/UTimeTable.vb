@@ -822,4 +822,32 @@ Public Class UTimeTable
         End Using
     End Sub
 
+    Private Sub panelRtbAjad_Paint(sender As Object, e As PaintEventArgs) Handles panelRtbAjad.Paint
+        ' Draw custom border
+        Using pen As New Pen(Color.Black, 1)
+            e.Graphics.DrawRectangle(pen, 0, 0, panelRtbAjad.Width - 1, panelRtbAjad.Height - 1)
+        End Using
+    End Sub
+
+    Private Sub panelLboxRealtime_Paint(sender As Object, e As PaintEventArgs) Handles panelLboxRealtime.Paint
+        ' Draw custom border
+        Using pen As New Pen(Color.Black, 1)
+            e.Graphics.DrawRectangle(pen, 0, 0, panelLboxRealtime.Width - 1, panelLboxRealtime.Height - 1)
+        End Using
+    End Sub
+
+    Private Sub panelLBoxPeatused_Paint(sender As Object, e As PaintEventArgs) Handles panelLBoxPeatused.Paint
+        ' Draw custom border
+        Using pen As New Pen(Color.Black, 1)
+            e.Graphics.DrawRectangle(pen, 0, 0, panelLBoxPeatused.Width - 1, panelLBoxPeatused.Height - 1)
+        End Using
+    End Sub
+
+    Private Sub panelLBoxLiinid_Paint(sender As Object, e As PaintEventArgs) Handles panelLBoxLiinid.Paint
+        ' Draw custom border
+        Using pen As New Pen(Color.Black, 1)
+            e.Graphics.DrawRectangle(pen, 0, 0, panelLBoxLiinid.Width - 1, panelLBoxLiinid.Height - 1)
+        End Using
+    End Sub
+
 End Class

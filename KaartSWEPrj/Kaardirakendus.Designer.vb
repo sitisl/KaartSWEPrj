@@ -34,7 +34,7 @@ Partial Class Kaardirakendus
         Me.tblLayoutMain.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
         Me.tblLayoutMain.ColumnCount = 2
         Me.tblLayoutMain.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.tblLayoutMain.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 590.0!))
+        Me.tblLayoutMain.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 585.0!))
         Me.tblLayoutMain.Controls.Add(Me.UTimeTable1, 1, 0)
         Me.tblLayoutMain.Controls.Add(Me.UCtrlMapViewer1, 0, 0)
         Me.tblLayoutMain.Dock = System.Windows.Forms.DockStyle.Fill
@@ -52,10 +52,10 @@ Partial Class Kaardirakendus
         Me.UTimeTable1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.UTimeTable1.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
         Me.UTimeTable1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
-        Me.UTimeTable1.Location = New System.Drawing.Point(796, 3)
+        Me.UTimeTable1.Location = New System.Drawing.Point(801, 3)
         Me.UTimeTable1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.UTimeTable1.Name = "UTimeTable1"
-        Me.UTimeTable1.Size = New System.Drawing.Size(582, 728)
+        Me.UTimeTable1.Size = New System.Drawing.Size(577, 728)
         Me.UTimeTable1.TabIndex = 27
         '
         'UCtrlMapViewer1
@@ -67,7 +67,7 @@ Partial Class Kaardirakendus
         Me.UCtrlMapViewer1.Location = New System.Drawing.Point(4, 5)
         Me.UCtrlMapViewer1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.UCtrlMapViewer1.Name = "UCtrlMapViewer1"
-        Me.UCtrlMapViewer1.Size = New System.Drawing.Size(784, 743)
+        Me.UCtrlMapViewer1.Size = New System.Drawing.Size(789, 743)
         Me.UCtrlMapViewer1.TabIndex = 28
         '
         'Kaardirakendus
