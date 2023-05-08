@@ -28,6 +28,9 @@ Partial Class Kaardirakendus
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.UTimeTable1 = New UTimeTable.UTimeTable()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.btnSave = New System.Windows.Forms.Button()
+        Me.lblInfo = New System.Windows.Forms.Label()
+        Me.cbAppend = New System.Windows.Forms.CheckBox()
         Me.tbDelimiter = New System.Windows.Forms.TextBox()
         Me.lblFilePathText = New System.Windows.Forms.Label()
         Me.LblFileName = New System.Windows.Forms.Label()
@@ -35,10 +38,8 @@ Partial Class Kaardirakendus
         Me.lblFileNameText = New System.Windows.Forms.Label()
         Me.cbSaveType = New System.Windows.Forms.CheckBox()
         Me.tbQualifier = New System.Windows.Forms.TextBox()
-        Me.btnSave = New System.Windows.Forms.Button()
         Me.lblQualifier = New System.Windows.Forms.Label()
         Me.lblDelimiter = New System.Windows.Forms.Label()
-        Me.cbAppend = New System.Windows.Forms.CheckBox()
         Me.tblLayoutMain.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -101,6 +102,8 @@ Partial Class Kaardirakendus
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.btnSave)
+        Me.Panel1.Controls.Add(Me.lblInfo)
         Me.Panel1.Controls.Add(Me.cbAppend)
         Me.Panel1.Controls.Add(Me.tbDelimiter)
         Me.Panel1.Controls.Add(Me.lblFilePathText)
@@ -109,7 +112,6 @@ Partial Class Kaardirakendus
         Me.Panel1.Controls.Add(Me.lblFileNameText)
         Me.Panel1.Controls.Add(Me.cbSaveType)
         Me.Panel1.Controls.Add(Me.tbQualifier)
-        Me.Panel1.Controls.Add(Me.btnSave)
         Me.Panel1.Controls.Add(Me.lblQualifier)
         Me.Panel1.Controls.Add(Me.lblDelimiter)
         Me.Panel1.ForeColor = System.Drawing.SystemColors.Window
@@ -118,10 +120,43 @@ Partial Class Kaardirakendus
         Me.Panel1.Size = New System.Drawing.Size(573, 181)
         Me.Panel1.TabIndex = 29
         '
+        'btnSave
+        '
+        Me.btnSave.BackColor = System.Drawing.Color.Transparent
+        Me.btnSave.FlatAppearance.BorderSize = 0
+        Me.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnSave.ForeColor = System.Drawing.Color.White
+        Me.btnSave.Location = New System.Drawing.Point(11, 113)
+        Me.btnSave.Name = "btnSave"
+        Me.btnSave.Size = New System.Drawing.Size(197, 23)
+        Me.btnSave.TabIndex = 22
+        Me.btnSave.Text = "Salvesta"
+        Me.btnSave.UseVisualStyleBackColor = False
+        '
+        'lblInfo
+        '
+        Me.lblInfo.AutoSize = True
+        Me.lblInfo.Location = New System.Drawing.Point(8, 7)
+        Me.lblInfo.Name = "lblInfo"
+        Me.lblInfo.Size = New System.Drawing.Size(173, 15)
+        Me.lblInfo.TabIndex = 15
+        Me.lblInfo.Text = "Peatuste andmete salvestamine"
+        '
+        'cbAppend
+        '
+        Me.cbAppend.AutoSize = True
+        Me.cbAppend.ForeColor = System.Drawing.SystemColors.Info
+        Me.cbAppend.Location = New System.Drawing.Point(134, 88)
+        Me.cbAppend.Name = "cbAppend"
+        Me.cbAppend.Size = New System.Drawing.Size(80, 19)
+        Me.cbAppend.TabIndex = 14
+        Me.cbAppend.Text = "Lisa lõppu"
+        Me.cbAppend.UseVisualStyleBackColor = True
+        '
         'tbDelimiter
         '
         Me.tbDelimiter.BackColor = System.Drawing.Color.White
-        Me.tbDelimiter.Location = New System.Drawing.Point(120, 4)
+        Me.tbDelimiter.Location = New System.Drawing.Point(120, 25)
         Me.tbDelimiter.Name = "tbDelimiter"
         Me.tbDelimiter.Size = New System.Drawing.Size(88, 23)
         Me.tbDelimiter.TabIndex = 13
@@ -130,7 +165,7 @@ Partial Class Kaardirakendus
         '
         Me.lblFilePathText.AutoSize = True
         Me.lblFilePathText.ForeColor = System.Drawing.SystemColors.Window
-        Me.lblFilePathText.Location = New System.Drawing.Point(11, 137)
+        Me.lblFilePathText.Location = New System.Drawing.Point(11, 158)
         Me.lblFilePathText.Name = "lblFilePathText"
         Me.lblFilePathText.Size = New System.Drawing.Size(76, 15)
         Me.lblFilePathText.TabIndex = 12
@@ -141,7 +176,7 @@ Partial Class Kaardirakendus
         '
         Me.LblFileName.AutoSize = True
         Me.LblFileName.ForeColor = System.Drawing.SystemColors.Window
-        Me.LblFileName.Location = New System.Drawing.Point(90, 122)
+        Me.LblFileName.Location = New System.Drawing.Point(90, 143)
         Me.LblFileName.Name = "LblFileName"
         Me.LblFileName.Size = New System.Drawing.Size(0, 15)
         Me.LblFileName.TabIndex = 11
@@ -150,7 +185,7 @@ Partial Class Kaardirakendus
         '
         Me.lblFilePath.AutoSize = True
         Me.lblFilePath.ForeColor = System.Drawing.SystemColors.Window
-        Me.lblFilePath.Location = New System.Drawing.Point(90, 137)
+        Me.lblFilePath.Location = New System.Drawing.Point(90, 158)
         Me.lblFilePath.Name = "lblFilePath"
         Me.lblFilePath.Size = New System.Drawing.Size(0, 15)
         Me.lblFilePath.TabIndex = 10
@@ -159,7 +194,7 @@ Partial Class Kaardirakendus
         '
         Me.lblFileNameText.AutoSize = True
         Me.lblFileNameText.ForeColor = System.Drawing.SystemColors.Window
-        Me.lblFileNameText.Location = New System.Drawing.Point(11, 122)
+        Me.lblFileNameText.Location = New System.Drawing.Point(11, 143)
         Me.lblFileNameText.Name = "lblFileNameText"
         Me.lblFileNameText.Size = New System.Drawing.Size(58, 15)
         Me.lblFileNameText.TabIndex = 9
@@ -170,7 +205,7 @@ Partial Class Kaardirakendus
         '
         Me.cbSaveType.AutoSize = True
         Me.cbSaveType.ForeColor = System.Drawing.SystemColors.Info
-        Me.cbSaveType.Location = New System.Drawing.Point(11, 67)
+        Me.cbSaveType.Location = New System.Drawing.Point(11, 88)
         Me.cbSaveType.Name = "cbSaveType"
         Me.cbSaveType.Size = New System.Drawing.Size(120, 19)
         Me.cbSaveType.TabIndex = 8
@@ -179,26 +214,16 @@ Partial Class Kaardirakendus
         '
         'tbQualifier
         '
-        Me.tbQualifier.Location = New System.Drawing.Point(120, 31)
+        Me.tbQualifier.Location = New System.Drawing.Point(120, 52)
         Me.tbQualifier.Name = "tbQualifier"
         Me.tbQualifier.Size = New System.Drawing.Size(88, 23)
         Me.tbQualifier.TabIndex = 7
-        '
-        'btnSave
-        '
-        Me.btnSave.ForeColor = System.Drawing.SystemColors.Desktop
-        Me.btnSave.Location = New System.Drawing.Point(11, 92)
-        Me.btnSave.Name = "btnSave"
-        Me.btnSave.Size = New System.Drawing.Size(197, 23)
-        Me.btnSave.TabIndex = 6
-        Me.btnSave.Text = "Save "
-        Me.btnSave.UseVisualStyleBackColor = True
         '
         'lblQualifier
         '
         Me.lblQualifier.AutoSize = True
         Me.lblQualifier.ForeColor = System.Drawing.Color.Snow
-        Me.lblQualifier.Location = New System.Drawing.Point(8, 39)
+        Me.lblQualifier.Location = New System.Drawing.Point(8, 60)
         Me.lblQualifier.Name = "lblQualifier"
         Me.lblQualifier.Size = New System.Drawing.Size(106, 15)
         Me.lblQualifier.TabIndex = 4
@@ -208,22 +233,11 @@ Partial Class Kaardirakendus
         '
         Me.lblDelimiter.AutoSize = True
         Me.lblDelimiter.ForeColor = System.Drawing.Color.Snow
-        Me.lblDelimiter.Location = New System.Drawing.Point(8, 12)
+        Me.lblDelimiter.Location = New System.Drawing.Point(8, 33)
         Me.lblDelimiter.Name = "lblDelimiter"
         Me.lblDelimiter.Size = New System.Drawing.Size(91, 15)
         Me.lblDelimiter.TabIndex = 2
         Me.lblDelimiter.Text = "Väljade eraldaja:"
-        '
-        'cbAppend
-        '
-        Me.cbAppend.AutoSize = True
-        Me.cbAppend.ForeColor = System.Drawing.SystemColors.Info
-        Me.cbAppend.Location = New System.Drawing.Point(134, 67)
-        Me.cbAppend.Name = "cbAppend"
-        Me.cbAppend.Size = New System.Drawing.Size(80, 19)
-        Me.cbAppend.TabIndex = 14
-        Me.cbAppend.Text = "Lisa lõppu"
-        Me.cbAppend.UseVisualStyleBackColor = True
         '
         'Kaardirakendus
         '
@@ -254,7 +268,6 @@ Partial Class Kaardirakendus
     Friend WithEvents lblDelimiter As Label
     Friend WithEvents cbSaveType As CheckBox
     Friend WithEvents tbQualifier As TextBox
-    Friend WithEvents btnSave As Button
     Friend WithEvents lblQualifier As Label
     Friend WithEvents lblFilePathText As Label
     Friend WithEvents LblFileName As Label
@@ -262,4 +275,6 @@ Partial Class Kaardirakendus
     Friend WithEvents lblFileNameText As Label
     Friend WithEvents tbDelimiter As TextBox
     Friend WithEvents cbAppend As CheckBox
+    Friend WithEvents lblInfo As Label
+    Friend WithEvents btnSave As Button
 End Class

@@ -379,6 +379,8 @@ Public Class UTimeTable
         lBoxLiinid.Items.Clear()
         lBoxPeatused.Items.Clear()
         lBoxRealTime.Items.Clear()
+        btnBA.Font = New Font(btnBA.Font, FontStyle.Regular)
+        btnAB.Font = New Font(btnAB.Font, FontStyle.Regular)
         SelectedStop = Nothing
         SelectedLine = Nothing
         Suund = Nothing
@@ -388,6 +390,7 @@ Public Class UTimeTable
         btnBA.Text = Nothing
         btnAB.Enabled = False
         btnBA.Enabled = False
+        lblAbi.Visible = False
         LoadLines()
     End Sub
 
@@ -395,6 +398,8 @@ Public Class UTimeTable
         lBoxLiinid.Items.Clear()
         lBoxPeatused.Items.Clear()
         lBoxRealTime.Items.Clear()
+        btnBA.Font = New Font(btnBA.Font, FontStyle.Regular)
+        btnAB.Font = New Font(btnAB.Font, FontStyle.Regular)
         SelectedStop = Nothing
         SelectedLine = Nothing
         Suund = Nothing
@@ -404,6 +409,7 @@ Public Class UTimeTable
         btnBA.Text = Nothing
         btnAB.Enabled = False
         btnBA.Enabled = False
+        lblAbi.Visible = False
         LoadLineStops()
     End Sub
 
@@ -414,13 +420,14 @@ Public Class UTimeTable
         btnAB.Font = New Font(btnAB.Font, FontStyle.Bold)
         btnBA.Font = New Font(btnBA.Font, FontStyle.Regular)
         rtbAjad.Clear()
+        lblAbi.Visible = False
         lBoxRealTime.Items.Clear()
+        lBoxPeatused.Items.Clear()
         Suund = "A>B"
         LoadLineStops()
         lBoxPeatused.SelectedIndex = 0
         btnDisplayLines.Enabled = True
         RaiseEvent ClearShapes()
-        'LoadShapes()
     End Sub
 
     Private Sub btnBA_Click(sender As Object, e As EventArgs) Handles btnBA.Click
@@ -430,22 +437,28 @@ Public Class UTimeTable
         btnAB.Font = New Font(btnAB.Font, FontStyle.Regular)
         btnBA.Font = New Font(btnBA.Font, FontStyle.Bold)
         rtbAjad.Clear()
+        lblAbi.Visible = False
         lBoxRealTime.Items.Clear()
+        lBoxPeatused.Items.Clear()
         Suund = "B>A"
         LoadLineStops()
         lBoxPeatused.SelectedIndex = 0
         btnDisplayLines.Enabled = True
         RaiseEvent ClearShapes()
-        'LoadShapes()
     End Sub
 
     Private Sub lBoxLiinid_SelectedValueChanged(sender As Object, e As EventArgs) Handles lBoxLiinid.SelectedValueChanged
         If lBoxLiinid.SelectedItem IsNot Nothing Then
             lBoxPeatused.Items.Clear()
             lBoxRealTime.Items.Clear()
+            btnBA.Font = New Font(btnBA.Font, FontStyle.Regular)
+            btnAB.Font = New Font(btnAB.Font, FontStyle.Regular)
             SelectedStop = Nothing
             Suund = Nothing
             rtbAjad.Clear()
+            RaiseEvent ClearShapes()
+            lblAbi.Visible = False
+            btnDisplayLines.Enabled = False
             SelectedLine = lBoxLiinid.SelectedItem
             LoadLineSuund()
             btnAB.Enabled = True
@@ -460,6 +473,7 @@ Public Class UTimeTable
             SelectedStop = lBoxPeatused.SelectedItem
         End If
         rtbAjad.Clear()
+        lblAbi.Visible = False
         lBoxRealTime.Items.Clear()
         If String.IsNullOrEmpty(lBoxLiinid.Text) Then
             SelectedLine = Nothing
