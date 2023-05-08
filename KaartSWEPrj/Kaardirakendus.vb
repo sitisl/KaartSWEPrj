@@ -1,9 +1,6 @@
 ﻿Imports GMap.NET.WindowsForms
-Imports GMap.NET.WindowsForms.Markers
-Imports System.IO
-Imports System.Net
-Imports UTimeTable.UTimeTable
 Imports PrjTransitRouteInfo.URouteInfo
+Imports StopStruct = UTimeTable.ITimeTable.StopStruct
 
 Public Class Kaardirakendus
 
@@ -13,9 +10,6 @@ Public Class Kaardirakendus
     Private Sub Kaardirakendus_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         UCtrlMapViewer1.initMap()
         URouteInfo1.Visible = False
-        'UCtrlMapViewer.Invalidate()
-        'UTimeTable1.Invalidate()
-        'InitChromeDriverIfNeeded()
     End Sub
 
     Private Sub Kaardirakendus_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing

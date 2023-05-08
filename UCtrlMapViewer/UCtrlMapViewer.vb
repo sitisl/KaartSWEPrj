@@ -1,39 +1,23 @@
 ﻿Imports System.Drawing.Drawing2D
-Imports System.Drawing.Imaging
 Imports System.Globalization
 Imports System.IO
 Imports System.Net
-Imports System.Windows.Forms.VisualStyles
 Imports GMap.NET
 Imports GMap.NET.MapProviders
 Imports GMap.NET.WindowsForms
 Imports GMap.NET.WindowsForms.Markers
-Imports System.Data.SQLite
-Imports System.Data.SqlClient
-Imports UTimeTable.UTimeTable
-Imports System.Windows
 Imports PrjRealTime
 Imports PrjRealTime.CRealTime
-Imports System.Windows.Forms.VisualStyles.VisualStyleElement
-Imports System.Reflection.Emit
 Imports Newtonsoft.Json.Linq
 Imports System.Text.RegularExpressions
-Imports System.Runtime.InteropServices
-Imports System.Reflection
-Imports Newtonsoft.Json
-Imports System.Net.Http
-Imports HtmlAgilityPack
-Imports System.Xml
-Imports System.Security.Authentication.ExtendedProtection
-Imports System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar
 Imports PrjTransitRouteInfo.URouteInfo
-Imports PrjTransitRouteInfo
-Imports TheArtOfDev.HtmlRenderer.Adapters
-Imports System
+Imports StopStruct = UTimeTable.ITimeTable.StopStruct
+Imports TransportStruct = UTimeTable.ITimeTable.TransportStruct
+
 ' This class realizes the functionality of the map viewer graphic component
 Public Class UCtrlMapViewer
 
-    '----------Class properties and globals-------------
+    '----------Class variables and globals-------------
 
     'Flag for checking the btnOptimize state
     Private optimizeByDist As Boolean = False
@@ -46,15 +30,14 @@ Public Class UCtrlMapViewer
     Private pointCoord As PointLatLng
     Private stopMarker As GMarkerGoogle
     'Key to access Bing Map provider routing
-    Private apiKey As String = "9uNDiiSRdZbV6ok9Ec5t~H2haoDb04SzxUDigaGoUfg~Ajj9p1O58cpXmy-Y-BbTNAF8M1Ws3HjoFHGWOaSgIYCucioMsIkP3BpBZGI3XtWr"
-    Public timeT As New UTimeTable.UTimeTable
+    Private Const apiKey As String = "9uNDiiSRdZbV6ok9Ec5t~H2haoDb04SzxUDigaGoUfg~Ajj9p1O58cpXmy-Y-BbTNAF8M1Ws3HjoFHGWOaSgIYCucioMsIkP3BpBZGI3XtWr"
+    Public timeT As UTimeTable.ITimeTable
     Private WithEvents transportTimer As New Timer()
     Private busesOverlay As New GMapOverlay("busesOverlay")
     Private stopsOverlay As New GMapOverlay("stopsOverlay")
     Private trolleysOverlay As New GMapOverlay("trolleysOverlay")
     Private tramsOverlay As New GMapOverlay("tramsOverlay")
     Private routesOverlay As New WindowsForms.GMapOverlay("RoutesOverlay")
-
 
     '---------------Load and init methods-------------------
     Private Sub UCtrlMapViewer_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -775,7 +758,8 @@ Public Class UCtrlMapViewer
     'All functions and methods that are not events
 
     'Gets stops from database and adds them to the map
-    Public Function getStopsSQL(ByRef markerBitmap As Bitmap)
+    Private Function getStopsSQL(ByRef markerBitmap As Bitmap)
+        Dim timeT As UTimeTable.ITimeTable = New UTimeTable.UTimeTable
         Dim stops As List(Of StopStruct) = timeT.GetStopsCoordinates()
         Dim marker As GMarkerGoogle
         For Each stop_el As StopStruct In stops
@@ -1093,7 +1077,7 @@ Public Class UCtrlMapViewer
 
     'This method gets the bus locations using realtime component and adds them to the map
     Public Function GetBuses(ByRef markerBitmap As Bitmap)
-        Dim realTime As New CRealTime
+        Dim realTime As UTimeTable.ITimeTable = New UTimeTable.UTimeTable
         Dim buses As List(Of TransportStruct) = realTime.GetRealTimeTransport("bus")
         Dim marker As GMarkerGoogle
         busesOverlay.Markers.Clear()
@@ -1112,7 +1096,7 @@ Public Class UCtrlMapViewer
 
     'This method gets the trams location and adds them to the map
     Public Function GetTrams(ByRef markerBitmap As Bitmap)
-        Dim realTime As New CRealTime
+        Dim realTime As UTimeTable.ITimeTable = New UTimeTable.UTimeTable
         Dim trams As List(Of TransportStruct) = realTime.GetRealTimeTransport("tram")
         Dim marker As GMarkerGoogle
         tramsOverlay.Markers.Clear()
@@ -1131,7 +1115,7 @@ Public Class UCtrlMapViewer
 
     'This method gets the trolleys location and adds them to the map
     Public Function GetTrolleys(ByRef markerBitmap As Bitmap)
-        Dim realTime As New CRealTime
+        Dim realTime As UTimeTable.ITimeTable = New UTimeTable.UTimeTable
         Dim trolleys As List(Of TransportStruct) = realTime.GetRealTimeTransport("trolley")
         Dim marker As GMarkerGoogle
         trolleysOverlay.Markers.Clear()

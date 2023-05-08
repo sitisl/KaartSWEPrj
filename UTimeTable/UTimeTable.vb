@@ -1,18 +1,13 @@
-﻿Imports System.Collections.ObjectModel
-Imports System.Data.Entity.Core
-Imports System.Data.SQLite
+﻿Imports System.Data.SQLite
 Imports System.Drawing.Drawing2D
 Imports System.Globalization
 Imports System.IO
 Imports System.Net
-Imports System.Reflection.Emit
-Imports System.Text
-Imports System.Windows
-Imports System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar
-Imports OpenQA.Selenium
-Imports OpenQA.Selenium.Chrome
+Imports StopStruct = UTimeTable.ITimeTable.StopStruct
+Imports TransportStruct = UTimeTable.ITimeTable.TransportStruct
 
 Public Class UTimeTable
+    Implements ITimeTable
 
     Dim SQLiteCon As SQLiteConnection
     Dim SQLiteCmd As SQLiteCommand
@@ -23,13 +18,6 @@ Public Class UTimeTable
     Public SelectedDay As String = "monday"
     Dim desktopPath As String = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)
     Dim dbFilePath As String = Path.Combine(desktopPath, "mapdb.db")
-
-    Public Structure StopStruct
-        Public Name As String
-        Public ID As Integer
-        Public Latitude As Double
-        Public Longitude As Double
-    End Structure
 
     Private Structure TimeStruct
         Dim Name As String
@@ -42,7 +30,57 @@ Public Class UTimeTable
         btnAB.Enabled = False
         btnBA.Enabled = False
     End Sub
-    Public Function GetStopsCoordinates() As List(Of StopStruct)
+
+    Public Function GetRealTimeTransport(type As String) As List(Of ITimeTable.TransportStruct) Implements ITimeTable.GetRealTimeTransport
+        Dim transport As New List(Of TransportStruct)
+        Dim url As String = "https://transport.tallinn.ee/gps.txt"
+
+        Try
+            Dim request As HttpWebRequest = CType(WebRequest.Create(url), HttpWebRequest)
+            request.Method = "GET"
+            Dim response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+
+            Using reader As New StreamReader(response.GetResponseStream())
+                While Not reader.EndOfStream
+                    Dim line As String = reader.ReadLine()
+                    Dim fields As String() = line.Split(",")
+                    If fields.Length >= 8 Then
+                        Dim t As New TransportStruct
+                        Select Case type
+                            Case "bus"
+                                If fields(0) = 2 Then
+                                    t.Number = fields(1)
+                                    t.Latitude = Double.Parse(fields(3), CultureInfo.InvariantCulture) / 1000000
+                                    t.Longitude = Double.Parse(fields(2), CultureInfo.InvariantCulture) / 1000000
+                                    transport.Add(t)
+                                End If
+                            Case "tram"
+                                If fields(0) = 3 Then
+                                    t.Number = fields(1)
+                                    t.Latitude = Double.Parse(fields(3), CultureInfo.InvariantCulture) / 1000000
+                                    t.Longitude = Double.Parse(fields(2), CultureInfo.InvariantCulture) / 1000000
+                                    transport.Add(t)
+                                End If
+                            Case "trolley"
+                                If fields(0) = 1 Then
+                                    t.Number = fields(1)
+                                    t.Latitude = Double.Parse(fields(3), CultureInfo.InvariantCulture) / 1000000
+                                    t.Longitude = Double.Parse(fields(2), CultureInfo.InvariantCulture) / 1000000
+                                    transport.Add(t)
+                                End If
+                        End Select
+                    End If
+                End While
+            End Using
+            response.Close()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+
+        Return transport
+    End Function
+
+    Public Function GetStopsCoordinates() As List(Of StopStruct) Implements ITimeTable.GetStopsCoordinates
         Dim query As String = "SELECT name, stop_id, lat, lon FROM stops;"
         Dim stops As New List(Of StopStruct)
 
@@ -50,7 +88,6 @@ Public Class UTimeTable
             MakeSqlConn()
             SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
             SQLiteReader = SQLiteCmd.ExecuteReader()
-
             While SQLiteReader.Read()
                 Dim s As New StopStruct
                 s.Name = SQLiteReader.GetString(0)
@@ -59,7 +96,6 @@ Public Class UTimeTable
                 s.Longitude = SQLiteReader.GetDouble(3)
                 stops.Add(s)
             End While
-
             SQLiteReader.Close()
             SQLiteCon.Close()
         Catch ex As Exception
@@ -68,7 +104,8 @@ Public Class UTimeTable
 
         Return stops
     End Function
-    Public Sub MakeSqlConn()
+
+    Public Sub MakeSqlConn() Implements ITimeTable.MakeSqlConn
         Try
             SQLiteCon = New SQLiteConnection($"Data Source={dbFilePath};Version=3;")
             SQLiteCon.Open()
@@ -77,7 +114,7 @@ Public Class UTimeTable
         End Try
     End Sub
 
-    Public Sub CloseConnections()
+    Public Sub CloseConnections() Implements ITimeTable.CloseConnections
         Try
             SQLiteCon.Close()
         Catch
@@ -241,9 +278,9 @@ Public Class UTimeTable
             MsgBox(ex.Message)
         End Try
         If closestTime IsNot Nothing Then
-            'MsgBox("Next closest arrival time is: " & closestTime & " " & tripID)
+            'MsgBox("Järgmine lähim väljumise aeg: " & closestTime & " " & tripID)
         Else
-            MsgBox("There are no more arrivals today.")
+            MsgBox("Täna ei ole rohkem väljumisi!")
         End If
         Return tripID
     End Function
@@ -783,12 +820,10 @@ Public Class UTimeTable
                 e.Graphics.DrawString(btnDay2.Text, btnDay2.Font, Brushes.Gray, textRect, format)
             End If
         End If
-
     End Sub
 
     Private Sub btnDay3_Paint(sender As Object, e As PaintEventArgs) Handles btnDay3.Paint
         Dim textSize As SizeF = e.Graphics.MeasureString(btnDay3.Text, btnDay3.Font)
-
         Dim textRect As New RectangleF(0, 0, btnDay3.Width, btnDay3.Height)
         Dim format As New StringFormat()
         format.Alignment = StringAlignment.Center
@@ -813,7 +848,6 @@ Public Class UTimeTable
                 e.Graphics.DrawString(btnDay3.Text, btnDay3.Font, Brushes.Gray, textRect, format)
             End If
         End If
-
     End Sub
     Private Sub lBoxLiinid_Paint(sender As Object, e As PaintEventArgs) Handles lBoxLiinid.Paint
         ' Draw custom border
