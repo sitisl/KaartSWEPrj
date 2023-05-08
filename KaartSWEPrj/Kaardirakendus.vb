@@ -41,6 +41,11 @@ Public Class Kaardirakendus
         URouteInfo1.ClearBrowser()
     End Sub
 
+    Private Sub HandleClearInfo() Handles UTimeTable1.ClearInfo
+        URouteInfo1.Visible = False
+        URouteInfo1.ClearBrowser()
+    End Sub
+
     Private Sub btnSaveStops_Paint(sender As Object, e As PaintEventArgs) Handles btnSaveStops.Paint
         Dim textSize As SizeF = e.Graphics.MeasureString(btnSaveStops.Text, btnSaveStops.Font)
 

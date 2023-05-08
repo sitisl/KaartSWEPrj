@@ -200,6 +200,7 @@ Public Class UTimeTable
 
     Public Event ShapesReady(ByVal routepoints As List(Of StopStruct), ByVal routestops As List(Of StopStruct))
     Public Event ClearShapes()
+    Public Event ClearInfo()
 
     Private Function GetCurrentTimeTripID()
         Dim tempStop As String
@@ -555,7 +556,7 @@ Public Class UTimeTable
     End Sub
 
     Private Sub btnDisplayLines_Click(sender As Object, e As EventArgs) Handles btnDisplayLines.Click
-
+        RaiseEvent ClearInfo()
         If String.IsNullOrEmpty(Suund) Or String.IsNullOrEmpty(SelectedLine) Then
             Return
         Else

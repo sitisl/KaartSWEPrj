@@ -47,9 +47,7 @@ Partial Class Kaardirakendus
         Me.tblLayoutMain.RowCount = 3
         Me.tblLayoutMain.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
         Me.tblLayoutMain.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.tblLayoutMain.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 200.0!))
-        Me.tblLayoutMain.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.tblLayoutMain.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.tblLayoutMain.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 170.0!))
         Me.tblLayoutMain.Size = New System.Drawing.Size(1382, 753)
         Me.tblLayoutMain.TabIndex = 25
         '
@@ -63,7 +61,7 @@ Partial Class Kaardirakendus
         Me.UTimeTable1.Location = New System.Drawing.Point(801, 33)
         Me.UTimeTable1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.UTimeTable1.Name = "UTimeTable1"
-        Me.UTimeTable1.Size = New System.Drawing.Size(577, 517)
+        Me.UTimeTable1.Size = New System.Drawing.Size(577, 547)
         Me.UTimeTable1.TabIndex = 27
         '
         'UCtrlMapViewer1
@@ -84,9 +82,9 @@ Partial Class Kaardirakendus
         Me.URouteInfo1.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
         Me.URouteInfo1.Enabled = False
         Me.URouteInfo1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
-        Me.URouteInfo1.Location = New System.Drawing.Point(800, 556)
+        Me.URouteInfo1.Location = New System.Drawing.Point(800, 586)
         Me.URouteInfo1.Name = "URouteInfo1"
-        Me.URouteInfo1.Size = New System.Drawing.Size(579, 194)
+        Me.URouteInfo1.Size = New System.Drawing.Size(579, 164)
         Me.URouteInfo1.TabIndex = 29
         '
         'btnSaveStops
