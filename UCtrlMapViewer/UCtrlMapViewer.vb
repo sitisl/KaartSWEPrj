@@ -407,6 +407,14 @@ Public Class UCtrlMapViewer
         toolTipNearestStop.Hide(btnOptimize)
     End Sub
 
+    Private Sub btnLayers_MouseHover(sender As Object, e As EventArgs) Handles btnLayers.MouseHover
+        toolTipNearestStop.Show("Kihid", btnLayers, -45, 10)
+    End Sub
+
+    Private Sub btnLayers_MouseLeave(sender As Object, e As EventArgs) Handles btnLayers.MouseLeave
+        toolTipNearestStop.Hide(btnLayers)
+    End Sub
+
     Private Sub btnRoute_Click(sender As Object, e As EventArgs) Handles btnRoute.Click
         If lblStart.Text IsNot "" And lblDest.Text IsNot "" _
             And lblStart.Text IsNot lblDest.Text Then
