@@ -1,5 +1,7 @@
 ﻿Imports GMap.NET.WindowsForms
+Imports System.IO
 Imports StopStruct = UTimeTable.ITimeTable.StopStruct
+Imports CSVExporterDNF
 
 Public Class Kaardirakendus
 
@@ -17,7 +19,7 @@ Public Class Kaardirakendus
         Try
             UTimeTable1.CloseConnections()
         Catch ex As Exception
-            MsgBox(ex)
+            MsgBox(ex.Message)
         End Try
     End Sub
     Private Sub UTimeTable1_ShapesReady(ByVal routepoints As List(Of StopStruct), ByVal routestops As List(Of StopStruct)) _
@@ -28,5 +30,49 @@ Public Class Kaardirakendus
     Private Sub UTimeTable_ClearShapes()
         UCtrlMapViewer1.ClearShapes()
     End Sub
+
+    Dim filePath As String = Nothing
+    Dim exporter As IExporter = New CSVExporterDNF.CExporter
+
+    Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+        Try
+            If tbQualifier.Text = Nothing Or tbDelimiter.Text = Nothing Then
+                MessageBox.Show("Täida väljad.")
+                Exit Sub
+            End If
+            exporter.delimiter = tbDelimiter.Text
+            exporter.textQualifier = tbQualifier.Text
+            If cbSaveType.Checked Then
+                filePath = exporter.setFileToSave()
+                If String.IsNullOrEmpty(filePath) Then
+                    lblFilePath.Text = filePath
+                    LblFileName.Text = Path.GetFileName(filePath)
+                    lblFilePathText.Visible = False
+                    lblFileNameText.Visible = False
+                    MessageBox.Show("Faili asukohta pole valitud.")
+                    Exit Sub
+                End If
+                lblFilePathText.Visible = True
+                lblFileNameText.Visible = True
+                lblFilePath.Text = filePath
+                LblFileName.Text = Path.GetFileName(filePath)
+            Else
+                If String.IsNullOrEmpty(filePath) Then
+                    MessageBox.Show("Faili asukohta pole valitud.")
+                    Exit Sub
+                End If
+            End If
+            Dim data As Array = GetMyData()
+            Dim rowsWritten As Integer = exporter.saveDataToCsv(data, cbAppend.Checked)
+            MessageBox.Show(String.Format("{0} rows written to {1}", rowsWritten, filePath))
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Private Function GetMyData() As String(,)
+        Dim data(,) As String = New String(2, 2) {{"Buss 1", "08:00", "1"}, {"Tramm 3", "06:42", "0"}, {"Buss 60", "21:34", "1"}} 'Asendada reaalsete andmetega
+        Return data
+    End Function
 
 End Class
