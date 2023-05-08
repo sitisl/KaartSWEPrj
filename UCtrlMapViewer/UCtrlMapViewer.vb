@@ -6,13 +6,12 @@ Imports GMap.NET
 Imports GMap.NET.MapProviders
 Imports GMap.NET.WindowsForms
 Imports GMap.NET.WindowsForms.Markers
-Imports PrjRealTime
-Imports PrjRealTime.CRealTime
 Imports Newtonsoft.Json.Linq
 Imports System.Text.RegularExpressions
-Imports PrjTransitRouteInfo.URouteInfo
 Imports StopStruct = UTimeTable.ITimeTable.StopStruct
 Imports TransportStruct = UTimeTable.ITimeTable.TransportStruct
+Imports RouteInfo = PrjTransitRouteInfo.IRouteInfo.RouteInfo
+Imports StepInfo = PrjTransitRouteInfo.IRouteInfo.StepInfo
 
 ' This class realizes the functionality of the map viewer graphic component
 Public Class UCtrlMapViewer

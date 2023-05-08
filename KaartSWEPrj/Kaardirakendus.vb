@@ -1,6 +1,6 @@
 ﻿Imports GMap.NET.WindowsForms
-Imports PrjTransitRouteInfo.URouteInfo
 Imports StopStruct = UTimeTable.ITimeTable.StopStruct
+Imports RouteInfo = PrjTransitRouteInfo.IRouteInfo.RouteInfo
 
 Public Class Kaardirakendus
 

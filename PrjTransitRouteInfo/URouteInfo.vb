@@ -1,24 +1,13 @@
 ﻿Imports System.IO
-Imports System.Security.Policy
-Imports System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify
+Imports RouteInfo = PrjTransitRouteInfo.IRouteInfo.RouteInfo
+Imports StepInfo = PrjTransitRouteInfo.IRouteInfo.StepInfo
 
 Public Class URouteInfo
+    Implements IRouteInfo
 
-    Public Structure RouteInfo
-        Public Steps As List(Of StepInfo)
-        Public StartTime As String
-        Public EndTime As String
-        Public Duration As Integer
-    End Structure
-    Public Structure StepInfo
-        Public Time As Integer
-        Public IconPath As String
-        Public LineNr As String
-    End Structure
     Private tempFile As String
 
-
-    Public Sub DisplayInfo(route As RouteInfo)
+    Public Sub DisplayInfo(route As RouteInfo) Implements IRouteInfo.DisplayInfo
         ' wBrowserInfo.Navigate("about:blank")
         Dim transitIconPath As String = IO.Path.Combine(IO.Path.GetTempPath(), Guid.NewGuid().ToString() + "_bus_route.png")
         My.Resources.bus_route.Save(transitIconPath, Imaging.ImageFormat.Png)
@@ -143,15 +132,11 @@ Public Class URouteInfo
         wBrowserInfo.Navigate(tempFile)
     End Sub
 
-    Public Sub ClearBrowser()
+    Public Sub ClearBrowser() Implements IRouteInfo.ClearBrowser
         wBrowserInfo.Navigate("about:blank")
         If File.Exists(tempFile) Then
             File.Delete(tempFile)
         End If
-        'wBrowserInfo.Refresh()
-    End Sub
-    Private Sub URouteInfo_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
     End Sub
 
 End Class
