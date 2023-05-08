@@ -25,6 +25,7 @@ Partial Class Kaardirakendus
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Kaardirakendus))
         Me.tblLayoutMain = New System.Windows.Forms.TableLayoutPanel()
         Me.UTimeTable1 = New UTimeTable.UTimeTable()
+        Me.URouteInfo1 = New PrjTransitRouteInfo.URouteInfo()
         Me.UCtrlMapViewer1 = New UCtrlMapViewer.UCtrlMapViewer()
         Me.tblLayoutMain.SuspendLayout()
         Me.SuspendLayout()
@@ -37,11 +38,13 @@ Partial Class Kaardirakendus
         Me.tblLayoutMain.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 585.0!))
         Me.tblLayoutMain.Controls.Add(Me.UTimeTable1, 1, 0)
         Me.tblLayoutMain.Controls.Add(Me.UCtrlMapViewer1, 0, 0)
+        Me.tblLayoutMain.Controls.Add(Me.URouteInfo1, 1, 1)
         Me.tblLayoutMain.Dock = System.Windows.Forms.DockStyle.Fill
         Me.tblLayoutMain.Location = New System.Drawing.Point(0, 0)
         Me.tblLayoutMain.Name = "tblLayoutMain"
-        Me.tblLayoutMain.RowCount = 1
+        Me.tblLayoutMain.RowCount = 2
         Me.tblLayoutMain.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.tblLayoutMain.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 200.0!))
         Me.tblLayoutMain.Size = New System.Drawing.Size(1382, 753)
         Me.tblLayoutMain.TabIndex = 25
         '
@@ -55,8 +58,18 @@ Partial Class Kaardirakendus
         Me.UTimeTable1.Location = New System.Drawing.Point(801, 3)
         Me.UTimeTable1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.UTimeTable1.Name = "UTimeTable1"
-        Me.UTimeTable1.Size = New System.Drawing.Size(577, 728)
+        Me.UTimeTable1.Size = New System.Drawing.Size(577, 547)
         Me.UTimeTable1.TabIndex = 27
+        '
+        'URouteInfo1
+        '
+        Me.URouteInfo1.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.URouteInfo1.Enabled = False
+        Me.URouteInfo1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.URouteInfo1.Location = New System.Drawing.Point(800, 556)
+        Me.URouteInfo1.Name = "URouteInfo1"
+        Me.URouteInfo1.Size = New System.Drawing.Size(500, 194)
+        Me.URouteInfo1.TabIndex = 29
         '
         'UCtrlMapViewer1
         '
@@ -67,6 +80,7 @@ Partial Class Kaardirakendus
         Me.UCtrlMapViewer1.Location = New System.Drawing.Point(4, 5)
         Me.UCtrlMapViewer1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.UCtrlMapViewer1.Name = "UCtrlMapViewer1"
+        Me.tblLayoutMain.SetRowSpan(Me.UCtrlMapViewer1, 2)
         Me.UCtrlMapViewer1.Size = New System.Drawing.Size(789, 743)
         Me.UCtrlMapViewer1.TabIndex = 28
         '
@@ -82,7 +96,7 @@ Partial Class Kaardirakendus
         Me.Margin = New System.Windows.Forms.Padding(5)
         Me.Name = "Kaardirakendus"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Ühistranspordi rakendus"
+        Me.Text = "Linnatranspordi rakendus"
         Me.tblLayoutMain.ResumeLayout(False)
         Me.tblLayoutMain.PerformLayout()
         Me.ResumeLayout(False)
@@ -91,4 +105,5 @@ Partial Class Kaardirakendus
     Friend WithEvents tblLayoutMain As TableLayoutPanel
     Friend WithEvents UTimeTable1 As UTimeTable.UTimeTable
     Friend WithEvents UCtrlMapViewer1 As UCtrlMapViewer.UCtrlMapViewer
+    Friend WithEvents URouteInfo1 As PrjTransitRouteInfo.URouteInfo
 End Class

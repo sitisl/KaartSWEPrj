@@ -177,6 +177,10 @@
       <Project>{90ed1caf-dac2-4d51-bcc8-93680c20d7ce}</Project>
       <Name>PrjRealTime</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PrjTransitRouteInfo\PrjTransitRouteInfo.vbproj">
+      <Project>{ad07f478-1d9a-4f1c-b1fd-4f0be9cfcfce}</Project>
+      <Name>PrjTransitRouteInfo</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UTimeTable\UTimeTable.vbproj">
       <Project>{957e8b01-520a-4786-880e-1168f4da9d65}</Project>
       <Name>UTimeTable</Name>

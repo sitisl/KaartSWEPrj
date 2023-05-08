@@ -26,8 +26,10 @@ Imports HtmlAgilityPack
 Imports System.Xml
 Imports System.Security.Authentication.ExtendedProtection
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar
-
-
+Imports PrjTransitRouteInfo.URouteInfo
+Imports PrjTransitRouteInfo
+Imports TheArtOfDev.HtmlRenderer.Adapters
+Imports System
 ' This class realizes the functionality of the map viewer graphic component
 Public Class UCtrlMapViewer
 
@@ -409,9 +411,9 @@ Public Class UCtrlMapViewer
         If lblStart.Text IsNot "" And lblDest.Text IsNot "" _
             And lblStart.Text IsNot lblDest.Text Then
             If optimizeByDist Then
-                getRoute(startCoord, endCoord, "distance")
+                RaiseEvent DisplayRouteInfo(getRoute(startCoord, endCoord, "distance"))
             Else
-                getRoute(startCoord, endCoord, "time")
+                RaiseEvent DisplayRouteInfo(getRoute(startCoord, endCoord, "time"))
             End If
         End If
         btnRoute.Enabled = False
@@ -427,6 +429,7 @@ Public Class UCtrlMapViewer
         btnRoute.Enabled = False
         btnNearestStopStart.Enabled = False
         btnNearestStopDest.Enabled = False
+        RaiseEvent ClearRouteInfo()
         clearRoute()
         gMap1.Position = New GMap.NET.PointLatLng(59.43, 24.75)
         gMap1.Zoom = 12
@@ -721,6 +724,9 @@ Public Class UCtrlMapViewer
     ' Events to see coordinates and stops on the form
     Public Event LocationClicked(ByVal latitude As Double, ByVal longitude As Double)
     Public Event MarkerClicked(ByVal value As String, ByVal latitude As Double, ByVal longitude As Double)
+    'Event for route info
+    Public Event DisplayRouteInfo(ByVal route As RouteInfo)
+    Public Event ClearRouteInfo()
 
     Private Sub GMap1_OnMapZoomChanged() Handles gMap1.OnMapZoomChanged
         Dim zoomLevel As Double = gMap1.Zoom
@@ -842,10 +848,14 @@ Public Class UCtrlMapViewer
 
     'This method gets the transit route using Bing Maps API and plots it onto the map
     'In addition to the route it adds markers on the map for the start, destination and stops on the route
-    Public Sub getRoute(startCoord As PointLatLng, endCoord As PointLatLng, optimize As String)
+    Public Function getRoute(startCoord As PointLatLng, endCoord As PointLatLng, optimize As String)
         showHideStops(False, getStopsSQL(drawMarker("Orange", 9)))
         ' Define the route overlay and add it to the map
         Dim mapOverlay As GMapOverlay = New GMapOverlay("routes")
+
+        'Define structures to add the route info
+        Dim myRoute As New RouteInfo()
+        myRoute.Steps = New List(Of StepInfo)
 
         'Define current time
         Dim currentTime As DateTime = DateTime.UtcNow
@@ -888,10 +898,10 @@ Public Class UCtrlMapViewer
                 For Each leg In jsonResponse("resourceSets")(0)("resources")(0)("routeLegs")
                     For Each item In leg("itineraryItems")
                         If item("details")(0)("startPathIndices") IsNot Nothing AndAlso item("details")(0)("startPathIndices") IsNot Nothing Then
-
+                            Dim myStep As New StepInfo()
                             If item("iconType") IsNot Nothing AndAlso item("iconType") = "Walk" Then
                                 For i = CType(item("details")(0)("startPathIndices")(0), Integer) To CType(item("details")(0)("endPathIndices")(0), Integer)
-                                    Debug.WriteLine("startIndeks: " & item("details")(0)("startPathIndices")(0).ToString & " " & item("details")(0)("endPathIndices")(0).ToString)
+                                    'Debug.WriteLine("startIndeks: " & item("details")(0)("startPathIndices")(0).ToString & " " & item("details")(0)("endPathIndices")(0).ToString)
                                     walkingPath.Add(New List(Of PointLatLng))
 
                                     Dim latitude As Double = coordinates(i)(0)
@@ -900,6 +910,14 @@ Public Class UCtrlMapViewer
                                     walkingPath(walkCount).Add(loc)
                                 Next
                                 walkCount = walkCount + 1
+                                myStep.IconPath = "Walk"
+                                myStep.LineNr = ""
+                                If item("travelDuration") IsNot Nothing Then
+                                    myStep.Time = CInt(Math.Floor(item("travelDuration").Value(Of Double)() / 60))
+                                Else
+                                    myStep.Time = 0
+                                End If
+                                myRoute.Steps.Add(myStep)
                             Else
                                 For i = CType(item("details")(0)("startPathIndices")(0), Integer) To CType(item("details")(0)("endPathIndices")(0), Integer)
                                     Debug.WriteLine("startIndeks: " & item("details")(0)("startPathIndices")(0).ToString & " " & item("details")(0)("endPathIndices")(0).ToString)
@@ -909,6 +927,18 @@ Public Class UCtrlMapViewer
                                     Dim loc As New PointLatLng(latitude, longitude)
                                     busPath(busCount).Add(loc)
                                 Next
+                                myStep.IconPath = "Bus"
+                                If item("travelDuration") IsNot Nothing Then
+                                    myStep.Time = CInt(Math.Floor(item("travelDuration").Value(Of Double)() / 60))
+                                Else
+                                    myStep.Time = 0
+                                End If
+                                If item("transitLine")("abbreviatedName") IsNot Nothing Then
+                                    myStep.LineNr = item("transitLine")("abbreviatedName")
+                                Else
+                                    myStep.LineNr = ""
+                                End If
+                                myRoute.Steps.Add(myStep)
                                 busCount = busCount + 1
                             End If
                         End If
@@ -928,8 +958,22 @@ Public Class UCtrlMapViewer
                         End If
                     Next
                 Next
-            Else
-                MessageBox.Show("Sobivat marsuuti ei leitud!")
+                If jsonResponse("resourceSets")(0)("resources")(0)("routeLegs")(0)("startTime") IsNot Nothing _
+                    AndAlso jsonResponse("resourceSets")(0)("resources")(0)("routeLegs")(0)("endTime") IsNot Nothing Then
+                    Dim startTime As String = jsonResponse("resourceSets")(0)("resources")(0)("routeLegs")(0)("startTime")
+                    Dim endTime As String = jsonResponse("resourceSets")(0)("resources")(0)("routeLegs")(0)("endTime")
+                    Dim dateTime As DateTime = DateTime.ParseExact(startTime, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture)
+                    myRoute.StartTime = dateTime.ToString("HH:mm")
+                    dateTime = DateTime.ParseExact(endTime, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture)
+                    myRoute.EndTime = dateTime.ToString("HH:mm")
+                End If
+                If jsonResponse("resourceSets")(0)("resources")(0)("travelDuration") IsNot Nothing Then
+                        myRoute.Duration = CInt(Math.Floor(jsonResponse("resourceSets")(0)("resources")(0)("travelDuration").Value(Of Double)() / 60))
+                    Else
+                        myRoute.Duration = 0
+                    End If
+                Else
+                    MessageBox.Show("Sobivat marsuuti ei leitud!")
             End If
 
             For Each busPathList As List(Of PointLatLng) In busPath
@@ -994,10 +1038,9 @@ Public Class UCtrlMapViewer
         Catch ex As Exception
             ' Handle other types of exceptions
             Console.WriteLine("Exception: " + ex.Message)
-
         End Try
-
-    End Sub
+        Return myRoute
+    End Function
 
     'This method clears the route from the map and adds the stops back on the map
     Public Sub clearRoute()

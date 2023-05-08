@@ -3,6 +3,7 @@ Imports GMap.NET.WindowsForms.Markers
 Imports System.IO
 Imports System.Net
 Imports UTimeTable.UTimeTable
+Imports PrjTransitRouteInfo.URouteInfo
 
 Public Class Kaardirakendus
 
@@ -11,6 +12,7 @@ Public Class Kaardirakendus
 
     Private Sub Kaardirakendus_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         UCtrlMapViewer1.initMap()
+        URouteInfo1.Visible = False
         'UCtrlMapViewer.Invalidate()
         'UTimeTable1.Invalidate()
         'InitChromeDriverIfNeeded()
@@ -30,6 +32,17 @@ Public Class Kaardirakendus
 
     Private Sub UTimeTable_ClearShapes()
         UCtrlMapViewer1.ClearShapes()
+    End Sub
+
+    Private Sub HandleDisplayRouteInfo(ByVal route As RouteInfo) _
+        Handles UCtrlMapViewer1.DisplayRouteInfo
+        URouteInfo1.DisplayInfo(route)
+        URouteInfo1.Visible = True
+    End Sub
+
+    Private Sub HandleClearRouteInfo() Handles UCtrlMapViewer1.ClearRouteInfo
+        URouteInfo1.Visible = False
+        URouteInfo1.ClearBrowser()
     End Sub
 
 End Class
