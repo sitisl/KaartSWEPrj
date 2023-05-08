@@ -18,7 +18,7 @@ Public Class UTimeTable
     Public SelectedDay As String = "monday"
     Dim desktopPath As String = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)
     Dim dbFilePath As String = Path.Combine(desktopPath, "mapdb.db")
-
+    Dim CData As PrjData.IDataGetter = New PrjData.CDataGetter
     Private Structure TimeStruct
         Dim Name As String
         Dim Time As String
@@ -126,8 +126,6 @@ Public Class UTimeTable
         Dim query As String
         If String.IsNullOrEmpty(lBoxPeatused.Text) Then
             query = "SELECT route_short_name FROM routes ORDER BY CAST(SUBSTRING(route_short_name, 6) AS UNSIGNED) ASC;"
-
-            ' Kui on valitud koikide peatuste loendist peatus kuvatakse, koik selle valitud peatuse soidukid
         Else
             query = "SELECT DISTINCT routes.route_short_name FROM routes
              JOIN trips ON routes.route_id = trips.route_id
@@ -135,19 +133,10 @@ Public Class UTimeTable
              JOIN stops ON stoptimes.stop_id = stops.stop_id
              WHERE stops.name = '" & SelectedStop & "';"
         End If
-        Try
-            lBoxLiinid.Items.Clear()
-            MakeSqlConn()
-            SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
-            SQLiteReader = SQLiteCmd.ExecuteReader()
-            While SQLiteReader.Read()
-                lBoxLiinid.Items.Add(SQLiteReader.GetString(0))
-            End While
-            SQLiteReader.Close()
-        Catch ex As Exception
-            MsgBox(ex.Message)
-            SQLiteCon.Close()
-        End Try
+        SQLiteReader = CData.MakeQuery(query)
+        While SQLiteReader.Read()
+            lBoxLiinid.Items.Add(SQLiteReader.GetString(0))
+        End While
     End Sub
 
     Private Sub LoadLineStops()
@@ -163,19 +152,10 @@ Public Class UTimeTable
              AND trips.direction_code = '" & Suund & "'
              ORDER BY CAST(stoptimes.stop_sequence AS UNSIGNED);"
         End If
-
-        Try
-            lBoxPeatused.Items.Clear()
-            MakeSqlConn()
-            SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
-            SQLiteReader = SQLiteCmd.ExecuteReader()
-            While SQLiteReader.Read()
-                lBoxPeatused.Items.Add(SQLiteReader.GetString(0))
-            End While
-            SQLiteReader.Close()
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
+        SQLiteReader = CData.MakeQuery(query)
+        While SQLiteReader.Read()
+            lBoxPeatused.Items.Add(SQLiteReader.GetString(0))
+        End While
     End Sub
 
     Private Sub AppendStopDepartureTimes(tripID As Integer)
@@ -183,45 +163,39 @@ Public Class UTimeTable
             Exit Sub
         End If
         Dim routeTimeList As New List(Of TimeStruct)
-        Dim Query As String = "Select stoptimes.arrival_time, stops.name, routes.route_short_name
-             From stoptimes
-             Join stops On stoptimes.stop_id = stops.stop_id
-             Join trips On stoptimes.trip_id = trips.trip_id
-             Join calender On trips.service_id = calender.service_id
-             Join routes On trips.route_id = routes.route_id
-             Where trips.trip_id = '" & tripID & "'"
-        Try
-            MakeSqlConn()
-            SQLiteCmd = New SQLiteCommand(Query, SQLiteCon)
-            SQLiteReader = SQLiteCmd.ExecuteReader()
-            While SQLiteReader.Read()
-                Dim r As New TimeStruct
-                r.Time = SQLiteReader.GetString(0).Substring(0, 5)
-                r.Name = SQLiteReader.GetString(1)
-                routeTimeList.Add(r)
-            End While
-            Dim updatedItems As New List(Of String)
-            For Each item As String In lBoxPeatused.Items
-                For Each r As TimeStruct In routeTimeList
-                    If item.Contains(":") Then
-                        item = item.Substring(6)
-                    End If
-                    If r.Name = item Then
-                        updatedItems.Add(r.Time & " " & item)
-                        Exit For ' Exit inner loop once a match is found
-                    End If
-                Next
+        Dim query As String = "Select stoptimes.arrival_time, stops.name, routes.route_short_name
+                                From stoptimes
+                                Join stops On stoptimes.stop_id = stops.stop_id
+                                Join trips On stoptimes.trip_id = trips.trip_id
+                                Join calender On trips.service_id = calender.service_id
+                                Join routes On trips.route_id = routes.route_id
+                                Where trips.trip_id = '" & tripID & "'"
+        SQLiteReader = CData.MakeQuery(query)
+        While SQLiteReader.Read()
+            Dim r As New TimeStruct
+            r.Time = SQLiteReader.GetString(0).Substring(0, 5)
+            r.Name = SQLiteReader.GetString(1)
+            routeTimeList.Add(r)
+        End While
+        Dim updatedItems As New List(Of String)
+        For Each item As String In lBoxPeatused.Items
+            For Each r As TimeStruct In routeTimeList
+                If item.Contains(":") Then
+                    item = item.Substring(6)
+                End If
+                If r.Name = item Then
+                    updatedItems.Add(r.Time & " " & item)
+                    Exit For ' Exit inner loop once a match is found
+                End If
             Next
-            RemoveHandler lBoxPeatused.SelectedValueChanged, AddressOf lBoxPeatused_SelectedValueChanged
-            Dim index As Integer = lBoxPeatused.SelectedIndex
-            lBoxPeatused.Items.Clear()
-            lBoxPeatused.Items.AddRange(updatedItems.ToArray())
-            lBoxPeatused.SelectedIndex = index
-            AddHandler lBoxPeatused.SelectedValueChanged, AddressOf lBoxPeatused_SelectedValueChanged
-            SQLiteReader.Close()
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
+        Next
+        RemoveHandler lBoxPeatused.SelectedValueChanged, AddressOf lBoxPeatused_SelectedValueChanged
+        Dim index As Integer = lBoxPeatused.SelectedIndex
+        lBoxPeatused.Items.Clear()
+        lBoxPeatused.Items.AddRange(updatedItems.ToArray())
+        lBoxPeatused.SelectedIndex = index
+        AddHandler lBoxPeatused.SelectedValueChanged, AddressOf lBoxPeatused_SelectedValueChanged
+        SQLiteReader.Close()
     End Sub
 
     Public Event ShapesReady(ByVal routepoints As List(Of StopStruct), ByVal routestops As List(Of StopStruct))
@@ -253,141 +227,111 @@ Public Class UTimeTable
 
         Dim time As DateTime = DateTime.Now
         Dim closestTime As String = Nothing
-        Try
-            MakeSqlConn()
-            SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
-            SQLiteReader = SQLiteCmd.ExecuteReader()
-            While SQLiteReader.Read()
-                Dim arrivalTime As String = SQLiteReader.GetString(0)
-                tripID = SQLiteReader.GetInt32(1)
-                Dim hour As Integer = Integer.Parse(arrivalTime.Substring(0, 2))
-                Dim minute As Integer = Integer.Parse(arrivalTime.Substring(3, 2))
-                If hour = 24 Then
-                    hour = 0
-                End If
-                Dim arrivalDateTime As DateTime = New DateTime(time.Year, time.Month, time.Day, hour, minute, 0)
+        SQLiteReader = CData.MakeQuery(query)
+        While SQLiteReader.Read()
+            Dim arrivalTime As String = SQLiteReader.GetString(0)
+            tripID = SQLiteReader.GetInt32(1)
+            Dim hour As Integer = Integer.Parse(arrivalTime.Substring(0, 2))
+            Dim minute As Integer = Integer.Parse(arrivalTime.Substring(3, 2))
+            If hour = 24 Then
+                hour = 0
+            End If
+            Dim arrivalDateTime As DateTime = New DateTime(time.Year, time.Month, time.Day, hour, minute, 0)
 
-                If arrivalDateTime > time AndAlso (closestTime Is Nothing OrElse arrivalDateTime < DateTime.Parse(closestTime)) Then
-                    closestTime = arrivalTime
-                    Exit While
-                End If
-
-            End While
-            SQLiteReader.Close()
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
+            If arrivalDateTime > time AndAlso (closestTime Is Nothing OrElse arrivalDateTime < DateTime.Parse(closestTime)) Then
+                closestTime = arrivalTime
+                Exit While
+            End If
+        End While
         If closestTime IsNot Nothing Then
-            'MsgBox("Järgmine lähim väljumise aeg: " & closestTime & " " & tripID)
-        Else
-            MsgBox("Täna ei ole rohkem väljumisi!")
-        End If
-        Return tripID
+                lblPeatused.Text = "Peatused"
+            Else
+                lblPeatused.Text = "Tänased viimased ajad olid"
+                lblPeatused.TextAlign = ContentAlignment.MiddleCenter
+            End If
+            Return tripID
     End Function
 
     Private Sub LoadLineSuund()
-        Try
-            Dim query = "SELECT trips.trip_long_name FROM trips
-             JOIN routes ON trips.route_id = routes.route_id
-             WHERE routes.route_short_name = '" & SelectedLine & "'
-             AND trips.direction_code = ""A>B""
-             GROUP BY trips.trip_long_name;"
-            SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
-            SQLiteReader = SQLiteCmd.ExecuteReader()
-            SQLiteReader.Read()
-            btnAB.Text = SQLiteReader.GetString(0)
-            SQLiteReader.Close()
-        Catch ex As Exception
-            MsgBox(ex.Message)
-            SQLiteCon.Close()
-        End Try
+        Dim query As String
+        query = "SELECT trips.trip_long_name FROM trips
+                JOIN routes ON trips.route_id = routes.route_id
+                WHERE routes.route_short_name = '" & SelectedLine & "'
+                AND trips.direction_code = ""A>B""
+                GROUP BY trips.trip_long_name;"
+        SQLiteReader = CData.MakeQuery(query)
+        SQLiteReader.Read()
+        btnAB.Text = SQLiteReader.GetString(0)
 
-        Try
-            Dim query = "SELECT trips.trip_long_name FROM trips
-             JOIN routes ON trips.route_id = routes.route_id
-             WHERE routes.route_short_name = '" & SelectedLine & "'
-             AND trips.direction_code = ""B>A""
-             GROUP BY trips.trip_long_name;"
-            SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
-            SQLiteReader = SQLiteCmd.ExecuteReader()
-            SQLiteReader.Read()
-            btnBA.Text = SQLiteReader.GetString(0)
-            SQLiteReader.Close()
-        Catch ex As Exception
-            MsgBox(ex.Message)
-            SQLiteCon.Close()
-        End Try
+        query = "SELECT trips.trip_long_name FROM trips
+                JOIN routes ON trips.route_id = routes.route_id
+                WHERE routes.route_short_name = '" & SelectedLine & "'
+                AND trips.direction_code = ""B>A""
+                GROUP BY trips.trip_long_name;"
 
+        SQLiteReader = CData.MakeQuery(query)
+        SQLiteReader.Read()
+        btnBA.Text = SQLiteReader.GetString(0)
     End Sub
 
     Private Sub LoadShapes()
-        Try
-            Dim routePoints As New List(Of StopStruct)
-            Dim routestops As New List(Of StopStruct)
-            Dim query = "SELECT shape_pt_lat, shape_pt_lon FROM shapes
-             JOIN trips ON shapes.shape_id = trips.shape_id
-             JOIN routes ON trips.route_id = routes.route_id
-             WHERE routes.route_short_name = '" & SelectedLine & "'
-             AND trips.direction_code = '" & Suund & "'
-             ORDER BY shape_pt_sequence;"
-            SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
-            SQLiteReader = SQLiteCmd.ExecuteReader()
-            While SQLiteReader.Read()
-                Dim point As New StopStruct
-                point.Latitude = SQLiteReader.GetDouble(0)
-                point.Longitude = SQLiteReader.GetDouble(1)
-                routePoints.Add(point)
-            End While
-            SQLiteReader.Close()
-            query = "SELECT name, lat, lon FROM stops
-             JOIN stoptimes ON stops.stop_id = stoptimes.stop_id
-             JOIN trips ON stoptimes.trip_id = trips.trip_id
-             JOIN routes ON trips.route_id = routes.route_id
-             WHERE routes.route_short_name = '" & SelectedLine & "'
-             AND trips.direction_code = '" & Suund & "'
-             ORDER BY CAST(stoptimes.stop_sequence AS UNSIGNED);"
-            SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
-            SQLiteReader = SQLiteCmd.ExecuteReader()
-            While SQLiteReader.Read()
-                Dim s As New StopStruct
-                s.Name = SQLiteReader.GetString(0)
-                s.Latitude = SQLiteReader.GetDouble(1)
-                s.Longitude = SQLiteReader.GetDouble(2)
-                routestops.Add(s)
-            End While
-            SQLiteReader.Close()
-            RaiseEvent ShapesReady(routePoints, routestops)
-        Catch ex As Exception
-            MsgBox(ex.Message)
-            SQLiteCon.Close()
-        End Try
+        Dim routePoints As New List(Of StopStruct)
+        Dim routestops As New List(Of StopStruct)
+        Dim query = "SELECT shape_pt_lat, shape_pt_lon FROM shapes
+                    JOIN trips ON shapes.shape_id = trips.shape_id
+                    JOIN routes ON trips.route_id = routes.route_id
+                    WHERE routes.route_short_name = '" & SelectedLine & "'
+                    AND trips.direction_code = '" & Suund & "'
+                    ORDER BY shape_pt_sequence;"
+
+        SQLiteReader = CData.MakeQuery(query)
+        While SQLiteReader.Read()
+            Dim point As New StopStruct
+            point.Latitude = SQLiteReader.GetDouble(0)
+            point.Longitude = SQLiteReader.GetDouble(1)
+            routePoints.Add(point)
+        End While
+        query = "SELECT name, lat, lon FROM stops
+                    JOIN stoptimes ON stops.stop_id = stoptimes.stop_id
+                    JOIN trips ON stoptimes.trip_id = trips.trip_id
+                    JOIN routes ON trips.route_id = routes.route_id
+                    WHERE routes.route_short_name = '" & SelectedLine & "'
+                    AND trips.direction_code = '" & Suund & "'
+                    ORDER BY CAST(stoptimes.stop_sequence AS UNSIGNED);"
+
+        SQLiteReader = CData.MakeQuery(query)
+        While SQLiteReader.Read()
+            Dim s As New StopStruct
+            s.Name = SQLiteReader.GetString(0)
+            s.Latitude = SQLiteReader.GetDouble(1)
+            s.Longitude = SQLiteReader.GetDouble(2)
+            routestops.Add(s)
+        End While
+        RaiseEvent ShapesReady(routePoints, routestops)
         btnDisplayLines.Enabled = False
     End Sub
 
     Private Sub GetStopTimesRealTime()
-
         lBoxRealTime.Items.Clear()
         Dim url As String = "https://transport.tallinn.ee/siri-stop-departures.php?stopid="
         Dim SelectedStopID As Integer
+        Dim query = "SELECT stops.stop_id FROM stops
+                    JOIN stoptimes ON stops.stop_id = stoptimes.stop_id
+                    JOIN trips ON stoptimes.trip_id = trips.trip_id
+                    JOIN routes ON trips.route_id = routes.route_id
+                    WHERE routes.route_short_name = '" & SelectedLine & "'
+                    AND stops.name = '" & SelectedStop & "'
+                    AND trips.direction_code = '" & Suund & "';"
+        SQLiteReader = CData.MakeQuery(query)
+        SQLiteReader.Read()
+        SelectedStopID = SQLiteReader.GetInt32(0)
+        url &= SelectedStopID.ToString()
+        Dim parts As String() = SelectedLine.Split(" "c)
+        Dim transport As String = parts(0).ToLower()
+        transport = transport.Substring(0, 3)
+        Dim number As String = parts(parts.Length - 1)
+        Dim time As Double
         Try
-            Dim query = "SELECT stops.stop_id FROM stops
-             JOIN stoptimes ON stops.stop_id = stoptimes.stop_id
-             JOIN trips ON stoptimes.trip_id = trips.trip_id
-             JOIN routes ON trips.route_id = routes.route_id
-             WHERE routes.route_short_name = '" & SelectedLine & "'
-             AND stops.name = '" & SelectedStop & "'
-             AND trips.direction_code = '" & Suund & "';"
-            SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
-            SQLiteReader = SQLiteCmd.ExecuteReader()
-            SQLiteReader.Read()
-            SelectedStopID = SQLiteReader.GetInt32(0)
-            url &= SelectedStopID.ToString()
-            SQLiteReader.Close()
-            Dim parts As String() = SelectedLine.Split(" "c)
-            Dim transport As String = parts(0).ToLower()
-            transport = transport.Substring(0, 3)
-            Dim number As String = parts(parts.Length - 1)
-            Dim time As Double
             Dim request As HttpWebRequest = CType(WebRequest.Create(url), HttpWebRequest)
             request.Method = "GET"
             Dim response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
@@ -415,7 +359,6 @@ Public Class UTimeTable
             End If
         Catch ex As Exception
             MsgBox(ex.Message)
-            SQLiteCon.Close()
         End Try
 
     End Sub
@@ -540,38 +483,31 @@ Public Class UTimeTable
              AND calender.'" & SelectedDay & "' = ""1""
              ORDER by arrival_time;"
 
-        Try
-            MakeSqlConn()
-            SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
-            SQLiteReader = SQLiteCmd.ExecuteReader()
-            Dim currentHour As Integer = -1 ' initialize current hour to -1
-            While SQLiteReader.Read()
-                rtbAjad.SelectionColor = Color.Black
-                Dim arrivalTime As String = SQLiteReader.GetString(0)
-                Dim hour As Integer = Integer.Parse(arrivalTime.Substring(0, 2))
-                If hour >= 24 Then
-                    hour = hour - 24
+        SQLiteReader = CData.MakeQuery(query)
+        Dim currentHour As Integer = -1 ' initialize current hour to -1
+        While SQLiteReader.Read()
+            rtbAjad.SelectionColor = Color.White
+            Dim arrivalTime As String = SQLiteReader.GetString(0)
+            Dim hour As Integer = Integer.Parse(arrivalTime.Substring(0, 2))
+            If hour >= 24 Then
+                hour = hour - 24
+            End If
+            Dim minute As Integer = Integer.Parse(arrivalTime.Substring(3, 2))
+            Dim wheelchairAccessible As Int32 = (SQLiteReader.GetInt32(1))
+            If currentHour <> hour Then ' new hour, add hour header
+                If currentHour >= 0 Then ' not the first hour, add newline
+                    rtbAjad.AppendText(Environment.NewLine)
                 End If
-                Dim minute As Integer = Integer.Parse(arrivalTime.Substring(3, 2))
-                Dim wheelchairAccessible As Int32 = (SQLiteReader.GetInt32(1))
-                If currentHour <> hour Then ' new hour, add hour header
-                    If currentHour >= 0 Then ' not the first hour, add newline
-                        rtbAjad.AppendText(Environment.NewLine)
-                    End If
-                    rtbAjad.AppendText(hour) ' add hour header
-                    rtbAjad.AppendText(": ") ' add space separator between minutes
-                    currentHour = hour
-                End If
-                If wheelchairAccessible = 1 Then
-                    rtbAjad.SelectionColor = InvaColor
-                End If
-                rtbAjad.AppendText(minute) ' append minute string
-                rtbAjad.AppendText(" ") ' add space separator between minutes
-            End While
-            SQLiteReader.Close()
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
+                rtbAjad.AppendText(hour) ' add hour header
+                rtbAjad.AppendText(": ") ' add space separator between minutes
+                currentHour = hour
+            End If
+            If wheelchairAccessible = 1 Then
+                rtbAjad.SelectionColor = InvaColor
+            End If
+            rtbAjad.AppendText(minute) ' append minute string
+            rtbAjad.AppendText(" ") ' add space separator between minutes
+        End While
     End Sub
 
     Private Sub btnDay1_Click(sender As Object, e As EventArgs) Handles btnDay1.Click

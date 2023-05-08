@@ -8,17 +8,12 @@ Public Class URouteInfo
     Private tempFile As String
 
     Public Sub DisplayInfo(route As RouteInfo) Implements IRouteInfo.DisplayInfo
-        ' wBrowserInfo.Navigate("about:blank")
         Dim transitIconPath As String = IO.Path.Combine(IO.Path.GetTempPath(), Guid.NewGuid().ToString() + "_bus_route.png")
         My.Resources.bus_route.Save(transitIconPath, Imaging.ImageFormat.Png)
         Dim busIconPath As String = IO.Path.Combine(IO.Path.GetTempPath(), Guid.NewGuid().ToString() + "_bus_icon.png")
         My.Resources.bus_icon.Save(busIconPath, Imaging.ImageFormat.Png)
         Dim walkIconPath As String = IO.Path.Combine(IO.Path.GetTempPath(), Guid.NewGuid().ToString() + "_walk_icon.png")
         My.Resources.walk_icon.Save(walkIconPath, Imaging.ImageFormat.Png)
-        'Dim tramIconPath As String = IO.Path.Combine(IO.Path.GetTempPath(), "tram_icon.png")
-        'My.Resources.tram_icon.Save(tramIconPath, Imaging.ImageFormat.Png)
-        'Dim trollIconPath As String = IO.Path.Combine(IO.Path.GetTempPath(), "troll_icon.png")
-        'My.Resources.troll_icon.Save(trollIconPath, Imaging.ImageFormat.Png)
         ' Create the HTML table content as a string
         Dim stepsHtml As String = ""
         Dim table As String = "<table>" &
@@ -57,7 +52,7 @@ Public Class URouteInfo
         Next
         Dim css As String = "<style>" &
             "body {" &
-                "background-color :  #212121;" &
+                "background-color: #212121;" &
                 "padding: 2px;" &
                 "margin: 0;" &
             "}" &
@@ -85,40 +80,40 @@ Public Class URouteInfo
                 "border: none;" &
                 "display: inline-block" &
                 "align-items: center;" &
-        "}" &
-        ".duration-cell {" &
-        "padding: 0;" &
-        "vertical-align: middle;" &
-        "}" &
-        ".duration-number {" &
-        "font-size: 30px;" &
-        "font-weight: 600;" &
-        "}" &
-        ".duration-text {" &
-        "font-size: 14px;" &
-        "text-align: center;" &
-        "}" &
-        ".transit-icon {" &
-        "width: auto;" &
-        "height: auto;" &
-        "display: flex;" &
-        "align-items: center;" &
-        "}" &
-        ".bus-icon img {" &
-        "margin: auto;" &
-        "}" &
-        ".walk-icon img {" &
-        "margin: auto;" &
-        "}" &
-        ".line-number {" &
-        "background-color: #0062FF;" &
-        "border-radius: 10px;" &
-        "width: 25px;" &
-        "font-weight: 600;" &
-        "}" &
-        ".transit-icon img {" &
-        "margin: auto;" &
-        "}" &
+                "}" &
+                ".duration-cell {" &
+                "padding: 0;" &
+                "vertical-align: middle;" &
+                "}" &
+                ".duration-number {" &
+                "font-size: 30px;" &
+                "font-weight: 600;" &
+                "}" &
+                ".duration-text {" &
+                "font-size: 14px;" &
+                "text-align: center;" &
+                "}" &
+                ".transit-icon {" &
+                "width: auto;" &
+                "height: auto;" &
+                "display: flex;" &
+                "align-items: center;" &
+                "}" &
+                ".bus-icon img {" &
+                "margin: auto;" &
+                "}" &
+                ".walk-icon img {" &
+                "margin: auto;" &
+                "}" &
+                ".line-number {" &
+                "background-color: blue;" &
+                "border-radius: 10px;" &
+                "width: 25px;" &
+                "font-weight: 600;" &
+                "}" &
+                ".transit-icon img {" &
+                "margin: auto;" &
+                "}" &
         "</style>"
         ' Complete the HTML table content string
         table &= "</tr></tbody></table>"
