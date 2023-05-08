@@ -10,9 +10,6 @@ Public Class Kaardirakendus
 
     Private Sub Kaardirakendus_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         UCtrlMapViewer1.initMap()
-        'UCtrlMapViewer.Invalidate()
-        'UTimeTable1.Invalidate()
-        'InitChromeDriverIfNeeded()
     End Sub
 
     Private Sub Kaardirakendus_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
@@ -27,7 +24,7 @@ Public Class Kaardirakendus
         UCtrlMapViewer1.DisplayShapes(routepoints, routestops)
     End Sub
 
-    Private Sub UTimeTable_ClearShapes()
+    Private Sub UTimeTable1_ClearShapes() Handles UTimeTable1.ClearShapes
         UCtrlMapViewer1.ClearShapes()
     End Sub
 
