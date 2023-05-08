@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class Kaardirakendus
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,141 +20,108 @@ Partial Class Kaardirakendus
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.GMapControl1 = New GMap.NET.WindowsForms.GMapControl()
-        Me.btnChoose = New System.Windows.Forms.Button()
-        Me.lblLat = New System.Windows.Forms.Label()
-        Me.lblLongName = New System.Windows.Forms.Label()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.btnDisplay = New System.Windows.Forms.Button()
-        Me.txtLongName = New System.Windows.Forms.TextBox()
-        Me.txtLat = New System.Windows.Forms.TextBox()
-        Me.btnAll = New System.Windows.Forms.Button()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Kaardirakendus))
+        Me.tblLayoutMain = New System.Windows.Forms.TableLayoutPanel()
+        Me.UTimeTable1 = New UTimeTable.UTimeTable()
+        Me.UCtrlMapViewer1 = New UCtrlMapViewer.UCtrlMapViewer()
+        Me.URouteInfo1 = New PrjTransitRouteInfo.URouteInfo()
+        Me.btnSaveStops = New System.Windows.Forms.Button()
+        Me.tblLayoutMain.SuspendLayout()
         Me.SuspendLayout()
         '
-        'GMapControl1
+        'tblLayoutMain
         '
-        Me.GMapControl1.Bearing = 0!
-        Me.GMapControl1.CanDragMap = True
-        Me.GMapControl1.EmptyTileColor = System.Drawing.Color.Navy
-        Me.GMapControl1.GrayScaleMode = False
-        Me.GMapControl1.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow
-        Me.GMapControl1.LevelsKeepInMemory = 5
-        Me.GMapControl1.Location = New System.Drawing.Point(175, 24)
-        Me.GMapControl1.MarkersEnabled = True
-        Me.GMapControl1.MaxZoom = 2
-        Me.GMapControl1.MinZoom = 2
-        Me.GMapControl1.MouseWheelZoomEnabled = True
-        Me.GMapControl1.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter
-        Me.GMapControl1.Name = "GMapControl1"
-        Me.GMapControl1.NegativeMode = False
-        Me.GMapControl1.PolygonsEnabled = True
-        Me.GMapControl1.RetryLoadTile = 0
-        Me.GMapControl1.RoutesEnabled = True
-        Me.GMapControl1.ScaleMode = GMap.NET.WindowsForms.ScaleModes.[Integer]
-        Me.GMapControl1.SelectedAreaFillColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(105, Byte), Integer), CType(CType(225, Byte), Integer))
-        Me.GMapControl1.ShowTileGridLines = False
-        Me.GMapControl1.Size = New System.Drawing.Size(603, 402)
-        Me.GMapControl1.TabIndex = 0
-        Me.GMapControl1.Zoom = 0R
+        Me.tblLayoutMain.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.tblLayoutMain.ColumnCount = 2
+        Me.tblLayoutMain.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.tblLayoutMain.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 585.0!))
+        Me.tblLayoutMain.Controls.Add(Me.UTimeTable1, 1, 1)
+        Me.tblLayoutMain.Controls.Add(Me.UCtrlMapViewer1, 0, 0)
+        Me.tblLayoutMain.Controls.Add(Me.URouteInfo1, 1, 2)
+        Me.tblLayoutMain.Controls.Add(Me.btnSaveStops, 1, 0)
+        Me.tblLayoutMain.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.tblLayoutMain.Location = New System.Drawing.Point(0, 0)
+        Me.tblLayoutMain.Name = "tblLayoutMain"
+        Me.tblLayoutMain.RowCount = 3
+        Me.tblLayoutMain.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.tblLayoutMain.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.tblLayoutMain.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 170.0!))
+        Me.tblLayoutMain.Size = New System.Drawing.Size(1382, 753)
+        Me.tblLayoutMain.TabIndex = 25
         '
-        'btnChoose
+        'UTimeTable1
         '
-        Me.btnChoose.Location = New System.Drawing.Point(12, 46)
-        Me.btnChoose.Name = "btnChoose"
-        Me.btnChoose.Size = New System.Drawing.Size(75, 23)
-        Me.btnChoose.TabIndex = 1
-        Me.btnChoose.Text = "Name"
-        Me.btnChoose.UseVisualStyleBackColor = True
+        Me.UTimeTable1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UTimeTable1.AutoSize = True
+        Me.UTimeTable1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.UTimeTable1.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.UTimeTable1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.UTimeTable1.Location = New System.Drawing.Point(801, 33)
+        Me.UTimeTable1.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.UTimeTable1.Name = "UTimeTable1"
+        Me.UTimeTable1.Size = New System.Drawing.Size(577, 547)
+        Me.UTimeTable1.TabIndex = 27
         '
-        'lblLat
+        'UCtrlMapViewer1
         '
-        Me.lblLat.AutoSize = True
-        Me.lblLat.Location = New System.Drawing.Point(12, 129)
-        Me.lblLat.Name = "lblLat"
-        Me.lblLat.Size = New System.Drawing.Size(45, 13)
-        Me.lblLat.TabIndex = 2
-        Me.lblLat.Text = "Latitude"
+        Me.UCtrlMapViewer1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UCtrlMapViewer1.BackColor = System.Drawing.Color.Transparent
+        Me.UCtrlMapViewer1.Location = New System.Drawing.Point(0, 0)
+        Me.UCtrlMapViewer1.Margin = New System.Windows.Forms.Padding(0)
+        Me.UCtrlMapViewer1.Name = "UCtrlMapViewer1"
+        Me.tblLayoutMain.SetRowSpan(Me.UCtrlMapViewer1, 3)
+        Me.UCtrlMapViewer1.Size = New System.Drawing.Size(797, 753)
+        Me.UCtrlMapViewer1.TabIndex = 28
         '
-        'lblLongName
+        'URouteInfo1
         '
-        Me.lblLongName.AutoSize = True
-        Me.lblLongName.Location = New System.Drawing.Point(9, 84)
-        Me.lblLongName.Name = "lblLongName"
-        Me.lblLongName.Size = New System.Drawing.Size(54, 13)
-        Me.lblLongName.TabIndex = 3
-        Me.lblLongName.Text = "Longitude"
+        Me.URouteInfo1.BackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer), CType(CType(33, Byte), Integer))
+        Me.URouteInfo1.Enabled = False
+        Me.URouteInfo1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.URouteInfo1.Location = New System.Drawing.Point(800, 586)
+        Me.URouteInfo1.Name = "URouteInfo1"
+        Me.URouteInfo1.Size = New System.Drawing.Size(579, 164)
+        Me.URouteInfo1.TabIndex = 29
         '
-        'Label3
+        'btnSaveStops
         '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(12, 24)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(66, 13)
-        Me.Label3.TabIndex = 4
-        Me.Label3.Text = "Choose stop"
-        '
-        'btnDisplay
-        '
-        Me.btnDisplay.Location = New System.Drawing.Point(93, 46)
-        Me.btnDisplay.Name = "btnDisplay"
-        Me.btnDisplay.Size = New System.Drawing.Size(75, 23)
-        Me.btnDisplay.TabIndex = 5
-        Me.btnDisplay.Text = "Display"
-        Me.btnDisplay.UseVisualStyleBackColor = True
-        '
-        'txtLongName
-        '
-        Me.txtLongName.Location = New System.Drawing.Point(12, 100)
-        Me.txtLongName.Name = "txtLongName"
-        Me.txtLongName.Size = New System.Drawing.Size(100, 20)
-        Me.txtLongName.TabIndex = 6
-        '
-        'txtLat
-        '
-        Me.txtLat.Location = New System.Drawing.Point(12, 145)
-        Me.txtLat.Name = "txtLat"
-        Me.txtLat.Size = New System.Drawing.Size(100, 20)
-        Me.txtLat.TabIndex = 7
-        '
-        'btnAll
-        '
-        Me.btnAll.Location = New System.Drawing.Point(15, 181)
-        Me.btnAll.Name = "btnAll"
-        Me.btnAll.Size = New System.Drawing.Size(75, 23)
-        Me.btnAll.TabIndex = 8
-        Me.btnAll.Text = "Display All"
-        Me.btnAll.UseVisualStyleBackColor = True
+        Me.btnSaveStops.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnSaveStops.FlatAppearance.BorderSize = 0
+        Me.btnSaveStops.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnSaveStops.Font = New System.Drawing.Font("Segoe UI", 8.0!)
+        Me.btnSaveStops.ForeColor = System.Drawing.Color.White
+        Me.btnSaveStops.Location = New System.Drawing.Point(1241, 0)
+        Me.btnSaveStops.Margin = New System.Windows.Forms.Padding(0)
+        Me.btnSaveStops.Name = "btnSaveStops"
+        Me.btnSaveStops.Size = New System.Drawing.Size(141, 25)
+        Me.btnSaveStops.TabIndex = 30
+        Me.btnSaveStops.UseVisualStyleBackColor = True
         '
         'Kaardirakendus
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(800, 450)
-        Me.Controls.Add(Me.btnAll)
-        Me.Controls.Add(Me.txtLat)
-        Me.Controls.Add(Me.txtLongName)
-        Me.Controls.Add(Me.btnDisplay)
-        Me.Controls.Add(Me.Label3)
-        Me.Controls.Add(Me.lblLongName)
-        Me.Controls.Add(Me.lblLat)
-        Me.Controls.Add(Me.btnChoose)
-        Me.Controls.Add(Me.GMapControl1)
+        Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(35, Byte), Integer))
+        Me.ClientSize = New System.Drawing.Size(1382, 753)
+        Me.Controls.Add(Me.tblLayoutMain)
+        Me.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.Margin = New System.Windows.Forms.Padding(5)
         Me.Name = "Kaardirakendus"
-        Me.Text = "Form1"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+        Me.Text = "Linnatranspordi rakendus"
+        Me.tblLayoutMain.ResumeLayout(False)
+        Me.tblLayoutMain.PerformLayout()
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
-
-    Friend WithEvents GMapControl1 As GMap.NET.WindowsForms.GMapControl
-    Friend WithEvents btnChoose As Button
-    Friend WithEvents lblLat As Label
-    Friend WithEvents lblLongName As Label
-    Friend WithEvents Label3 As Label
-    Friend WithEvents btnDisplay As Button
-    Friend WithEvents txtLongName As TextBox
-    Friend WithEvents txtLat As TextBox
-    Friend WithEvents btnAll As Button
+    Friend WithEvents tblLayoutMain As TableLayoutPanel
+    Friend WithEvents UTimeTable1 As UTimeTable.UTimeTable
+    Friend WithEvents UCtrlMapViewer1 As UCtrlMapViewer.UCtrlMapViewer
+    Friend WithEvents URouteInfo1 As PrjTransitRouteInfo.URouteInfo
+    Friend WithEvents btnSaveStops As Button
 End Class

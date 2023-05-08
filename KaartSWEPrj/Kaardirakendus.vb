@@ -1,130 +1,75 @@
-﻿Imports GMap.NET
-Imports GMap.NET.MapProviders
-Imports GMap.NET.WindowsForms
-Imports GMap.NET.WindowsForms.Markers
-Imports System.IO
-Imports System.Net
-Imports System.Windows
+﻿Imports GMap.NET.WindowsForms
+Imports StopStruct = UTimeTable.ITimeTable.StopStruct
+Imports RouteInfo = PrjTransitRouteInfo.IRouteInfo.RouteInfo
+Imports System.Drawing.Drawing2D
 
 Public Class Kaardirakendus
-    'Algne versioon
-    Private Sub Kaardirakendus_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        GMapControl1.MapProvider = GoogleMapProvider.Instance
-        GMaps.Instance.Mode = AccessMode.ServerAndCache
-        GMapControl1.ShowCenter = False
-
-        GMapControl1.Position = New GMap.NET.PointLatLng(59.4380930599551, 24.7590637207031)
-        GMapControl1.MinZoom = 5
-        GMapControl1.MaxZoom = 100
-        GMapControl1.Zoom = 10
-    End Sub
-
-    Private Sub GMapControl1_Load(sender As Object, e As EventArgs) Handles GMapControl1.Load
-
-    End Sub
-
-    Private Sub GMapControl1_MouseMove(sender As Object, e As MouseEventArgs) Handles GMapControl1.MouseMove
-        'GMapControl1.Mouse
-    End Sub
-
-    Private Sub GMapControl1_OnMapClick(sender As Object, e As MouseEventArgs) Handles GMapControl1.OnMapClick
-        ' Get the latitude and longitude of the clicked point
-        Dim lat As Double = GMapControl1.FromLocalToLatLng(e.X, e.Y).Lat
-        Dim lng As Double = GMapControl1.FromLocalToLatLng(e.X, e.Y).Lng
-        If (choose) Then
-            btnChoose.Text = "Name"
-            lblLongName.Text = "Longitude"
-            lblLat.Visible = True
-            txtLat.Visible = True
-            choose = False
-        End If
-        txtLongName.Text = lng
-        txtLat.Text = lat
-    End Sub
-
-    Dim choose As Boolean = True
-
-    Private Sub btnChoose_Click(sender As Object, e As EventArgs) Handles btnChoose.Click
-        If (choose) Then
-            btnChoose.Text = "Name"
-            lblLongName.Text = "Longitude"
-            txtLongName.Text = ""
-            lblLat.Visible = True
-            txtLat.Visible = True
-            choose = False
-        Else
-            btnChoose.Text = "Coordinates"
-            lblLongName.Text = "Name"
-            txtLongName.Text = ""
-            txtLat.Text = ""
-            lblLat.Visible = False
-            txtLat.Visible = False
-            choose = True
-        End If
-    End Sub
 
     Private lastMarker As GMapMarker
+    Dim choose As Boolean = True
 
-    Private Sub btnDisplay_Click(sender As Object, e As EventArgs) Handles btnDisplay.Click
-        If (choose) Then
+    Private Sub Kaardirakendus_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        UCtrlMapViewer1.initMap()
+        URouteInfo1.Visible = False
+    End Sub
 
+    Private Sub Kaardirakendus_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+        Try
+            UTimeTable1.CloseConnections()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+    Private Sub UTimeTable1_ShapesReady(ByVal routepoints As List(Of StopStruct), ByVal routestops As List(Of StopStruct)) _
+    Handles UTimeTable1.ShapesReady
+        UCtrlMapViewer1.DisplayShapes(routepoints, routestops)
+    End Sub
+
+    Private Sub UTimeTable_ClearShapes() Handles UTimeTable1.ClearShapes
+        UCtrlMapViewer1.ClearShapes()
+    End Sub
+
+    Private Sub HandleDisplayRouteInfo(ByVal route As RouteInfo) _
+        Handles UCtrlMapViewer1.DisplayRouteInfo
+        URouteInfo1.DisplayInfo(route)
+        URouteInfo1.Visible = True
+        URouteInfo1.Invalidate()
+    End Sub
+
+    Private Sub HandleClearRouteInfo() Handles UCtrlMapViewer1.ClearRouteInfo
+        URouteInfo1.Visible = False
+        URouteInfo1.ClearBrowser()
+    End Sub
+
+    Private Sub HandleClearInfo() Handles UTimeTable1.ClearInfo
+        URouteInfo1.Visible = False
+        URouteInfo1.ClearBrowser()
+    End Sub
+
+    Private Sub btnSaveStops_Paint(sender As Object, e As PaintEventArgs) Handles btnSaveStops.Paint
+        Dim textSize As SizeF = e.Graphics.MeasureString(btnSaveStops.Text, btnSaveStops.Font)
+
+        Dim textRect As New RectangleF(0, 0, btnSaveStops.Width, btnSaveStops.Height)
+        Dim format As New StringFormat()
+        format.Alignment = StringAlignment.Center
+        format.LineAlignment = StringAlignment.Center
+        Dim text As String = "Salvesta peatused..."
+        If btnSaveStops.ClientRectangle.Contains(btnSaveStops.PointToClient(Control.MousePosition)) Then
+            e.Graphics.FillRectangle(SystemBrushes.Control, btnSaveStops.ClientRectangle)
+            e.Graphics.DrawString(text, btnSaveStops.Font, Brushes.Black, textRect, format)
         Else
-            ' Clear all markers from the map
-            GMapControl1.Overlays.Clear()
-
-            ' Get the longitude and latitude coordinates from the textboxes
-            Dim longCoord As Double = CDbl(Val(txtLat.Text))
-            Dim latCoord As Double = CDbl(Val(txtLongName.Text))
-
-            ' Set the position of the map control to the specified coordinates
-            GMapControl1.ShowCenter = False
-            GMapControl1.Position = New GMap.NET.PointLatLng(longCoord, latCoord)
-
-            ' Create a new marker and add it to the map
-            Dim markers As GMapOverlay = New GMapOverlay("polygons")
-            Dim marker As GMapMarker = New GMarkerGoogle(GMapControl1.Position, GMarkerGoogleType.blue_dot)
-            markers.Markers.Add(marker)
-            GMapControl1.Overlays.Add(markers)
-
-            ' Set some zoom properties and tooltip mode for the marker
-            GMapControl1.MinZoom = 5
-            GMapControl1.MaxZoom = 100
-            GMapControl1.Zoom = 14
-            marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
+            Dim rect As Rectangle = New Rectangle(0, 0, btnSaveStops.Width, btnSaveStops.Height)
+            ' Draw button outline
+            Dim outlinePen As Pen = New Pen(Color.Black, 2)
+            e.Graphics.DrawRectangle(outlinePen, rect)
+            Dim brush As New LinearGradientBrush(rect, Color.FromArgb(204, 35, 35, 35), Color.FromArgb(204, 20, 20, 20), LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, rect)
+            e.Graphics.DrawString(text, btnSaveStops.Font, Brushes.White, textRect, format)
         End If
     End Sub
 
-    Private Sub btnAll_Click(sender As Object, e As EventArgs) Handles btnAll.Click
-        ' Clear all markers from the map
-        GMapControl1.Overlays.Clear()
-
-        ' Download the stops.txt file
-        Dim client As WebClient = New WebClient()
-        Dim data As Stream = client.OpenRead("https://transport.tallinn.ee/data/stops.txt")
-        Dim reader As New StreamReader(data)
-        Dim line As String
-        Dim fields As String()
-        Dim lat As Double
-        Dim lng As Double
-
-        GMapControl1.ShowCenter = False
-        Dim markers As GMapOverlay = New GMapOverlay("markers")
-        While Not reader.EndOfStream
-            line = reader.ReadLine()
-            fields = line.Split(";")
-            If fields.Length >= 4 AndAlso Integer.TryParse(fields(2), Nothing) AndAlso Integer.TryParse(fields(3), Nothing) Then
-                lat = CDbl(fields(2)) / 100000
-                lng = CDbl(fields(3)) / 100000
-                Dim busStop As PointLatLng = New GMap.NET.PointLatLng(lat, lng)
-                Dim marker As GMapMarker = New GMarkerGoogle(busStop, GMarkerGoogleType.red_small)
-                markers.Markers.Add(marker)
-                'Console.WriteLine("Bus Stop at Latitude: " & busStop.Lat.ToString() & ", Longitude: " & busStop.Lng.ToString())
-            End If
-        End While
-
-        ' Add the markers overlay to the map
-        GMapControl1.Overlays.Add(markers)
-        GMapControl1.Refresh()
+    Private Sub btnSaveStops_Click(sender As Object, e As EventArgs) Handles btnSaveStops.Click
+        formCSV.ShowDialog()
     End Sub
-
 End Class
+
