@@ -1,4 +1,5 @@
-﻿Imports System.Security.Policy
+﻿Imports System.IO
+Imports System.Security.Policy
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify
 
 Public Class URouteInfo
@@ -8,26 +9,17 @@ Public Class URouteInfo
         Public StartTime As String
         Public EndTime As String
         Public Duration As Integer
-        Public Sub Reset()
-            Steps = Nothing
-            StartTime = ""
-            EndTime = ""
-            Duration = 0
-        End Sub
     End Structure
     Public Structure StepInfo
         Public Time As Integer
         Public IconPath As String
         Public LineNr As String
-        Public Sub Reset()
-            Time = 0
-            IconPath = ""
-            LineNr = ""
-        End Sub
     End Structure
+    Private tempFile As String
 
 
     Public Sub DisplayInfo(route As RouteInfo)
+        ' wBrowserInfo.Navigate("about:blank")
         Dim transitIconPath As String = IO.Path.Combine(IO.Path.GetTempPath(), Guid.NewGuid().ToString() + "_bus_route.png")
         My.Resources.bus_route.Save(transitIconPath, Imaging.ImageFormat.Png)
         Dim busIconPath As String = IO.Path.Combine(IO.Path.GetTempPath(), Guid.NewGuid().ToString() + "_bus_icon.png")
@@ -43,8 +35,8 @@ Public Class URouteInfo
         Dim table As String = "<table>" &
     "<tbody>" &
         "<tr>" &
-            "<td rowspan='4' valign='middle'><div class='bus-icon'><img src='" & transitIconPath & "' width='50' height='50'/></div></td>" &
-            "<td colspan='3' style='font-size: 20px; font-weight: bold;'>" & route.StartTime & " - " & route.EndTime & "</td>" &
+            "<td rowspan='3' valign='middle'><div class='bus-icon'><img src='" & transitIconPath & "' width='50' height='50'/></div></td>" &
+            "<td colspan='3' style='vertical-align:bottom; font-size: 24px; font-weight: 600;'>" & route.StartTime & " - " & route.EndTime & "</td>" &
             "<td rowspan='3' class='duration-cell' style='text-align:center; vertical-align:middle; '>" &
                 "<table><tbody><tr></tr><tr><td><div class='duration-number'>" & route.Duration & "</div><div class='duration-text'>min</div></td></tr><tr></tr></tbody></table>" &
             "</td>" &
@@ -59,14 +51,16 @@ Public Class URouteInfo
         For Each item As StepInfo In route.Steps
             Dim iconPath As String = If(item.IconPath = "Bus", busIconPath, walkIconPath)
             Dim iconSize As Integer = If(item.IconPath = "Bus", 25, 25)
+            Dim lineNr As String = If(item.LineNr IsNot "", "<div class='line-number'>" & item.LineNr & "</div>",
+            item.LineNr)
             table &= "<td>" &
                 "<table>" &
                 "<tbody>" &
-                "<tr>" &
-                "<td><div class='transit-icon'" & item.IconPath & "-icon'><img src='" & iconPath & "' width='" & iconSize & "' height='" & iconSize & "'/>" & item.LineNr & "</div></td>" &
+                "<tr style='height: 44px;'>" &
+                "<td style='vertical-align: middle;'>" & lineNr & "<div class='transit-icon'" & item.IconPath & "-icon'><img src='" & iconPath & "' width='" & iconSize & "' height='" & iconSize & "'/></div></td>" &
                 "</tr>" &
-                "<tr>" &
-                "<td>" & item.Time & "&nbsp;min</td>" &
+                "<tr style='height:20px'>" &
+                "<td style='vertical-align: top'>" & item.Time & "&nbsp;min</td>" &
                 "</tr>" &
                 "</tbody>" &
                 "</table>" &
@@ -74,20 +68,15 @@ Public Class URouteInfo
         Next
         Dim css As String = "<style>" &
             "body {" &
-                "user-select: none;" &
-                "-webkit-user-select: none;" &
-                "-moz-user-select: none;" &
-                "-ms-user-select: none;" &
-                "user-interaction: none;" &
                 "background-color :  #212121;" &
-                "padding: 0;" &
+                "padding: 2px;" &
                 "margin: 0;" &
             "}" &
             "table {" &
-                "border-collapse: collapse;" &
+                "border-collapse: separate !important;" &
+                "overflow: hidden;" &
                 "width: 100%;" &
                 "height: 100%;" &
-                "box-sizing: border-box;" &
                 "font-family: Segoe UI, sans-serif;" &
                 "font-size: 14px;" &
                 "color: white;" &
@@ -98,14 +87,14 @@ Public Class URouteInfo
                 "padding: 0px;" &
             "}" &
             "th {" &
-                "background-color: #f2f2f2;" &
+                "background-color: #212121;" &
                 "font-weight: normal;" &
             "}" &
             ".bus-icon {" &
                 "width: auto;" &
                 "height: auto;" &
                 "border: none;" &
-                "display: flex;" &
+                "display: inline-block" &
                 "align-items: center;" &
         "}" &
         ".duration-cell {" &
@@ -114,7 +103,7 @@ Public Class URouteInfo
         "}" &
         ".duration-number {" &
         "font-size: 30px;" &
-        "font-weight: bold;" &
+        "font-weight: 600;" &
         "}" &
         ".duration-text {" &
         "font-size: 14px;" &
@@ -132,6 +121,12 @@ Public Class URouteInfo
         ".walk-icon img {" &
         "margin: auto;" &
         "}" &
+        ".line-number {" &
+        "background-color: #0062FF;" &
+        "border-radius: 10px;" &
+        "width: 25px;" &
+        "font-weight: 600;" &
+        "}" &
         ".transit-icon img {" &
         "margin: auto;" &
         "}" &
@@ -142,12 +137,18 @@ Public Class URouteInfo
 
         ' Combine all the HTML content and display it in a web browser control
         Dim html As String = "<html><head>" & css & "</head><body>" & stepsHtml & "</body></html>"
-        wBrowserInfo.DocumentText = html
-        'wBrowserInfo.Refresh()
+        ' Navigate to a blank page to clear any previous content
+        tempFile = Path.GetTempFileName() & ".html"
+        File.WriteAllText(tempFile, html)
+        wBrowserInfo.Navigate(tempFile)
     End Sub
 
     Public Sub ClearBrowser()
-        wBrowserInfo.Refresh()
+        wBrowserInfo.Navigate("about:blank")
+        If File.Exists(tempFile) Then
+            File.Delete(tempFile)
+        End If
+        'wBrowserInfo.Refresh()
     End Sub
     Private Sub URouteInfo_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 

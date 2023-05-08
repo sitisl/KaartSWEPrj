@@ -38,6 +38,7 @@ Public Class Kaardirakendus
         Handles UCtrlMapViewer1.DisplayRouteInfo
         URouteInfo1.DisplayInfo(route)
         URouteInfo1.Visible = True
+        URouteInfo1.Invalidate()
     End Sub
 
     Private Sub HandleClearRouteInfo() Handles UCtrlMapViewer1.ClearRouteInfo
