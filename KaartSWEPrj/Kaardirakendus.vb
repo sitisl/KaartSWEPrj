@@ -17,7 +17,7 @@ Public Class Kaardirakendus
         Try
             UTimeTable1.CloseConnections()
         Catch ex As Exception
-            MsgBox(ex)
+            MsgBox(ex.Message)
         End Try
     End Sub
     Private Sub UTimeTable1_ShapesReady(ByVal routepoints As List(Of StopStruct), ByVal routestops As List(Of StopStruct)) _
@@ -25,7 +25,7 @@ Public Class Kaardirakendus
         UCtrlMapViewer1.DisplayShapes(routepoints, routestops)
     End Sub
 
-    Private Sub UTimeTable_ClearShapes()
+    Private Sub UTimeTable_ClearShapes() Handles UTimeTable1.ClearShapes
         UCtrlMapViewer1.ClearShapes()
     End Sub
 
@@ -64,7 +64,7 @@ Public Class Kaardirakendus
     End Sub
 
     Private Sub btnSaveStops_Click(sender As Object, e As EventArgs) Handles btnSaveStops.Click
-        formCSV.Show()
+        formCSV.ShowDialog()
     End Sub
 End Class
 
