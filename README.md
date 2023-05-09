@@ -8,7 +8,7 @@ Authors:
 
 
 ## Introduction
-This is the repo of Projektirühm from Software Project course at TalTech 2023. 
+This is the repo of Projektirühm from Software Engineering course at TalTech 2023. 
 The goal of the project was to create a real time public transportation app for Tallinn in Visual Basic that has a GUI, map and support for finding most convenient way to get around Tallin by public transport.
 This repo is only for more convenient code management and project is intended olny as a study project.
 
