@@ -21,7 +21,6 @@ Public Class UCtrlMapViewer
     'Flag for checking the btnOptimize state
     Private optimizeByDist As Boolean = False
     ' Flag for checking if the layerPanel is resized
-    Private isResized As Boolean = False
     Private startCoord As PointLatLng
     Private endCoord As PointLatLng
     Private startAddress As String
@@ -29,7 +28,6 @@ Public Class UCtrlMapViewer
     Private stopMarker As GMarkerGoogle
     'Key to access Bing Map provider routing
     Private Const apiKey As String = "9uNDiiSRdZbV6ok9Ec5t~H2haoDb04SzxUDigaGoUfg~Ajj9p1O58cpXmy-Y-BbTNAF8M1Ws3HjoFHGWOaSgIYCucioMsIkP3BpBZGI3XtWr"
-    Private WithEvents transportTimer As New Timer()
     Private stopsOverlay As New GMapOverlay("stopsOverlay")
     Private routesOverlay As New WindowsForms.GMapOverlay("RoutesOverlay")
 
@@ -40,7 +38,7 @@ Public Class UCtrlMapViewer
         ' This code will run when the user control is loaded into a form or another container control
         panelLayers_Init()
         cbStops.Checked = True
-        transportTimer.Interval = 5000 ' 1 second
+        transportTimer.Interval = 5000 ' 5 seconds
         transportTimer.Enabled = True
         lblStart.Parent = gMap1 'Parent set as gMap1 to get transparency effect for controls
         lblDest.Parent = gMap1
@@ -71,10 +69,6 @@ Public Class UCtrlMapViewer
     End Sub
 
     Public Sub initMap()
-        initializeMap()
-    End Sub
-    'The map is initialized in this sub
-    Private Sub initializeMap()
         gMap1.MapProvider = BingMapProvider.Instance 'Bing for map provider
         'API key
         BingMapProvider.Instance.ClientKey = apiKey
@@ -86,11 +80,7 @@ Public Class UCtrlMapViewer
         gMap1.Zoom = 12
         gMap1.DragButton = MouseButtons.Left
         gMap1.Refresh()
-        'GMaps.Instance.UseMemoryCache = True
-        'GMapControl1.BoundsOfMap = New RectLatLng(59.43, 24.75, 0.1, 0.1)
     End Sub
-
-
 
     '------------------Paint events and personalization of the user controls-------------------------
     'These events and functions override the default behaviour and appearance of the controls
@@ -518,7 +508,6 @@ Public Class UCtrlMapViewer
         cbTram.Location = New Point(10, 60)
         cbTroll.Location = New Point(10, 85)
         panelLayers.Show()
-        isResized = True
     End Sub
 
     Private Sub panelLayers_MouseLeave(sender As Object, e As EventArgs) Handles panelLayers.MouseLeave
@@ -532,7 +521,6 @@ Public Class UCtrlMapViewer
             panelLayers.Location = menuLocation
             panelLayers.Size = btnLayers.Size
             btnLayers.Location = New Point(panelLayers.Width - btnLayers.Width, 0)
-            isResized = False
             panelLayers.Show()
         End If
     End Sub
@@ -1044,63 +1032,6 @@ Public Class UCtrlMapViewer
             gMap1.Refresh()
         End If
     End Sub
-
-    'This method gets the bus locations using realtime component and adds them to the map
-    'Public Function GetBuses(ByRef markerBitmap As Bitmap)
-    '    Dim realTime As UTimeTable.ITimeTable = New UTimeTable.UTimeTable
-    '    Dim buses As List(Of TransportStruct) = realTime.GetRealTimeTransport("bus")
-    '    Dim marker As GMarkerGoogle
-    '    CStops.busesOverlay.Markers.Clear()
-    '    For Each buses_el As TransportStruct In buses
-    '        marker = New GMarkerGoogle(New PointLatLng(buses_el.Latitude, buses_el.Longitude), markerBitmap)
-    '        marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
-    '        Dim toolTip As New CustomToolTip(marker)
-    '        toolTip.Offset = New Point(5, -markerBitmap.Height / 2)
-    '        marker.ToolTip = toolTip
-    '        marker.ToolTipText = buses_el.Number
-    '        gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
-    '        CStops.busesOverlay.Markers.Add(marker)
-    '    Next
-    '    Return CStops.busesOverlay
-    'End Function
-
-    'This method gets the trams location and adds them to the map
-    'Public Function GetTrams(ByRef markerBitmap As Bitmap)
-    '    Dim realTime As UTimeTable.ITimeTable = New UTimeTable.UTimeTable
-    '    Dim trams As List(Of TransportStruct) = realTime.GetRealTimeTransport("tram")
-    '    Dim marker As GMarkerGoogle
-    '    tramsOverlay.Markers.Clear()
-    '    For Each trams_el As TransportStruct In trams
-    '        marker = New GMarkerGoogle(New PointLatLng(trams_el.Latitude, trams_el.Longitude), markerBitmap)
-    '        marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
-    '        Dim toolTip As New CustomToolTip(marker)
-    '        toolTip.Offset = New Point(5, -markerBitmap.Height / 2)
-    '        marker.ToolTip = toolTip
-    '        marker.ToolTipText = trams_el.Number
-    '        gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
-    '        tramsOverlay.Markers.Add(marker)
-    '    Next
-    '    Return tramsOverlay
-    'End Function
-
-    'This method gets the trolleys location and adds them to the map
-    'Public Function GetTrolleys(ByRef markerBitmap As Bitmap)
-    '    Dim realTime As UTimeTable.ITimeTable = New UTimeTable.UTimeTable
-    '    Dim trolleys As List(Of TransportStruct) = realTime.GetRealTimeTransport("trolley")
-    '    Dim marker As GMarkerGoogle
-    '    trolleysOverlay.Markers.Clear()
-    '    For Each trolleys_el As TransportStruct In trolleys
-    '        marker = New GMarkerGoogle(New PointLatLng(trolleys_el.Latitude, trolleys_el.Longitude), markerBitmap)
-    '        marker.ToolTipMode = MarkerTooltipMode.OnMouseOver
-    '        Dim toolTip As New CustomToolTip(marker)
-    '        toolTip.Offset = New Point(5, -markerBitmap.Height / 2)
-    '        marker.ToolTip = toolTip
-    '        marker.ToolTipText = trolleys_el.Number
-    '        gMap1.UpdateMarkerLocalPosition(marker) 'This ensures that the markers appear on map
-    '        trolleysOverlay.Markers.Add(marker)
-    '    Next
-    '    Return trolleysOverlay
-    'End Function
 
 End Class
 

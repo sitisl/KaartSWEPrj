@@ -9,13 +9,11 @@ Imports TransportStruct = UTimeTable.ITimeTable.TransportStruct
 Public Class UTimeTable
     Implements ITimeTable
 
-    Dim SQLiteCon As SQLiteConnection
-    Dim SQLiteCmd As SQLiteCommand
-    Dim SQLiteReader As SQLiteDataReader
-    Public Suund As String = Nothing
-    Public SelectedLine As String = Nothing
-    Public SelectedStop As String = Nothing
-    Public SelectedDay As String = "monday"
+    Private SQLiteReader As SQLiteDataReader
+    Private Suund As String = Nothing
+    Private SelectedLine As String = Nothing
+    Private SelectedStop As String = Nothing
+    Private SelectedDay As String = "monday"
     'Dim dbFilePath As String = Path.Combine(Application.StartupPath, "mapdb.db")
     Dim CData As PrjData.IDataGetter = New PrjData.CDataGetter
     Private Structure TimeStruct

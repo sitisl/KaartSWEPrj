@@ -70,7 +70,7 @@ Public Class CStopsAndVehicles
         Return markerBitmap
     End Function
 
-    Public Function GetBuses(ByRef markerBitmap As Bitmap, ByRef gMap1 As GMapControl)
+    Private Function GetBuses(ByRef markerBitmap As Bitmap, ByRef gMap1 As GMapControl)
         Dim realTime As UTimeTable.ITimeTable = New UTimeTable.UTimeTable
         Dim buses As List(Of TransportStruct) = realTime.GetRealTimeTransport("bus")
         Dim marker As GMarkerGoogle
@@ -87,7 +87,7 @@ Public Class CStopsAndVehicles
         Next
         Return busesOverlay
     End Function
-    Public Function GetTrams(ByRef markerBitmap As Bitmap, ByRef gMap1 As GMapControl)
+    Private Function GetTrams(ByRef markerBitmap As Bitmap, ByRef gMap1 As GMapControl)
         Dim realTime As UTimeTable.ITimeTable = New UTimeTable.UTimeTable
         Dim trams As List(Of TransportStruct) = realTime.GetRealTimeTransport("tram")
         Dim marker As GMarkerGoogle
@@ -104,7 +104,7 @@ Public Class CStopsAndVehicles
         Next
         Return tramsOverlay
     End Function
-    Public Function GetTrolleys(ByRef markerBitmap As Bitmap, ByRef gMap1 As GMapControl)
+    Private Function GetTrolleys(ByRef markerBitmap As Bitmap, ByRef gMap1 As GMapControl)
         Dim realTime As UTimeTable.ITimeTable = New UTimeTable.UTimeTable
         Dim trolleys As List(Of TransportStruct) = realTime.GetRealTimeTransport("trolley")
         Dim marker As GMarkerGoogle
@@ -121,7 +121,7 @@ Public Class CStopsAndVehicles
         Next
         Return trolleysOverlay
     End Function
-    Private Function getStopsSQL(ByRef markerBitmap As Bitmap, ByRef gMap1 As GMapControl)
+    Private Function getStopsData(ByRef markerBitmap As Bitmap, ByRef gMap1 As GMapControl)
         Dim timeT As UTimeTable.ITimeTable = New UTimeTable.UTimeTable
         Dim stops As List(Of StopStruct) = timeT.GetStopsCoordinates()
         Dim marker As GMarkerGoogle
@@ -139,6 +139,6 @@ Public Class CStopsAndVehicles
         Return stopsOverlay
     End Function
     Public Function getStops(ByRef gMap1 As GMapControl) As Object
-        Return getStopsSQL(drawMarker("Orange", 9), gMap1)
+        Return getStopsData(drawMarker("Orange", 9), gMap1)
     End Function
 End Class
