@@ -16,7 +16,7 @@ Public Class UTimeTable
     Public SelectedLine As String = Nothing
     Public SelectedStop As String = Nothing
     Public SelectedDay As String = "monday"
-    Dim dbFilePath As String = Path.Combine(Application.StartupPath, "mapdb.db")
+    'Dim dbFilePath As String = Path.Combine(Application.StartupPath, "mapdb.db")
     Dim CData As PrjData.IDataGetter = New PrjData.CDataGetter
     Private Structure TimeStruct
         Dim Name As String
@@ -84,9 +84,7 @@ Public Class UTimeTable
         Dim stops As New List(Of StopStruct)
 
         Try
-            MakeSqlConn()
-            SQLiteCmd = New SQLiteCommand(query, SQLiteCon)
-            SQLiteReader = SQLiteCmd.ExecuteReader()
+            SQLiteReader = CData.MakeQuery(query)
             While SQLiteReader.Read()
                 Dim s As New StopStruct
                 s.Name = SQLiteReader.GetString(0)
@@ -95,31 +93,12 @@ Public Class UTimeTable
                 s.Longitude = SQLiteReader.GetDouble(3)
                 stops.Add(s)
             End While
-            SQLiteReader.Close()
-            SQLiteCon.Close()
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
 
         Return stops
     End Function
-
-    Public Sub MakeSqlConn() Implements ITimeTable.MakeSqlConn
-        Try
-            SQLiteCon = New SQLiteConnection($"Data Source={dbFilePath};Version=3;")
-            SQLiteCon.Open()
-        Catch ex As Exception
-            MsgBox(ex)
-        End Try
-    End Sub
-
-    Public Sub CloseConnections() Implements ITimeTable.CloseConnections
-        Try
-            SQLiteCon.Close()
-        Catch
-            Exit Sub
-        End Try
-    End Sub
 
     Private Sub LoadLines()
         Dim query As String
@@ -194,7 +173,6 @@ Public Class UTimeTable
         lBoxPeatused.Items.AddRange(updatedItems.ToArray())
         lBoxPeatused.SelectedIndex = index
         AddHandler lBoxPeatused.SelectedValueChanged, AddressOf lBoxPeatused_SelectedValueChanged
-        SQLiteReader.Close()
     End Sub
 
     Public Event ShapesReady(ByVal routepoints As List(Of StopStruct), ByVal routestops As List(Of StopStruct))

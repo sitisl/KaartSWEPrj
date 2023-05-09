@@ -12,7 +12,8 @@ Public Class CDataGetter
     Private Sub CloseConnections() Implements IDataGetter.CloseConnections
         Try
             SQLiteCon.Close()
-        Catch
+        Catch ex As Exception
+            MsgBox(ex)
             Exit Sub
         End Try
     End Sub

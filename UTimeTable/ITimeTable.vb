@@ -12,6 +12,4 @@
     End Structure
     Function GetStopsCoordinates() As List(Of StopStruct)
     Function GetRealTimeTransport(type As String) As List(Of TransportStruct)
-    Sub MakeSqlConn()
-    Sub CloseConnections()
 End Interface

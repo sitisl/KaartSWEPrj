@@ -26,11 +26,9 @@ Public Class UCtrlMapViewer
     Private endCoord As PointLatLng
     Private startAddress As String
     Private destAddress As String
-    Private pointCoord As PointLatLng
     Private stopMarker As GMarkerGoogle
     'Key to access Bing Map provider routing
     Private Const apiKey As String = "9uNDiiSRdZbV6ok9Ec5t~H2haoDb04SzxUDigaGoUfg~Ajj9p1O58cpXmy-Y-BbTNAF8M1Ws3HjoFHGWOaSgIYCucioMsIkP3BpBZGI3XtWr"
-    Public timeT As UTimeTable.ITimeTable
     Private WithEvents transportTimer As New Timer()
     Private busesOverlay As New GMapOverlay("busesOverlay")
     Private stopsOverlay As New GMapOverlay("stopsOverlay")
