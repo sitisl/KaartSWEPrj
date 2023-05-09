@@ -17,8 +17,8 @@ To run the public transportation applications all files from the repo have to be
 
 ## Technologies Used
 * VB programming languages
-* Google API for map
-* Bing API for route
+* GMAP.NET for displaying map
+* Bing Maps REST API for route and map provider
 * SQLite Studio for database creation
 * Visual Studio and Qt Creator as an integrated development environment (IDE)
 * Git for version control
