@@ -220,10 +220,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PrjRealTime\PrjRealTime.vbproj">
-      <Project>{90ed1caf-dac2-4d51-bcc8-93680c20d7ce}</Project>
-      <Name>PrjRealTime</Name>
-    </ProjectReference>
     <ProjectReference Include="..\PrjTransitRouteInfo\PrjTransitRouteInfo.vbproj">
       <Project>{ad07f478-1d9a-4f1c-b1fd-4f0be9cfcfce}</Project>
       <Name>PrjTransitRouteInfo</Name>
