@@ -33,7 +33,7 @@ Partial Class formCSV
         Me.cbSaveType = New System.Windows.Forms.CheckBox()
         Me.tbQualifier = New System.Windows.Forms.TextBox()
         Me.tbDelimiter = New System.Windows.Forms.TextBox()
-        Me.Label2 = New System.Windows.Forms.Label()
+        Me.lblQualifierText = New System.Windows.Forms.Label()
         Me.lblDivider = New System.Windows.Forms.Label()
         Me.gpSave.SuspendLayout()
         Me.SuspendLayout()
@@ -50,6 +50,7 @@ Partial Class formCSV
         '
         'gpSave
         '
+        Me.gpSave.AutoSize = True
         Me.gpSave.Controls.Add(Me.lblFilePath)
         Me.gpSave.Controls.Add(Me.lblFileName)
         Me.gpSave.Controls.Add(Me.lblFileNameText)
@@ -58,7 +59,7 @@ Partial Class formCSV
         Me.gpSave.Controls.Add(Me.cbSaveType)
         Me.gpSave.Controls.Add(Me.tbQualifier)
         Me.gpSave.Controls.Add(Me.tbDelimiter)
-        Me.gpSave.Controls.Add(Me.Label2)
+        Me.gpSave.Controls.Add(Me.lblQualifierText)
         Me.gpSave.Controls.Add(Me.lblDivider)
         Me.gpSave.Controls.Add(Me.btnSave)
         Me.gpSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat
@@ -74,6 +75,7 @@ Partial Class formCSV
         '
         Me.lblFilePath.AutoSize = True
         Me.lblFilePath.Location = New System.Drawing.Point(108, 221)
+        Me.lblFilePath.MaximumSize = New System.Drawing.Size(240, 0)
         Me.lblFilePath.Name = "lblFilePath"
         Me.lblFilePath.Size = New System.Drawing.Size(0, 20)
         Me.lblFilePath.TabIndex = 10
@@ -140,14 +142,14 @@ Partial Class formCSV
         Me.tbDelimiter.Size = New System.Drawing.Size(176, 27)
         Me.tbDelimiter.TabIndex = 3
         '
-        'Label2
+        'lblQualifierText
         '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(6, 82)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(134, 20)
-        Me.Label2.TabIndex = 2
-        Me.Label2.Text = "Teksti kvalifikaator:"
+        Me.lblQualifierText.AutoSize = True
+        Me.lblQualifierText.Location = New System.Drawing.Point(6, 82)
+        Me.lblQualifierText.Name = "lblQualifierText"
+        Me.lblQualifierText.Size = New System.Drawing.Size(134, 20)
+        Me.lblQualifierText.TabIndex = 2
+        Me.lblQualifierText.Text = "Teksti kvalifikaator:"
         '
         'lblDivider
         '
@@ -176,6 +178,7 @@ Partial Class formCSV
         Me.gpSave.ResumeLayout(False)
         Me.gpSave.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
@@ -189,6 +192,6 @@ Partial Class formCSV
     Friend WithEvents cbSaveType As CheckBox
     Friend WithEvents tbQualifier As TextBox
     Friend WithEvents tbDelimiter As TextBox
-    Friend WithEvents Label2 As Label
+    Friend WithEvents lblQualifierText As Label
     Friend WithEvents lblDivider As Label
 End Class

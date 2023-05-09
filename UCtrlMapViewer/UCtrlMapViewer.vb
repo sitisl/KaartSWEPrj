@@ -498,8 +498,15 @@ Public Class UCtrlMapViewer
             If closestMarker IsNot Nothing Then
                 closestMarker.ToolTipMode = MarkerTooltipMode.Always
             End If
-            gMap1.UpdateMarkerLocalPosition(closestMarker)
-            gMap1.Refresh()
+            If cbStops.Checked Then
+                gMap1.UpdateMarkerLocalPosition(closestMarker)
+                gMap1.Refresh()
+            Else
+                stopsOverlay.Clear()
+                stopsOverlay.Markers.Add(closestMarker)
+                gMap1.UpdateMarkerLocalPosition(closestMarker)
+                gMap1.Refresh()
+            End If
         End If
         btnNearestStopDest.Enabled = False
         btnNearestStopStart.Enabled = True
