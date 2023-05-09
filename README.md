@@ -13,7 +13,7 @@ The goal of the project was to create a real time public transportation app for 
 This repo is only for more convenient code management and project is intended olny as a study project.
 
 ## Installation
-To run the ublic transportation applications all files from the repo have to be downloaded and executed as a unit. And mapsdb.db database file has to be downloaded and placed in users Desktop folder
+To run the public transportation applications all files from the repo have to be downloaded and executed as a unit. Also mapsdb.db database file has to be downloaded and placed in users Desktop folder.
 
 ## Technologies Used
 * VB programming languages
