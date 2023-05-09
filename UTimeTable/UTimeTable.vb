@@ -16,8 +16,7 @@ Public Class UTimeTable
     Public SelectedLine As String = Nothing
     Public SelectedStop As String = Nothing
     Public SelectedDay As String = "monday"
-    Dim desktopPath As String = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)
-    Dim dbFilePath As String = Path.Combine(desktopPath, "mapdb.db")
+    Dim dbFilePath As String = Path.Combine(Application.StartupPath, "mapdb.db")
     Dim CData As PrjData.IDataGetter = New PrjData.CDataGetter
     Private Structure TimeStruct
         Dim Name As String

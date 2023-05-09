@@ -1,15 +1,13 @@
 ﻿Imports System.Data.SQLite
-Imports System.Globalization
 Imports System.IO
-Imports System.Net
+
 Public Class CDataGetter
     Implements IDataGetter
 
     Private SQLiteCon As SQLiteConnection
     Private SQLiteCmd As SQLiteCommand
     Private SQLiteReader As SQLiteDataReader
-    Private desktopPath As String = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)
-    Private dbFilePath As String = Path.Combine(desktopPath, "mapdb.db")
+    Dim dbFilePath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mapdb.db")
 
     Private Sub CloseConnections() Implements IDataGetter.CloseConnections
         Try
