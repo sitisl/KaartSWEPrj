@@ -7,7 +7,7 @@ Public Class CDataGetter
     Private SQLiteCon As SQLiteConnection
     Private SQLiteCmd As SQLiteCommand
     Private SQLiteReader As SQLiteDataReader
-    Dim dbFilePath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mapdb.db")
+    Private dbFilePath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mapdb.db")
 
     Private Sub CloseConnections() Implements IDataGetter.CloseConnections
         Try

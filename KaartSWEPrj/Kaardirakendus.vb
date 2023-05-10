@@ -5,9 +5,6 @@ Imports System.Drawing.Drawing2D
 
 Public Class Kaardirakendus
 
-    Private lastMarker As GMapMarker
-    Dim choose As Boolean = True
-
     Private Sub Kaardirakendus_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         UCtrlMapViewer1.initMap()
         URouteInfo1.Visible = False
