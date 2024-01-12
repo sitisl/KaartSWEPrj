@@ -6,6 +6,9 @@ Authors:
 * Rannar Randmäe 
 * Siim Tišler
 
+## Full documentation (in Estonian)
+
+[IAS0110_PROJEKT_Projektiruhm.pdf](https://github.com/sitisl/KaartSWEPrj/files/13920171/IAS0110_PROJEKT_Projektiruhm.pdf)
 
 ## Introduction
 This is the repo of Projektirühm from Software Engineering course at TalTech 2023. 
@@ -22,3 +25,9 @@ To run the public transportation applications all files from the repo have to be
 * SQLite Studio for database creation
 * Visual Studio and Qt Creator as an integrated development environment (IDE)
 * Git for version control
+
+## Screenshots of UI
+### Choosing the transport vehicle 
+![image](https://github.com/sitisl/KaartSWEPrj/assets/92330937/91717491-9b41-4b77-8ebb-f9cd28e8d048)
+### Map view, with bus locations
+![image](https://github.com/sitisl/KaartSWEPrj/assets/92330937/1d36ae9d-6117-4bc2-8b0f-c7fffa2d4def)
